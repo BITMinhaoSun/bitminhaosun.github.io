@@ -27,5 +27,6 @@ Then open http://127.0.0.1:8000/.
 
 - Profile and portrait: https://scholar.google.com/citations?user=Bg1pQ3MAAAAJ
 - SearchArt paper, author order, and preprint status: https://arxiv.org/abs/2607.24850
+- RACE paper, author order, and equal-contribution markers: https://arxiv.org/abs/2610.28382 (PDF first page).
 - Huawei internship: supplied by Minhao Sun, July 2026–present.
 
