@@ -25,6 +25,7 @@ Then open http://127.0.0.1:8000/.
 
 ## Content sources
 
+- Same Trajectory, Different Knowledge paper, author order, and preprint status: https://arxiv.org/abs/2611.01987 (PDF first page checked).
 - Search When Needed, Proceed When Reliable paper, author order, and preprint status: https://arxiv.org/abs/2610.41738.
 - Profile and portrait: https://scholar.google.com/citations?user=Bg1pQ3MAAAAJ
 - SearchArt paper, author order, and preprint status: https://arxiv.org/abs/2607.24850
