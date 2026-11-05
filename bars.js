@@ -1,6 +1,25 @@
 // Only Minhao's own reviews; every dimension is scored out of 5.
 const reviews = [
-  { name: '虎童', scores: { price: 3, quality: 2, atmosphere: 4, environment: 2 }, note: '' }
+  {
+    "name": "虎童",
+    "scores": {
+      "price": 3,
+      "quality": 2,
+      "atmosphere": 4,
+      "environment": 2
+    },
+    "note": "Visited on Halloween night: a great atmosphere, plenty of cosplayers, and a lively dance floor, though the venue was small and the setting was fairly ordinary."
+  },
+  {
+    "name": "响live house",
+    "scores": {
+      "price": 3,
+      "quality": 3,
+      "atmosphere": 5,
+      "environment": 3
+    },
+    "note": "Plenty of pop hits and live performances; we spent RMB 888 on a table for eight (RMB 111 per person), and a guest singer performed “The Night I Miss You”—my friends and I had a blast."
+  }
 ];
 const dimensions = [ ['price', 'Price'], ['quality', 'Drink quality'], ['atmosphere', 'Atmosphere'], ['environment', 'Environment'] ];
 const list = document.getElementById('reviews-list');
