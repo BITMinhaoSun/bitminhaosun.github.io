@@ -8,7 +8,7 @@ const reviews = [
       "atmosphere": 4,
       "environment": 2
     },
-    "note": "Visited on Halloween night: a great atmosphere, plenty of cosplayers, and a lively dance floor, though the venue was small and the setting was fairly ordinary."
+    "note": "Halloween here understood the assignment: loads of cosplayers and a dance floor that was popping, though the small venue and so-so setting brought things back down to earth."
   },
   {
     "name": "响live house",
@@ -18,7 +18,7 @@ const reviews = [
       "atmosphere": 5,
       "environment": 4
     },
-    "note": "Plenty of pop hits and live performances; we spent RMB 888 on a table for eight (RMB 111 per person), and a guest singer performed “The Night I Miss You”—my friends and I had a blast."
+    "note": "Pop hits, live performances, and RMB 888 for a table of eight (RMB 111 each)—then a guest singer hit us with “The Night I Miss You,” and my friends and I were absolutely living for it."
   },
   {
     "name": "么哈",
@@ -28,7 +28,7 @@ const reviews = [
       "atmosphere": 3,
       "environment": 3
     },
-    "note": "A hugely popular, crowded bar that I think owes much of its appeal to its location; I often play poker here, and overall it feels like a fairly average, no-frills spot."
+    "note": "Super hyped and packed with people—I reckon the location is doing the heavy lifting; I'm usually there playing poker, but every time “Bad Girl” comes on, I get ridiculously hyped."
   }
 ];
 const dimensions = [ ['price', 'Price'], ['quality', 'Drink quality'], ['atmosphere', 'Atmosphere'], ['environment', 'Environment'] ];
