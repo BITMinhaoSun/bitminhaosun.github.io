@@ -33,3 +33,9 @@ Then open http://127.0.0.1:8000/.
 - RACE paper, author order, and equal-contribution markers: https://arxiv.org/abs/2610.28382 (PDF first page).
 - Huawei internship: supplied by Minhao Sun, July 2026–present.
 
+
+## Beijing Bar Notes
+
+- `bars.html` is the public personal review page, linked from the homepage footer.
+- Add actual reviews to the `reviews` array in `bars.js` using `name`, `date` (YYYY-MM-DD), `area`, `score` (0–10), and `note`.
+- Reviews are published with the site; there is no public editing form or browser-only storage.
