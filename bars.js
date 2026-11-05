@@ -12,7 +12,8 @@ const reviews = [
     "photo": "assets/bars/hutong.jpg",
     "photoAlt": "DJs at the Halloween event at Hutong",
     "photoWidth": 1201,
-    "photoHeight": 1360
+    "photoHeight": 1360,
+    "photoPosition": "50% 72%"
   },
   {
     "name": "响live house",
@@ -26,7 +27,8 @@ const reviews = [
     "photo": "assets/bars/xiang.jpg",
     "photoAlt": "A crowd and colorful stage lights at Xiang Live House",
     "photoWidth": 1280,
-    "photoHeight": 1707
+    "photoHeight": 1707,
+    "photoPosition": "50% 65%"
   },
   {
     "name": "么哈",
@@ -40,7 +42,8 @@ const reviews = [
     "photo": "assets/bars/meha.jpg",
     "photoAlt": "Playing cards on a table at Meha",
     "photoWidth": 810,
-    "photoHeight": 1440
+    "photoHeight": 1440,
+    "photoPosition": "50% 40%"
   },
   {
     "name": "birbox",
@@ -54,7 +57,8 @@ const reviews = [
     "photo": "assets/bars/birbox.jpg",
     "photoAlt": "An outdoor fire performance at birbox",
     "photoWidth": 1540,
-    "photoHeight": 960
+    "photoHeight": 960,
+    "photoPosition": "50% 50%"
   }
 ];
 const dimensions = [ ['price', 'Price'], ['quality', 'Drink quality'], ['atmosphere', 'Atmosphere'], ['environment', 'Environment'] ];
@@ -101,7 +105,6 @@ if (reviews.length) {
       note.textContent = review.note;
       content.append(note);
     }
-    body.append(content);
     if (review.photo) {
       const link = document.createElement('a');
       link.className = 'review-photo';
@@ -110,6 +113,7 @@ if (reviews.length) {
       const img = document.createElement('img');
       img.src = review.photo;
       img.alt = review.photoAlt;
+      img.style.objectPosition = review.photoPosition;
       img.width = review.photoWidth;
       img.height = review.photoHeight;
       img.loading = 'lazy';
@@ -117,6 +121,7 @@ if (reviews.length) {
       link.append(img);
       body.append(link);
     }
+    body.append(content);
     article.append(body);
     list.append(article);
   }
