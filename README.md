@@ -37,5 +37,5 @@ Then open http://127.0.0.1:8000/.
 ## Beijing Bar Notes
 
 - `bars.html` is the public personal review page, linked from the homepage footer.
-- Add actual reviews to the `reviews` array in `bars.js` using `name`, `date` (YYYY-MM-DD), `area`, `score` (0–10), and `note`.
+- Add actual reviews to the `reviews` array in `bars.js` using `name`, `scores` (`price`, `quality`, `atmosphere`, `environment`, each 0–5), and a one-sentence `note`. An empty note stays blank.
 - Reviews are published with the site; there is no public editing form or browser-only storage.

@@ -1,7 +1,8 @@
-// Add only Minhao's own reviews. Each entry: { name, date, area, score, note }.
-// date: YYYY-MM-DD; score: a number from 0 to 10. No sample ratings are published.
-const reviews = [];
-
+// Only Minhao's own reviews; every dimension is scored out of 5.
+const reviews = [
+  { name: '虎童', scores: { price: 3, quality: 2, atmosphere: 4, environment: 2 }, note: '' }
+];
+const dimensions = [ ['price', '价格'], ['quality', '酒的质量'], ['atmosphere', '氛围'], ['environment', '环境'] ];
 const list = document.getElementById('reviews-list');
 const count = document.getElementById('review-count');
 if (reviews.length) {
@@ -10,23 +11,31 @@ if (reviews.length) {
   for (const review of reviews) {
     const article = document.createElement('article');
     article.className = 'bar-review';
-    const heading = document.createElement('div');
     const title = document.createElement('h3');
     title.textContent = review.name;
-    const meta = document.createElement('p');
-    meta.className = 'review-meta';
-    meta.textContent = [review.area, review.date].filter(Boolean).join(' · ');
-    heading.append(title, meta);
-    const score = document.createElement('p');
-    score.className = 'review-score';
-    score.textContent = Number.isFinite(review.score) && review.score >= 0 && review.score <= 10 ? String(review.score) : '—';
-    const denominator = document.createElement('small');
-    denominator.textContent = ' / 10';
-    score.append(denominator);
-    const note = document.createElement('p');
-    note.className = 'review-note';
-    note.textContent = review.note || '';
-    article.append(heading, score, note);
+    article.append(title);
+    const scores = document.createElement('dl');
+    scores.className = 'review-scores';
+    for (const [key, label] of dimensions) {
+      const item = document.createElement('div');
+      const term = document.createElement('dt');
+      term.textContent = label;
+      const value = document.createElement('dd');
+      const number = review.scores[key];
+      value.textContent = Number.isFinite(number) && number >= 0 && number <= 5 ? String(number) : '—';
+      const denominator = document.createElement('small');
+      denominator.textContent = ' / 5';
+      value.append(denominator);
+      item.append(term, value);
+      scores.append(item);
+    }
+    article.append(scores);
+    if (review.note) {
+      const note = document.createElement('p');
+      note.className = 'review-note';
+      note.textContent = review.note;
+      article.append(note);
+    }
     list.append(article);
   }
 }
