@@ -30,3 +30,14 @@
 }
 
 @media (max-width: 480px) { .review-scores { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; } .review-scores > div { padding: 12px 8px; } .review-scores dt { font-size: 11px; overflow-wrap: normal; } }
+
+.review-body { display: grid; grid-template-columns: minmax(0, 1fr) 220px; gap: 26px; align-items: start; }
+.review-content { min-width: 0; }
+.review-photo { display: block; border-radius: 3px; background: #eeeee7; }
+.review-photo img { display: block; width: 100%; height: auto; max-height: 360px; object-fit: contain; border-radius: 3px; }
+.review-body .review-scores { gap: 8px; }
+.review-body .review-scores > div { padding: 14px 10px; }
+@media (max-width: 650px) {
+  .review-body { grid-template-columns: 1fr; gap: 20px; }
+  .review-photo { width: 100%; max-width: 300px; }
+}
