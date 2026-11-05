@@ -2,17 +2,18 @@
 const reviews = [
   { name: '虎童', scores: { price: 3, quality: 2, atmosphere: 4, environment: 2 }, note: '' }
 ];
-const dimensions = [ ['price', '价格'], ['quality', '酒的质量'], ['atmosphere', '氛围'], ['environment', '环境'] ];
+const dimensions = [ ['price', 'Price'], ['quality', 'Drink quality'], ['atmosphere', 'Atmosphere'], ['environment', 'Environment'] ];
 const list = document.getElementById('reviews-list');
 const count = document.getElementById('review-count');
 if (reviews.length) {
   list.replaceChildren();
-  count.textContent = `${reviews.length} 篇记录`;
+  count.textContent = `${reviews.length} ${reviews.length === 1 ? 'review' : 'reviews'}`;
   for (const review of reviews) {
     const article = document.createElement('article');
     article.className = 'bar-review';
     const title = document.createElement('h3');
     title.textContent = review.name;
+    title.lang = 'zh-CN';
     article.append(title);
     const scores = document.createElement('dl');
     scores.className = 'review-scores';
