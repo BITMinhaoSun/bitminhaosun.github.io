@@ -76,11 +76,19 @@ h2 { margin: 0; color: var(--ink); font: 400 25px/1.3 Georgia, "Times New Roman"
 .experience-date { margin: 3px 0 0; font-size: 12px; color: var(--muted); }
 .experience-row h3 { margin: 0 0 2px; font-size: 15px; font-weight: 600; color: var(--ink); }
 .experience-row div p { margin: 0; font-size: 13px; }
-.hobby-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 26px 22px; }
+.hobbies-toggle { max-width: 520px; }
+.hobbies-toggle summary { cursor: pointer; color: var(--accent); padding: 6px 0 12px; border-bottom: 1px solid var(--line); }
+.hobbies-toggle summary h2 { display: inline; font-size: 22px; }
+.hobbies-toggle summary span { margin-left: 14px; font-size: 12px; color: var(--muted); }
+.hobbies-hide, .hobbies-toggle[open] .hobbies-show { display: none; }
+.hobbies-toggle[open] .hobbies-hide { display: inline; }
+.hobbies-intro { margin: 16px 0 0; font-size: 13px; line-height: 1.7; }
+.hobby-note { display: block; margin-top: 3px; color: var(--muted); font-size: 12px; font-weight: 400; }
+.hobby-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px 16px; margin-top: 18px; }
 .hobby { margin: 0; min-width: 0; }
 .hobby a { display: block; border-radius: 3px; }
 .hobby img { display: block; width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 3px; background: var(--line); }
-.hobby figcaption { margin-top: 10px; color: var(--ink); font-size: 14px; font-weight: 500; }
+.hobby figcaption { margin-top: 7px; color: var(--ink); font-size: 13px; font-weight: 500; }
 .contact-email { display: flex; flex-wrap: wrap; gap: 8px 24px; margin: 0; font-size: 15px; }
 .contact-email span { color: var(--muted); }
 .contact-email a { overflow-wrap: anywhere; }
@@ -120,7 +128,7 @@ footer a { color: var(--muted); }
 }
 @media (max-width: 480px) {
   nav { width: 100%; }
-  .hobby-grid { grid-template-columns: 1fr; gap: 24px; }
+  .hobby-grid { gap: 16px 12px; }
 }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
 @media print {
