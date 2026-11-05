@@ -6,9 +6,10 @@ A static academic homepage built with HTML and CSS. No dependency installation o
 
 ## Update content
 
-- Edit `index.html` to update the introduction, publications, and experience.
+- Edit `index.html` to update the introduction, publications, experience, hobbies, and contact information.
 - Edit `styles.css` to change the layout and colors.
 - Replace `assets/portrait.jpg` to change the photograph.
+- Hobby photos are stored in `assets/hobbies/`, in the order hiking, swimming and fitness, climbing, and poker.
 - Add bibliography files to `assets/` and link them from each publication.
 
 GitHub Pages publishes the root directory of the `main` branch. Commit changes to `main` to update the website.
