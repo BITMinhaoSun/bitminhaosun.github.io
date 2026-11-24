@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ISA-Distill | Same Trajectory, Different Knowledge</title>
+  <meta name="description" content="ISA-Distill adapts teacher feedback to what a search agent can recover at each step. Explore the method and results on seven QA benchmarks.">
+  <meta property="og:title" content="Same Trajectory, Different Knowledge">
+  <meta property="og:description" content="Information-State-Aware On-Policy Distillation for Search Agents">
+  <meta property="og:image" content="https://bitminhaosun.github.io/ISA-OPD/assets/framework.png">
+  <meta property="og:type" content="website">
+  <link rel="canonical" href="https://bitminhaosun.github.io/ISA-OPD/">
+  <meta name="citation_title" content="Same Trajectory, Different Knowledge: Information-State-Aware On-Policy Distillation for Search Agents">
+  <meta name="citation_author" content="Sun, Minhao">
+  <meta name="citation_author" content="Mao, Xian-Ling">
+  <meta name="citation_author" content="Tao, Eric">
+  <meta name="citation_author" content="Ma, Zi-Ao">
+  <meta name="citation_author" content="Wu, Zhijing">
+  <meta name="citation_publication_date" content="2026/11/01">
+  <meta name="citation_pdf_url" content="https://arxiv.org/pdf/2611.01987">
+  <link rel="icon" type="image/svg+xml" href="assets/mark.svg">
+  <link rel="stylesheet" href="style.css">
+  <script src="site.js" defer></script>
+</head>
+<body id="top">
+<a class="skip" href="#main">Skip to content</a>
+<header class="mast">
+  <nav class="wrap" aria-label="Main navigation">
+    <a class="brand" href="#top"><img src="assets/mark.svg" width="35" height="35" alt="">ISA-Distill</a>
+    <div class="navlinks"><a href="#overview">Overview</a><a href="#method">Method</a><a href="#results">Results</a><a href="#citation">Citation</a></div>
+  </nav>
+</header>
+<main id="main">
+  <section class="hero" aria-labelledby="page-title">
+    <div class="hero-inner wrap">
+      <p class="dateline"><span>arXiv:2611.01987</span><span>November 2026</span></p>
+      <h1 id="page-title">Same Trajectory,<br><em>Different Knowledge</em><span class="sr">:</span>
+        <small>Information-State-Aware <span style="white-space: nowrap">On-Policy</span> Distillation for Search Agents</small></h1>
+      <p class="authors"><a href="https://bitminhaosun.github.io/">Minhao Sun<sup>1</sup></a> <span>Xian-Ling Mao<sup>1,†</sup></span> <span>Eric Tao<sup>2</sup></span> <span>Zi-Ao Ma<sup>1</sup></span> <span>Zhijing Wu<sup>1</sup></span></p>
+      <p class="affils"><span><sup>1</sup> Beijing Institute of Technology</span><span><sup>2</sup> Huawei</span></p>
+      <p class="authornote">† Corresponding author</p>
+      <div class="actions">
+        <a class="button primary" href="https://arxiv.org/pdf/2611.01987"><span aria-hidden="true" class="file-icon"></span>Read paper</a>
+        <a class="button" href="https://arxiv.org/abs/2611.01987">arXiv</a>
+        <a class="button" href="https://github.com/BITMinhaoSun/ISAOPD"><span aria-hidden="true" class="code-icon">‹/›</span>GitHub</a>
+        <a class="button" href="#citation"><span aria-hidden="true" class="code-icon">{ }</span>BibTeX</a>
+      </div>
+    </div>
+  </section>
+  <div class="wrap">
+    <section class="feature" aria-labelledby="framework-title">
+      <div class="plate-heading"><h2 id="framework-title">ISA-Distill at a glance</h2><a class="enlarge" href="assets/framework.png" data-enlarge aria-label="Enlarge the framework diagram"><span aria-hidden="true">⛶</span> Enlarge</a></div>
+      <figure>
+        <a href="assets/framework.png" data-enlarge aria-label="View the full-size ISA-Distill framework diagram"><img src="assets/framework.png" width="2400" height="961" alt="A masked probe estimates how well the student can recover a focal fact. Its score weights two views of the same action, which adjust credit in the student update."></a>
+        <figcaption><strong>One action, two teacher views.</strong> The student’s ability to recover a fact determines how much credit it receives for using that fact or searching for evidence.</figcaption>
+      </figure>
+    </section>
+    <section class="overview section" id="overview" aria-labelledby="overview-title">
+      <div class="column-heading"><p class="kicker">Overview</p><h2 id="overview-title">When does a search deserve credit?</h2></div>
+      <div class="prose"><p>A teacher can follow the same reasoning steps as a student and still know more. If the teacher already knows a missing fact, it may give too little credit to a search that helps the student establish it.</p><p><strong>Information-State-Aware Distillation (ISA-Distill)</strong> estimates what the student can recover just before each action. It uses that estimate to balance feedback on finding evidence and feedback on using known facts. Across seven question-answering benchmarks, the approach improves average exact match at both 3B and 7B scales.</p></div>
+    </section>
+  </div>
+  <section class="tint section" id="method" aria-labelledby="method-title">
+    <div class="wrap">
+      <p class="kicker">Method</p><h2 id="method-title">Learning when to seek evidence</h2>
+      <div class="method-grid">
+        <figure class="example">
+          <a href="assets/mismatch.png" data-enlarge aria-label="Enlarge the teacher and student search example"><img src="assets/mismatch.png" width="1500" height="1200" loading="lazy" alt="Asked where A’s father was born, the teacher searches for B’s birthplace. The student first needs to identify A’s father."></a>
+          <figcaption>The teacher can identify A’s father as B. The student still needs to establish that relation before searching for B’s birthplace.</figcaption>
+        </figure>
+        <div class="steps">
+          <article><h3>Probe the student’s knowledge</h3><p>From the saved pre-action context, ask the student about a focal fact with its value hidden. Sample answers without retrieval to estimate how reliably it can recover the fact.</p></article>
+          <article><h3>Score the same action twice</h3><p>The fact-use view supplies the missing fact. The evidence-seeking view describes the information need while masking the answer. Both views score the action the student actually took.</p></article>
+          <article><h3>Weight the feedback</h3><p>Higher recoverability gives more weight to fact use. Lower recoverability favors evidence seeking. The combined signal adjusts outcome-based credit on selected action tokens during training.</p></article>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="wrap section" id="results" aria-labelledby="results-heading">
+  <p class="kicker">Results</p>
+  <h2 id="results-heading">Answer accuracy and search efficiency</h2>
+  <p>ISA-Distill achieves the highest average exact match across seven QA benchmarks at both model sizes. It improves on the strongest baseline, SD-Search, by 1.2 percentage points at 3B and 0.4 points at 7B.</p>
+  <div class="results-grid"><div><h3>Answer accuracy</h3><table class="results-table">
+    <caption>Macro-average exact match (%) on Qwen2.5-Instruct. Each benchmark has equal weight.</caption>
+    <thead>
+      <tr><th scope="col">Method</th><th scope="col">3B</th><th scope="col">7B</th></tr>
+    </thead>
+    <tbody>
+      <tr class="ours"><th scope="row">ISA-Distill</th><td><strong>43.9</strong></td><td><strong>48.0</strong></td></tr>
+      <tr><th scope="row">SD-Search</th><td>42.7</td><td>47.6</td></tr>
+      <tr><th scope="row">EviSD</th><td>42.6</td><td>47.2</td></tr>
+      <tr><th scope="row">GiGPO</th><td>37.0</td><td>47.2</td></tr>
+      <tr><th scope="row">Search-R1</th><td>33.6</td><td>39.6</td></tr>
+    </tbody>
+  </table>
+  <details>
+    <summary>ISA-Distill scores by benchmark</summary>
+    <table class="results-table">
+      <caption>Exact match (%) on Qwen2.5-Instruct</caption>
+      <thead><tr><th scope="col">Benchmark</th><th scope="col">3B</th><th scope="col">7B</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">Natural Questions</th><td>47.6</td><td>50.3</td></tr>
+        <tr><th scope="row">TriviaQA</th><td>63.3</td><td>67.1</td></tr>
+        <tr><th scope="row">PopQA</th><td>47.7</td><td>48.8</td></tr>
+        <tr><th scope="row">HotpotQA</th><td>42.0</td><td>47.1</td></tr>
+        <tr><th scope="row">2WikiMultiHopQA</th><td>45.9</td><td>49.9</td></tr>
+        <tr><th scope="row">MuSiQue</th><td>20.5</td><td>22.4</td></tr>
+        <tr><th scope="row">Bamboogle</th><td>40.0</td><td>50.4</td></tr>
+      </tbody>
+    </table>
+  </details>
+</div>
+    <aside class="allocation"><h3>Where did search calls change?</h3>
+      <p>Change in mean calls per question for the 7B student, compared with the reproduced EviSD baseline.</p>
+      <dl><div><dt>Single-hop QA</dt><dd>−7.21%</dd></div>
+      <div><dt>Multi-hop QA</dt><dd>+2.94%</dd></div>
+      <div><dt>All questions</dt><dd>−2.45%</dd></div></dl>
+      <p>Calls fell on all three single-hop datasets and rose on all four multi-hop datasets.</p>
+    </aside>
+  </div>
+</section>
+
+  <section class="tint section" id="citation" aria-labelledby="citation-title">
+    <div class="wrap">
+      <div class="cite-head"><div><p class="kicker">Citation</p><h2 id="citation-title">Cite this work</h2></div><div class="cite-actions"><a class="textlink" href="assets/isa-distill.bib" download>Download .bib</a><button id="copy" class="button" type="button" hidden>Copy BibTeX</button></div></div>
+      <pre tabindex="0"><code id="bib">@misc{sun2026sametrajectory,
+  title = {Same Trajectory, Different Knowledge: Information-State-Aware On-Policy Distillation for Search Agents},
+  author = {Minhao Sun and Xian-Ling Mao and Eric Tao and Zi-Ao Ma and Zhijing Wu},
+  year = {2026},
+  eprint = {2611.01987},
+  archivePrefix = {arXiv},
+  primaryClass = {cs.IR},
+  doi = {10.48550/arXiv.2611.01987},
+  url = {https://arxiv.org/abs/2611.01987}
+}</code></pre>
+      <p class="sr" role="status" id="copy-status"></p>
+    </div>
+  </section>
+</main>
+<footer><div class="wrap"><a class="brand" href="#top"><img src="assets/mark.svg" alt="" width="28" height="28">ISA-Distill</a><a href="#top">Back to top</a></div></footer>
+<dialog id="viewer" aria-label="Enlarged paper figure"><div class="dialog-tools"><a href="assets/framework.png" id="original">Open original image</a><button type="button" id="close">Close</button></div><img alt="" id="large-image"></dialog>
+</body>
+</html>
