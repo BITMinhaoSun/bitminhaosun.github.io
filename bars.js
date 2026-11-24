@@ -64,65 +64,110 @@ const reviews = [
 const dimensions = [ ['price', 'Price'], ['quality', 'Drink quality'], ['atmosphere', 'Atmosphere'], ['environment', 'Environment'] ];
 const list = document.getElementById('reviews-list');
 const count = document.getElementById('review-count');
-if (reviews.length) {
-  list.replaceChildren();
-  count.textContent = `${reviews.length} ${reviews.length === 1 ? 'review' : 'reviews'}`;
-  for (const review of reviews) {
-    const article = document.createElement('article');
-    article.className = 'bar-review';
-    const title = document.createElement('h3');
-    title.textContent = review.name;
-    title.lang = /[\u4e00-\u9fff]/.test(review.name) ? 'zh-CN' : 'en';
-    article.append(title);
-    const body = document.createElement('div');
-    body.className = 'review-body';
-    const content = document.createElement('div');
-    content.className = 'review-content';
-    const scores = document.createElement('dl');
-    scores.className = 'review-scores';
-    for (const [key, label] of dimensions) {
-      const item = document.createElement('div');
-      const term = document.createElement('dt');
-      term.textContent = label;
-      const value = document.createElement('dd');
-      const number = review.scores[key];
-      const rated = Number.isFinite(number) && number >= 0 && number <= 5;
-      value.textContent = rated ? String(number) : '—';
-      if (rated) {
-        const denominator = document.createElement('small');
-        denominator.textContent = ' / 5';
-        value.append(denominator);
-      } else {
-        value.setAttribute('aria-label', 'Not rated');
-      }
-      item.append(term, value);
-      scores.append(item);
-    }
-    content.append(scores);
-    if (review.note) {
-      const note = document.createElement('p');
-      note.className = 'review-note';
-      note.textContent = review.note;
-      content.append(note);
-    }
-    if (review.photo) {
-      const link = document.createElement('a');
-      link.className = 'review-photo';
-      link.href = review.photo;
-      link.setAttribute('aria-label', 'View full photo: ' + review.name);
-      const img = document.createElement('img');
-      img.src = review.photo;
-      img.alt = review.photoAlt;
-      img.style.objectPosition = review.photoPosition;
-      img.width = review.photoWidth;
-      img.height = review.photoHeight;
-      img.loading = 'lazy';
-      img.decoding = 'async';
-      link.append(img);
-      body.append(link);
-    }
-    body.append(content);
-    article.append(body);
-    list.append(article);
-  }
+const sort = document.getElementById('review-sort');
+const viewer = document.getElementById('review-viewer');
+const largePhoto = viewer.querySelector('img');
+
+function element(tag, className, text) {
+  const node = document.createElement(tag);
+  if (className) node.className = className;
+  if (text !== undefined) node.textContent = text;
+  return node;
 }
+
+function scoreList(scores) {
+  const ratings = element('dl', 'review-scores');
+  for (const [key, label] of dimensions) {
+    const item = element('div');
+    const value = scores[key];
+    const rated = Number.isFinite(value) && value >= 0 && value <= 5;
+    const reading = element('dd');
+    if (rated) {
+      const stars = element('span', 'star-track');
+      stars.setAttribute('aria-hidden', 'true');
+      stars.style.setProperty('--rated', (value * 20) + '%');
+      reading.append(stars, value + '/5');
+    } else {
+      reading.textContent = 'Not rated';
+      reading.className = 'unrated';
+    }
+    item.append(element('dt', '', label), reading);
+    ratings.append(item);
+  }
+  return ratings;
+}
+
+function photoLink(review) {
+  const link = element('a', 'review-photo');
+  link.href = review.photo;
+  link.setAttribute('aria-label', 'View full photo of ' + review.name);
+  const img = element('img');
+  img.src = review.photo;
+  img.alt = review.photoAlt || review.name;
+  img.width = review.photoWidth;
+  img.height = review.photoHeight;
+  img.style.objectPosition = review.photoPosition || 'center';
+  img.loading = 'lazy';
+  const expand = element('span', 'photo-expand');
+  expand.setAttribute('aria-hidden', 'true');
+  expand.innerHTML = '<svg viewBox="0 0 24 24"><path d="M4 10V4h6m4 0h6v6m0 4v6h-6M4 14v6h6"/></svg>';
+  link.append(img, expand);
+  if (typeof viewer.showModal === 'function') {
+    link.addEventListener('click', event => {
+      if (event.ctrlKey || event.altKey || event.metaKey || event.shiftKey) return;
+      event.preventDefault();
+      largePhoto.src = link.href;
+      largePhoto.alt = img.alt;
+      viewer.querySelector('figcaption').textContent = review.name;
+      viewer.showModal();
+    });
+  }
+  return link;
+}
+
+function reviewRow(review) {
+  const article = element('article', 'bar-review');
+  const body = element('div', 'review-body');
+  const content = element('div', 'review-content');
+  const heading = element('header', 'review-heading');
+  const byline = element('p', 'review-byline');
+  const portrait = element('img');
+  portrait.src = 'assets/portrait.jpg';
+  portrait.width = 25;
+  portrait.height = 25;
+  portrait.alt = '';
+  byline.append(portrait, 'Minhao Sun');
+  const title = element('h3', '', review.name);
+  title.lang = /[\u4e00-\u9fff]/.test(review.name) ? 'zh-CN' : 'en';
+  heading.append(byline, title);
+  content.append(heading);
+  if (review.note) content.append(element('p', 'review-note', review.note));
+  content.append(scoreList(review.scores));
+  body.append(content);
+  if (review.photo) body.append(photoLink(review));
+  article.append(body);
+  return article;
+}
+
+const rows = reviews.map(review => ({review, article: reviewRow(review)}));
+function showReviews() {
+  const key = sort.value;
+  const ordered = rows.slice();
+  if (key) {
+    ordered.sort((a, b) => (b.review.scores[key] ?? -1) - (a.review.scores[key] ?? -1));
+  }
+  list.replaceChildren(...ordered.map(row => row.article));
+}
+
+count.textContent = '(' + reviews.length + ')';
+if (reviews.length) {
+  showReviews();
+  sort.closest('label').hidden = reviews.length < 2;
+  sort.addEventListener('change', showReviews);
+} else {
+  list.append(element('p', 'reviews-empty', 'The first review is on its way.'));
+}
+viewer.querySelector('button').addEventListener('click', () => viewer.close());
+viewer.addEventListener('click', event => {
+  if (event.target === viewer) viewer.close();
+});

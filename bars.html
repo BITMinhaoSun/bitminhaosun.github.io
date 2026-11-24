@@ -9,34 +9,44 @@
   <link rel="canonical" href="https://bitminhaosun.github.io/bars.html">
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="styles.css">
-  <link rel="stylesheet" href="bars.css?v=ed79009186ba">
-  <script src="bars.js?v=f408b735eb5a" defer></script>
+  <link rel="stylesheet" href="bars.css?v=cf7999c030b6">
+  <script src="bars.js?v=9e48842f2783" defer></script>
 </head>
 <body>
-  <a class="skip-link" href="#main">Skip to content</a>
+  <a class="skip-link" href="#reviews">Skip to reviews</a>
   <header class="site-header">
     <div class="header-inner">
       <a class="wordmark" href="index.html" aria-label="Minhao Sun, home">MS<span aria-hidden="true">.</span></a>
-      <nav aria-label="Navigation"><a href="index.html">← Back to homepage</a></nav>
+      <nav aria-label="Navigation"><a href="index.html">Back to homepage</a></nav>
     </div>
   </header>
-  <main id="main" class="bar-page">
+  <main class="bar-page" id="main">
     <section class="bar-intro" aria-labelledby="page-title">
-      <p class="eyebrow">MINHAO SUN / AFTER HOURS</p>
-      <h1 id="page-title">Beijing<br>Bar Notes<span class="name-dot" aria-hidden="true">.</span></h1>
-      <p class="bar-subtitle">Personal visits, honest impressions.</p>
-      <p class="bar-description">Notes on the drinks, the atmosphere,<br>and the experience of each visit.</p>
-      <div class="bar-meta"><span>Beijing · Personal reviews</span><span>Four dimensions / 5</span></div>
-    </section>
-    <section class="bar-reviews" aria-labelledby="reviews-title">
-      <div class="section-heading"><h2 id="reviews-title">Visits &amp; ratings</h2><span id="review-count" class="review-count">0 reviews</span></div>
-      <p class="rating-note">Price, drink quality, atmosphere, and environment. Each rated out of 5; — means not rated.</p>
-      <div id="reviews-list">
-        <div class="reviews-empty"><span class="empty-mark" aria-hidden="true">—</span><h3>The first review is on its way.</h3><p>Bar names, ratings, and a short note from each visit will appear here.</p></div>
+      <div class="bar-intro-copy">
+        <p class="eyebrow">Minhao Sun / After hours</p>
+        <h1 id="page-title">Beijing <em>Bar Notes</em><span aria-hidden="true">.</span></h1>
+        <p class="bar-subtitle">Notes on the drinks, the atmosphere, and the experience of each visit.</p>
       </div>
-      <noscript><p>Enable JavaScript to view the full review list.</p></noscript>
+      <figure class="cover-photo">
+        <img src="assets/bars/xiang.jpg" width="1280" height="1707" alt="The stage at Xiang Live House under colored lights">
+        <figcaption lang="zh-CN">响live house</figcaption>
+      </figure>
     </section>
-    <footer><span>© 2026 Minhao Sun</span><a href="index.html">Back to homepage <span aria-hidden="true">↗</span></a></footer>
+    <section class="bar-reviews" id="reviews" aria-labelledby="reviews-title">
+      <div class="feed-toolbar">
+        <h2 id="reviews-title">Reviews <span id="review-count"></span></h2>
+        <label class="review-sort" hidden>Sort by
+          <select id="review-sort"><option value="">Listed order</option><option value="atmosphere">Atmosphere score</option><option value="quality">Drink quality score</option><option value="environment">Environment score</option><option value="price">Price score</option></select>
+        </label>
+      </div>
+      <div id="reviews-list"></div>
+      <noscript><p>Enable JavaScript to view the reviews.</p></noscript>
+    </section>
+    <footer><span>© 2026 Minhao Sun</span><a href="index.html">Back to homepage</a></footer>
   </main>
+  <dialog id="review-viewer" aria-label="Review photo">
+    <button type="button" class="viewer-close">Close <span aria-hidden="true">×</span></button>
+    <figure><img alt=""><figcaption></figcaption></figure>
+  </dialog>
 </body>
 </html>
