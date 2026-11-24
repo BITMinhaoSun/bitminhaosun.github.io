@@ -22,8 +22,10 @@
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="experiments.css">
   <link rel="stylesheet" href="trajectory.css">
+  <link rel="stylesheet" href="benchmark-overview.css">
   <script src="site.js" defer></script>
   <script src="benchmarks.js" defer></script>
+  <script src="benchmark-overview.js" defer></script>
   <script src="search-efficiency.js" defer></script>
   <script src="ablations.js" defer></script>
   <script src="experiments.js" defer></script>
@@ -34,7 +36,7 @@
 <header class="mast">
   <nav class="wrap" aria-label="Main navigation">
     <a class="brand" href="#top"><img src="assets/isa-fish.png" width="46" height="32" alt="">ISA-Distill</a>
-    <div class="navlinks"><a href="#overview">Overview</a><a href="#method">Method</a><a href="#results">Results</a><a href="#citation">Citation</a></div>
+    <div class="navlinks"><a href="#overview">Overview</a><a href="#method">Method</a><a href="#results">Results</a><a href="#case-study">Case study</a><a href="#citation">Citation</a></div>
   </nav>
 </header>
 <main id="main">
@@ -88,111 +90,94 @@
     <p class="kicker">Results</p>
     <h2 id="results-heading">Explore the experiments</h2>
     <p class="experiment-lead">Evaluation covers 51,713 questions across seven QA benchmarks. ISA-Distill scores 43.9% macro-average exact match at 3B and 48.0% at 7B, the highest among the methods evaluated at each scale.</p>
-    <nav class="experiment-nav" aria-label="Experiments">
-      <a id="tab-accuracy" href="#accuracy">Answer accuracy</a>
-      <a id="tab-retrieval" href="#retrieval">Search calls</a>
-      <a id="tab-ablations" href="#ablations">Ablations &amp; diagnostics</a>
-      <a id="tab-training" href="#training">Training analysis</a>
-      <a id="tab-case-study" href="#case-study">Case study</a>
-    </nav>
-    <div id="accuracy" data-panel>
+    <section id="benchmark-study" class="bo-card" aria-labelledby="bo-heading" hidden>
+  <div class="bo-head">
+    <div><h3 id="bo-heading">Explore the seven benchmarks</h3><p>Select a dataset to compare ISA-Distill with EviSD on Qwen2.5-7B-Instruct.</p></div>
+    <label for="bo-metric">Chart metric
+      <select id="bo-metric">
+        <option value="calls">Change in search calls (%)</option>
+        <option value="em">ISA-Distill exact match (%)</option>
+      </select>
+    </label>
+  </div>
+  <div class="bo-body">
+    <fieldset class="bo-chart">
+      <legend class="sr">Select a benchmark</legend>
+      <p class="bo-group">Single-hop QA</p><div data-bo-group="single"></div>
+      <p class="bo-group">Multi-hop QA</p><div data-bo-group="multi"></div>
+      <p class="bo-axis" id="bo-scale"></p>
+    </fieldset>
+    <div class="bo-inspector" role="region" aria-label="Selected benchmark" aria-live="polite" aria-atomic="true">
+      <p class="bo-group" id="bo-task"></p><h4 id="bo-name"></h4>
+      <table aria-label="Scores for the selected benchmark">
+        <thead><tr><th scope="col">Method</th><th scope="col">EM (%)</th><th scope="col">Calls / question</th></tr></thead>
+        <tbody>
+          <tr data-bo-method="isa"><th scope="row">ISA-Distill</th><td></td><td></td></tr>
+          <tr data-bo-method="evisd"><th scope="row">EviSD</th><td></td><td></td></tr>
+        </tbody>
+      </table>
+      <p class="bo-change">Search-call change <strong id="bo-change"></strong></p>
+    </div>
+  </div>
+  <p class="bo-source"><a href="https://arxiv.org/pdf/2611.01987v1#page=4">Table 1 · Exact match</a> · <a href="https://arxiv.org/pdf/2611.01987v1#page=5">Table 3 · Search calls</a></p>
+</section>
+    <div id="accuracy">
 <section id="bench-explorer" aria-labelledby="bench-heading">
   <h3 id="bench-heading">Answer accuracy</h3>
-  <p>Compare ISA-Distill with the 11 baselines in the paper. Scores are exact match (EM) percentages. Each of the seven benchmarks has equal weight in the macro-average.</p>
-  <div id="bench-interactive" hidden>
-    <div class="bench-controls">
-      <label for="bench-model">Backbone
-        <select id="bench-model"><option value="7B">Qwen2.5-7B-Instruct</option><option value="3B">Qwen2.5-3B-Instruct</option></select>
-      </label>
-      <label for="bench-dataset">Benchmark
-        <select id="bench-dataset">
-          <option value="8">Macro-average (7 datasets)</option>
-          <optgroup label="Single-hop QA"><option value="1">Natural Questions</option><option value="2">TriviaQA</option><option value="3">PopQA</option></optgroup>
-          <optgroup label="Multi-hop QA"><option value="4">HotpotQA</option><option value="5">2WikiMultiHopQA</option><option value="6">MuSiQue</option><option value="7">Bamboogle</option></optgroup>
-        </select>
-      </label>
-      <label for="bench-comparator">Comparison baseline
-        <select id="bench-comparator"></select>
-      </label>
-    </div>
-    <dl class="bench-summary" aria-live="polite" aria-atomic="true">
-      <div><dt>ISA-Distill EM</dt><dd id="bench-ours"></dd></div>
-      <div><dt id="bench-baseline-label">Baseline EM</dt><dd id="bench-baseline"></dd></div>
-    </dl>
-    <div class="bench-table-controls">
-      <label for="bench-view">Show methods
-        <select id="bench-view">
-          <option value="all">All 12 methods</option>
-          <option value="pair">ISA-Distill + selected baseline</option>
-        </select>
-      </label>
-      <label for="bench-order">Sort order
-        <select id="bench-order">
-          <option value="score-desc">Exact match: high to low</option>
-          <option value="score-asc">Exact match: low to high</option>
-          <option value="method-asc">Method: A–Z</option>
-          <option value="method-desc">Method: Z–A</option>
-        </select>
-      </label>
-    </div>
-    <table class="bench-ranking">
-      <caption id="bench-caption"></caption>
-      <thead><tr>
-        <th scope="col"><button class="bench-sort" type="button" data-key="method">Method <span aria-hidden="true"></span></button></th>
-        <th scope="col"><button class="bench-sort" type="button" data-key="score">Exact match (%) <span aria-hidden="true"></span></button></th>
-      </tr></thead>
-      <tbody id="bench-rows"></tbody>
-    </table>
-  </div>
-  <details class="bench-source" open>
-    <summary>Full 7B results</summary>
-    <div class="table-scroll" tabindex="0" role="region" aria-label="Full 7B results table">
-      <table data-model="7B">
-        <caption>Qwen2.5-7B-Instruct exact match (%). The average weights each benchmark equally.</caption>
+  <p>ISA-Distill and the 11 baselines are evaluated on seven QA benchmarks. Scores are exact match (%). Avg. gives each benchmark equal weight.</p>
+  <p class="bench-hint" hidden>Select a column heading to sort. Select a baseline to highlight it in both tables, or select it again to clear.</p>
+  <div class="bench-matrix">
+    <h4 id="bench-7b">Qwen2.5-7B-Instruct</h4>
+    <div class="table-scroll" tabindex="0" role="region" aria-labelledby="bench-7b">
+      <table data-model="7B" aria-labelledby="bench-7b">
         <thead><tr><th scope="col">Method</th><th scope="col">NQ</th><th scope="col">TriviaQA</th><th scope="col">PopQA</th><th scope="col">HotpotQA</th><th scope="col">2WikiMQA</th><th scope="col">MuSiQue</th><th scope="col">Bamboogle</th><th scope="col">Avg.</th></tr></thead>
         <tbody>
-          <tr><th scope="row">Search-R1</th><td>42.9</td><td>62.3</td><td>42.7</td><td>38.6</td><td>34.6</td><td>16.2</td><td>40.0</td><td>39.6</td></tr>
-          <tr><th scope="row">AutoRefine</th><td>42.0</td><td>60.4</td><td>41.3</td><td>39.8</td><td>33.3</td><td>17.6</td><td>39.2</td><td>39.1</td></tr>
-          <tr><th scope="row">TIPS</th><td>43.4</td><td>64.3</td><td>44.5</td><td>43.0</td><td>43.0</td><td>17.1</td><td>36.8</td><td>41.7</td></tr>
-          <tr><th scope="row">PiCA</th><td>46.0</td><td>64.1</td><td>44.2</td><td>42.4</td><td>40.1</td><td>19.7</td><td>41.9</td><td>42.6</td></tr>
-          <tr><th scope="row">GiGPO</th><td>46.4</td><td>64.7</td><td>46.1</td><td>41.6</td><td>43.6</td><td>18.9</td><td>68.9</td><td>47.2</td></tr>
+          <tr class="ours"><th scope="row">ISA-Distill</th><td>50.3</td><td>67.1</td><td>48.8</td><td>47.1</td><td>49.9</td><td>22.4</td><td>50.4</td><td>48.0</td></tr>
           <tr><th scope="row">SD-Search</th><td>49.5</td><td>66.8</td><td>49.4</td><td>47.1</td><td>44.1</td><td>22.2</td><td>54.4</td><td>47.6</td></tr>
-          <tr><th scope="row">Skill-SD</th><td>47.1</td><td>64.5</td><td>44.2</td><td>47.8</td><td>42.1</td><td>20.2</td><td>38.4</td><td>43.5</td></tr>
+          <tr><th scope="row">EviSD</th><td>48.9</td><td>66.5</td><td>48.6</td><td>46.6</td><td>48.6</td><td>21.6</td><td>49.6</td><td>47.2</td></tr>
+          <tr><th scope="row">GiGPO</th><td>46.4</td><td>64.7</td><td>46.1</td><td>41.6</td><td>43.6</td><td>18.9</td><td>68.9</td><td>47.2</td></tr>
           <tr><th scope="row">RLSD (skill)</th><td>46.8</td><td>63.0</td><td>44.4</td><td>45.5</td><td>48.9</td><td>21.5</td><td>46.4</td><td>45.2</td></tr>
           <tr><th scope="row">SDAR</th><td>46.3</td><td>63.5</td><td>48.2</td><td>43.8</td><td>48.4</td><td>19.6</td><td>46.4</td><td>45.2</td></tr>
+          <tr><th scope="row">Skill-SD</th><td>47.1</td><td>64.5</td><td>44.2</td><td>47.8</td><td>42.1</td><td>20.2</td><td>38.4</td><td>43.5</td></tr>
+          <tr><th scope="row">PiCA</th><td>46.0</td><td>64.1</td><td>44.2</td><td>42.4</td><td>40.1</td><td>19.7</td><td>41.9</td><td>42.6</td></tr>
+          <tr><th scope="row">TIPS</th><td>43.4</td><td>64.3</td><td>44.5</td><td>43.0</td><td>43.0</td><td>17.1</td><td>36.8</td><td>41.7</td></tr>
           <tr><th scope="row">RLSD (answer)</th><td>46.7</td><td>64.2</td><td>45.5</td><td>41.8</td><td>42.9</td><td>16.6</td><td>32.0</td><td>41.4</td></tr>
-          <tr><th scope="row">EviSD</th><td>48.9</td><td>66.5</td><td>48.6</td><td>46.6</td><td>48.6</td><td>21.6</td><td>49.6</td><td>47.2</td></tr>
-          <tr class="ours"><th scope="row">ISA-Distill</th><td>50.3</td><td>67.1</td><td>48.8</td><td>47.1</td><td>49.9</td><td>22.4</td><td>50.4</td><td>48.0</td></tr>
+          <tr><th scope="row">Search-R1</th><td>42.9</td><td>62.3</td><td>42.7</td><td>38.6</td><td>34.6</td><td>16.2</td><td>40.0</td><td>39.6</td></tr>
+          <tr><th scope="row">AutoRefine</th><td>42.0</td><td>60.4</td><td>41.3</td><td>39.8</td><td>33.3</td><td>17.6</td><td>39.2</td><td>39.1</td></tr>
         </tbody>
       </table>
     </div>
-  </details>
-  <details class="bench-source">
-    <summary>Full 3B results</summary>
-    <div class="table-scroll" tabindex="0" role="region" aria-label="Full 3B results table">
-      <table data-model="3B">
-        <caption>Qwen2.5-3B-Instruct exact match (%). The average weights each benchmark equally.</caption>
+  </div>
+  <div class="bench-matrix">
+    <h4 id="bench-3b">Qwen2.5-3B-Instruct</h4>
+    <div class="table-scroll" tabindex="0" role="region" aria-labelledby="bench-3b">
+      <table data-model="3B" aria-labelledby="bench-3b">
         <thead><tr><th scope="col">Method</th><th scope="col">NQ</th><th scope="col">TriviaQA</th><th scope="col">PopQA</th><th scope="col">HotpotQA</th><th scope="col">2WikiMQA</th><th scope="col">MuSiQue</th><th scope="col">Bamboogle</th><th scope="col">Avg.</th></tr></thead>
         <tbody>
-          <tr><th scope="row">Search-R1</th><td>39.7</td><td>56.5</td><td>39.1</td><td>33.1</td><td>31.0</td><td>12.4</td><td>23.2</td><td>33.6</td></tr>
-          <tr><th scope="row">AutoRefine</th><td>43.6</td><td>59.7</td><td>44.7</td><td>40.4</td><td>38.0</td><td>16.9</td><td>33.6</td><td>39.6</td></tr>
-          <tr><th scope="row">TIPS</th><td>43.5</td><td>58.8</td><td>42.8</td><td>31.4</td><td>29.3</td><td>8.7</td><td>20.8</td><td>33.6</td></tr>
-          <tr><th scope="row">PiCA</th><td>42.6</td><td>61.2</td><td>41.7</td><td>40.0</td><td>40.8</td><td>16.0</td><td>34.7</td><td>39.6</td></tr>
-          <tr><th scope="row">GiGPO</th><td>42.0</td><td>59.5</td><td>42.4</td><td>36.9</td><td>37.0</td><td>12.6</td><td>28.8</td><td>37.0</td></tr>
-          <tr><th scope="row">SD-Search</th><td>46.9</td><td>62.4</td><td>46.5</td><td>42.4</td><td>41.9</td><td>18.4</td><td>40.4</td><td>42.7</td></tr>
-          <tr><th scope="row">Skill-SD</th><td>44.4</td><td>60.4</td><td>44.0</td><td>39.5</td><td>40.4</td><td>15.4</td><td>30.4</td><td>39.2</td></tr>
-          <tr><th scope="row">RLSD (skill)</th><td>41.5</td><td>58.6</td><td>42.3</td><td>40.4</td><td>40.2</td><td>16.8</td><td>34.4</td><td>39.2</td></tr>
-          <tr><th scope="row">SDAR</th><td>44.8</td><td>58.1</td><td>44.3</td><td>38.6</td><td>36.2</td><td>15.7</td><td>32.8</td><td>38.6</td></tr>
-          <tr><th scope="row">RLSD (answer)</th><td>44.8</td><td>61.8</td><td>47.5</td><td>40.1</td><td>41.3</td><td>14.6</td><td>28.8</td><td>39.8</td></tr>
-          <tr><th scope="row">EviSD</th><td>46.6</td><td>63.1</td><td>48.7</td><td>42.4</td><td>44.9</td><td>17.5</td><td>35.2</td><td>42.6</td></tr>
           <tr class="ours"><th scope="row">ISA-Distill</th><td>47.6</td><td>63.3</td><td>47.7</td><td>42.0</td><td>45.9</td><td>20.5</td><td>40.0</td><td>43.9</td></tr>
+          <tr><th scope="row">SD-Search</th><td>46.9</td><td>62.4</td><td>46.5</td><td>42.4</td><td>41.9</td><td>18.4</td><td>40.4</td><td>42.7</td></tr>
+          <tr><th scope="row">EviSD</th><td>46.6</td><td>63.1</td><td>48.7</td><td>42.4</td><td>44.9</td><td>17.5</td><td>35.2</td><td>42.6</td></tr>
+          <tr><th scope="row">RLSD (answer)</th><td>44.8</td><td>61.8</td><td>47.5</td><td>40.1</td><td>41.3</td><td>14.6</td><td>28.8</td><td>39.8</td></tr>
+          <tr><th scope="row">AutoRefine</th><td>43.6</td><td>59.7</td><td>44.7</td><td>40.4</td><td>38.0</td><td>16.9</td><td>33.6</td><td>39.6</td></tr>
+          <tr><th scope="row">PiCA</th><td>42.6</td><td>61.2</td><td>41.7</td><td>40.0</td><td>40.8</td><td>16.0</td><td>34.7</td><td>39.6</td></tr>
+          <tr><th scope="row">RLSD (skill)</th><td>41.5</td><td>58.6</td><td>42.3</td><td>40.4</td><td>40.2</td><td>16.8</td><td>34.4</td><td>39.2</td></tr>
+          <tr><th scope="row">Skill-SD</th><td>44.4</td><td>60.4</td><td>44.0</td><td>39.5</td><td>40.4</td><td>15.4</td><td>30.4</td><td>39.2</td></tr>
+          <tr><th scope="row">SDAR</th><td>44.8</td><td>58.1</td><td>44.3</td><td>38.6</td><td>36.2</td><td>15.7</td><td>32.8</td><td>38.6</td></tr>
+          <tr><th scope="row">GiGPO</th><td>42.0</td><td>59.5</td><td>42.4</td><td>36.9</td><td>37.0</td><td>12.6</td><td>28.8</td><td>37.0</td></tr>
+          <tr><th scope="row">Search-R1</th><td>39.7</td><td>56.5</td><td>39.1</td><td>33.1</td><td>31.0</td><td>12.4</td><td>23.2</td><td>33.6</td></tr>
+          <tr><th scope="row">TIPS</th><td>43.5</td><td>58.8</td><td>42.8</td><td>31.4</td><td>29.3</td><td>8.7</td><td>20.8</td><td>33.6</td></tr>
         </tbody>
       </table>
     </div>
-  </details>
+  </div>
 </section>
 <p class="source-line"><a href="https://arxiv.org/pdf/2611.01987v1#page=4">Table 1 · 7B results</a><a href="https://arxiv.org/pdf/2611.01987v1#page=5">Table 2 · 3B results</a></p>
     </div>
+    <nav class="experiment-nav" aria-label="Additional experiments">
+      <a href="#retrieval" id="tab-retrieval">Search calls</a>
+      <a href="#ablations" id="tab-ablations">Ablations &amp; diagnostics</a>
+      <a href="#training" id="tab-training">Training analysis</a>
+    </nav>
     <div id="retrieval" data-panel>
 <div class="efficiency-experiment">
   <h3>How does ISA-Distill allocate its searches?</h3>
@@ -358,66 +343,101 @@
   </figure>
 </div>
     </div>
-    <div id="case-study" data-panel>
-<div class="trace" id="trajectory-reader">
-  <div class="trace-heading">
-    <h3>One question, two search paths</h3>
-    <p>Two 7B agents tackle the same 2WikiMultiHopQA question. Follow the evidence each uses to reach its answer.</p>
+  </section>
+  <section class="tint section" id="case-study" aria-labelledby="trace-question">
+<div class="wrap">
+  <p class="kicker">Case study · 2WikiMultiHopQA eval_43819</p>
+  <h2 id="trace-question">Where did Brooklyn Sudano’s mother die?</h2>
+  <div class="trace-intro">
+    <p class="trace-instruction" hidden>Select a search or answer to inspect each model’s trajectory.</p>
+    <a href="https://arxiv.org/pdf/2611.01987v1#page=8">Figure 10 in the paper</a>
+    <a href="https://arxiv.org/pdf/2611.01987v1#page=12">Appendix B.5 · Case record</a>
   </div>
-  <div class="trace-toolbar" hidden>
-    <p class="trace-status" role="status" aria-live="polite" aria-atomic="true"></p>
-    <div class="trace-actions" role="group" aria-label="Trajectory playback">
-      <button type="button" data-trace-action="play">Replay</button>
-      <button type="button" data-trace-action="back">Previous</button>
-      <button type="button" data-trace-action="next">Next</button>
-      <button type="button" data-trace-action="complete">Show complete</button>
-    </div>
-  </div>
-  <div class="trace-board" aria-label="Two search trajectories">
-    <div class="trace-shared">
-      <div class="trace-prompt" data-trace-step="1">
-        <p class="trace-node-label">Question</p>
-        <p class="trace-question">Where did Brooklyn Sudano’s mother die?</p>
+  <div class="trace-comparison">
+    <article class="trace-lane trace-isa" aria-labelledby="lane-isa">
+      <header class="trace-lane-head">
+        <div><h3 id="lane-isa">ISA-Distill</h3><p>Qwen2.5-7B · 2 searches</p></div>
+        <span class="trace-outcome">Correct answer</span>
+      </header>
+      <div class="trace-path" role="tablist" aria-label="ISA-Distill trajectory nodes" hidden>
+        <button class="trace-node" type="button" role="tab" id="trajectory-isa-first-tab" aria-controls="trajectory-isa-first">
+          <span class="trace-node-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10" cy="10" r="6"/><path d="m14.5 14.5 5.5 5.5"/></svg></span>
+          <span class="trace-action">Search 1</span><span class="trace-label">Identify mother</span>
+        </button>
+        <button class="trace-node" type="button" role="tab" id="trajectory-isa-second-tab" aria-controls="trajectory-isa-second">
+          <span class="trace-node-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10" cy="10" r="6"/><path d="m14.5 14.5 5.5 5.5"/></svg></span>
+          <span class="trace-action">Search 2</span><span class="trace-label">Verify location</span>
+        </button>
+        <button class="trace-node" type="button" role="tab" id="trajectory-isa-answer-tab" aria-controls="trajectory-isa-answer">
+          <span class="trace-node-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 21V4m0 1c5-4 9 4 14 0v10c-5 4-9-4-14 0"/></svg></span>
+          <span class="trace-action">Answer</span><span class="trace-label">Naples, Florida</span>
+        </button>
       </div>
-      <div class="trace-evidence" data-trace-step="2">
-        <h4>First search · Shared evidence</h4>
-        <p>Both agents retrieve the same three documents in the same order. The passages identify <strong>Donna Summer</strong> as Sudano’s mother and place her funeral in <strong>Nashville</strong>. The passages do not state where she died.</p>
+      <div class="trace-details">
+        <div class="trace-detail" id="trajectory-isa-first">
+          <h4>Search 1 · Identify mother</h4>
+          <dl>
+            <dt>Retrieved evidence</dt><dd>Both agents receive the same three documents in the same order. The passages identify Donna Summer as Sudano’s mother and place her funeral in Nashville, Tennessee.</dd>
+            <dt>Missing fact</dt><dd>The documents give the funeral location. They do not give the place of death.</dd>
+            <dt>Next action</dt><dd>The agent searches for Donna Summer’s place of death.</dd>
+          </dl>
+        </div>
+        <div class="trace-detail" id="trajectory-isa-second">
+          <h4>Search 2 · Verify location</h4>
+          <dl>
+            <dt>Query</dt><dd>where did donna summer die</dd>
+            <dt>Retrieved evidence</dt><dd>The passage states that Summer died in Naples, Florida.</dd>
+            <dt>Next action</dt><dd>The agent answers using the retrieved location.</dd>
+          </dl>
+        </div>
+        <div class="trace-detail" id="trajectory-isa-answer">
+          <h4>Answer · Naples, Florida</h4>
+          <dl>
+            <dt>Final answer</dt><dd>Naples, Florida</dd>
+            <dt>Accepted answers</dt><dd>Naples or Naples, Florida</dd>
+            <dt>Searches</dt><dd>Two searches. The second establishes the place of death.</dd>
+          </dl>
+        </div>
       </div>
-    </div>
-    <div class="trace-fork" data-trace-step="3">
-      <section class="trace-lane trace-isa" aria-labelledby="trace-isa-title">
-        <h4 id="trace-isa-title">ISA-Distill <span>7B</span></h4>
-        <div class="trace-turn">
-          <h5>Search again</h5>
-          <p>The agent identifies the missing location and issues a targeted query.</p>
-          <p class="trace-query"><code>where did donna summer die</code></p>
-          <p>The new passage states that Summer died at her home in Naples, Florida.</p>
+    </article>
+    <article class="trace-lane trace-evisd" aria-labelledby="lane-evisd">
+      <header class="trace-lane-head">
+        <div><h3 id="lane-evisd">EviSD</h3><p>Qwen2.5-7B · 1 search</p></div>
+        <span class="trace-outcome">Incorrect answer</span>
+      </header>
+      <div class="trace-path" role="tablist" aria-label="EviSD trajectory nodes" hidden>
+        <button class="trace-node" type="button" role="tab" id="trajectory-evisd-first-tab" aria-controls="trajectory-evisd-first">
+          <span class="trace-node-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10" cy="10" r="6"/><path d="m14.5 14.5 5.5 5.5"/></svg></span>
+          <span class="trace-action">Search 1</span><span class="trace-label">Identify mother</span>
+        </button>
+        <button class="trace-node" type="button" role="tab" id="trajectory-evisd-answer-tab" aria-controls="trajectory-evisd-answer">
+          <span class="trace-node-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 21V4m0 1c5-4 9 4 14 0v10c-5 4-9-4-14 0"/></svg></span>
+          <span class="trace-action">Answer</span><span class="trace-label">Miami, Florida</span>
+        </button>
+      </div>
+      <div class="trace-details">
+        <div class="trace-detail" id="trajectory-evisd-first">
+          <h4>Search 1 · Identify mother</h4>
+          <dl>
+            <dt>Retrieved evidence</dt><dd>Both agents receive the same three documents in the same order. The passages identify Donna Summer as Sudano’s mother and place her funeral in Nashville, Tennessee.</dd>
+            <dt>Local conclusion</dt><dd>The agent claims that Summer died in a Miami hospital. The retrieved documents do not support that claim.</dd>
+            <dt>Next action</dt><dd>The agent stops searching and answers.</dd>
+          </dl>
         </div>
-        <div class="trace-answer" data-trace-step="4">
-          <h5>Final answer</h5>
-          <p class="trace-answer-text">Naples, Florida</p>
-          <p class="trace-outcome">Correct · 2 searches</p>
+        <div class="trace-detail" id="trajectory-evisd-answer">
+          <h4>Answer · Miami, Florida</h4>
+          <dl>
+            <dt>Final answer</dt><dd>Miami, Florida</dd>
+            <dt>Accepted answers</dt><dd>Naples or Naples, Florida</dd>
+            <dt>Searches</dt><dd>One search. The agent answers without retrieving evidence for the place of death.</dd>
+          </dl>
         </div>
-      </section>
-      <section class="trace-lane trace-evisd" aria-labelledby="trace-evisd-title">
-        <h4 id="trace-evisd-title">EviSD <span>7B</span></h4>
-        <div class="trace-turn">
-          <h5>Stop searching</h5>
-          <p>The agent concludes that Summer died in a Miami hospital. The retrieved documents provide no evidence for that claim.</p>
-        </div>
-        <div class="trace-answer" data-trace-step="4">
-          <h5>Final answer</h5>
-          <p class="trace-answer-text">Miami, Florida</p>
-          <p class="trace-outcome">Incorrect · 1 search</p>
-        </div>
-      </section>
-    </div>
+      </div>
+    </article>
   </div>
 </div>
-<p class="source-line"><a href="https://arxiv.org/pdf/2611.01987v1#page=8">Figure 10 · Paired trajectories</a><a href="https://arxiv.org/pdf/2611.01987v1#page=12">Appendix B.5 · Case record</a></p>
-    </div>
   </section>
-  <section class="tint section" id="citation" aria-labelledby="citation-title">
+  <section class="section" id="citation" aria-labelledby="citation-title">
     <div class="wrap">
       <div class="cite-head"><div><p class="kicker">Citation</p><h2 id="citation-title">Cite this work</h2></div><div class="cite-actions"><a class="textlink" href="assets/isa-distill.bib" download>Download .bib</a><button id="copy" class="button" type="button" hidden>Copy BibTeX</button></div></div>
       <pre tabindex="0"><code id="bib">@misc{sun2026sametrajectory,
