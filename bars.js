@@ -8,8 +8,7 @@ const reviews = [
       "atmosphere": 2.5,
       "environment": 4
     },
-    "note": "抖音刷到新店开业套餐，冲着 69 块就来了。这个价管四个人的酒，人均 17 块 2 毛 5，算法这次是真懂我。驻唱一晚上都在唱流行歌，我私心把当晚最佳投给孙燕姿的《天黑黑》。就那句“天黑黑 欲落雨”，谁懂啊。",
-    "noteLang": "zh-CN",
+    "note": "Douyin put me on to the grand-opening deal. Four of us drank for ¥69 total. ¥17.25 a head? Give the algorithm its flowers. The house singer ran through pop tunes all night. My pick was Stefanie Sun’s “Tian Hei Hei.” Dark skies, rain on the way. That line came home with me.",
     "photo": "assets/bars/gexuan-yexu.jpg",
     "photoAlt": "Drinks, playing cards and a decorative birdcage on the table at Gexuan Yexu",
     "photoWidth": 1706,
@@ -24,7 +23,7 @@ const reviews = [
       "atmosphere": 4,
       "environment": 2
     },
-    "note": "Halloween here understood the assignment: loads of cosplayers and a dance floor that was popping, though the small venue and so-so setting brought things back down to earth.",
+    "note": "Small room, big Halloween energy. Cosplayers packed the place and the dance floor went off. The spot itself was pretty mid, but give that crowd the aux any night.",
     "photo": "assets/bars/hutong.jpg",
     "photoAlt": "DJs at the Halloween event at Hutong",
     "photoWidth": 1201,
@@ -39,7 +38,7 @@ const reviews = [
       "atmosphere": 5,
       "environment": 4
     },
-    "note": "Pop hits, live performances, and RMB 888 for a table of eight (RMB 111 each)—then a guest singer hit us with “The Night I Miss You,” and my friends and I were absolutely living for it.",
+    "note": "We rolled eight deep. ¥888 for the table, ¥111 a head. We were vibing to the live pop set, then the guest singer hit “The Night I Miss You.” My whole crew lost it. That was our cut.",
     "photo": "assets/bars/xiang.jpg",
     "photoAlt": "A crowd and colorful stage lights at Xiang Live House",
     "photoWidth": 1280,
@@ -54,7 +53,7 @@ const reviews = [
       "atmosphere": 3,
       "environment": 3
     },
-    "note": "Super hyped and packed with people—I reckon the location is doing the heavy lifting; I'm usually there playing poker, but every time “Bad Girl” comes on, I get ridiculously hyped.",
+    "note": "This place stays packed. My money’s on the location. I usually pull up to play poker, but the second that beat kicks in on A$AP Ferg’s “Plain Jane”? Deal me out for a hand.",
     "photo": "assets/bars/meha.jpg",
     "photoAlt": "Playing cards on a table at Meha",
     "photoWidth": 810,
@@ -69,7 +68,7 @@ const reviews = [
       "atmosphere": 5,
       "environment": 2
     },
-    "note": "Came for Beijing's long-haired men's competition but dipped out very early, so this was more of a quick cameo than a proper deep dive.",
+    "note": "Beijing’s long-haired men’s competition got me through the door. I dipped so early my whole visit was basically a guest verse.",
     "photo": "assets/bars/birbox.jpg",
     "photoAlt": "An outdoor fire performance at birbox",
     "photoWidth": 1540,
