@@ -1,0 +1,409 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f7faf9">
+  <title>ReliSearch · Search When Needed, Proceed When Reliable</title>
+  <meta name="description" content="ReliSearch uses the reliability of intermediate conclusions to teach a language model when to search. Explore seven QA benchmarks, backbone comparisons, reward ablations, and a MuSiQue case study.">
+  <link rel="canonical" href="https://bitminhaosun.github.io/ReliSearch/">
+  <meta property="og:title" content="ReliSearch · Search When Needed, Proceed When Reliable">
+  <meta property="og:description" content="Metacognitive Reliability Supervision for Efficient Agentic Search. Minhao Sun, Zhijing Wu, and Xian-Ling Mao.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://bitminhaosun.github.io/ReliSearch/">
+  <meta property="og:image" content="https://bitminhaosun.github.io/ReliSearch/assets/relisearch-icon.png">
+  <meta name="citation_title" content="Search When Needed, Proceed When Reliable: Metacognitive Reliability Supervision for Efficient Agentic Search">
+  <meta name="citation_author" content="Sun, Minhao">
+  <meta name="citation_author" content="Wu, Zhijing">
+  <meta name="citation_author" content="Mao, Xian-Ling">
+  <meta name="citation_publication_date" content="2026/10/30">
+  <meta name="citation_arxiv_id" content="2610.41738">
+  <meta name="citation_pdf_url" content="https://arxiv.org/pdf/2610.41738">
+  <link rel="icon" href="assets/favicon.png">
+  <link rel="stylesheet" href="site.css">
+  <link rel="stylesheet" href="bench-explorer.css">
+  <link rel="stylesheet" href="experiment.css">
+  <link rel="stylesheet" href="case.css">
+  <script src="bench-explorer.js" defer></script>
+  <script src="experiment.js" defer></script>
+  <script src="case.js" defer></script>
+  <script src="site.js" defer></script>
+</head>
+<body id="top">
+  <a class="skip" href="#overview">Skip to overview</a>
+  <svg class="icons" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <symbol id="paper-icon" viewBox="0 0 24 24"><path d="M6 3h8l4 4v14H6zM14 3v5h4M9 12h6M9 16h6"/></symbol>
+    <symbol id="repo-icon" viewBox="0 0 24 24"><path d="m8 7-5 5 5 5m8-10 5 5-5 5m-3-13-2 16"/></symbol>
+    <symbol id="cite-icon" viewBox="0 0 24 24"><path d="M9 4H7c-2 0-2 2-2 4v1c0 2-1 3-3 3 2 0 3 1 3 3v1c0 2 0 4 2 4h2m6-16h2c2 0 2 2 2 4v1c0 2 1 3 3 3-2 0-3 1-3 3v1c0 2 0 4-2 4h-2"/></symbol>
+    <symbol id="zoom-icon" viewBox="0 0 24 24"><circle cx="10" cy="10" r="6.5"/><path d="m15 15 6 6m-14-11h6m-3-3v6"/></symbol>
+  </svg>
+
+  <header class="site-header">
+    <nav class="wrap nav" aria-label="Page navigation">
+      <a class="brand" href="#top"><img src="assets/blue-fish.webp" width="34" height="34" alt="">ReliSearch</a>
+      <div class="nav-links"><a href="#overview">Overview</a><a href="#method">Method</a><a href="#results">Experiments</a><a href="#case-study">Case study</a><a href="#citation">Citation</a></div>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero" aria-labelledby="paper-title">
+      <div class="hero-inner">
+        <div class="lockup"><a class="icon-download" href="assets/relisearch-icon.png" aria-label="Open the full-resolution ReliSearch blue fish icon"><img src="assets/blue-fish.webp" alt="" width="96" height="96"></a><div><p class="project-name">Reli<span>Search</span></p><a class="preprint" href="https://arxiv.org/abs/2610.41738">arXiv preprint · October 2026</a></div></div>
+        <h1 id="paper-title">Search When Needed,<br><em>Proceed When Reliable</em><span class="subtitle">Metacognitive Reliability Supervision for Efficient Agentic Search</span></h1>
+        <p class="authors"><a href="https://bitminhaosun.github.io/">Minhao Sun</a><span>Zhijing Wu<a class="author-symbol" href="mailto:zhijingwu@bit.edu.cn" aria-label="Email Zhijing Wu, corresponding author">*</a></span><span>Xian-Ling Mao</span></p>
+        <p class="affiliation">Beijing Institute of Technology <span aria-hidden="true">·</span> <span>Beijing, China</span></p>
+        <p class="correspondence">* Corresponding author</p>
+        <div class="resources">
+          <a class="button primary" href="https://arxiv.org/pdf/2610.41738"><svg aria-hidden="true"><use href="#paper-icon"/></svg>Read paper</a>
+          <a class="button" href="https://github.com/BITMinhaoSun/ReliSearch"><svg aria-hidden="true"><use href="#repo-icon"/></svg>GitHub</a>
+          <a class="button" href="#results">Explore experiments</a>
+        </div>
+      </div>
+    </section>
+
+    <div class="metrics">
+      <dl class="wrap stats">
+        <div><dt>Average CEM on 7 QA benchmarks</dt><dd>69.3<span>%</span></dd></div>
+        <div><dt>CEM gain over HiPRAG</dt><dd>+2.1 <span>pts</span></dd></div>
+        <div><dt>Search calls vs. HiPRAG, controlled 7B</dt><dd>−6.8<span>%</span></dd></div>
+      </dl>
+    </div>
+
+    <section id="overview" class="section">
+      <div class="wrap split">
+        <div class="text-column">
+          <p class="kicker">Overview</p>
+          <h2>When should an<br class="desktop-break"> agent search?</h2>
+          <p>A model can guess the right answer or look up a fact it already knows. In both cases, final-answer accuracy tells us little about whether the search decision was sound.</p>
+          <p>ReliSearch asks what the model could reliably conclude at each step, and how much a search improved that conclusion.</p>
+          <details><summary>Read the abstract</summary><p>Efficient agentic search requires large language models (LLMs) to determine whether they can reliably proceed with their current knowledge or need additional external evidence. Supervision based on final-answer correctness or trajectory-level feedback evaluates realized trajectory performance. However, observed trajectory performance is jointly shaped by stochastic generation, retrieval quality, and downstream reasoning. Such signals therefore provide only indirect evidence of how reliable the current decision state was and how retrieved evidence changed its reliability. An effective reward should encourage search when external information is needed and favor searches that contribute to the answer. To this end, we propose a metacognitive framework for training LLMs to make search decisions based on the reliability of their intermediate reasoning states. Our framework estimates the reliability of local conclusions to distinguish whether the current information supports proceeding without search from how much retrieved evidence improves that reliability. The current-state reliability score assesses whether the model can proceed without search. The search-action score measures how retrieved evidence changes estimated reliability. Together, these scores define a reliability-aware process reward for Group Relative Policy Optimization (GRPO), providing finer-grained supervision for search and no-search behavior. Experiments across seven question-answering benchmarks demonstrate that our method achieves a better accuracy-efficiency trade-off than strong agentic-search baselines. Our code and model checkpoints will be open-sourced.</p></details>
+        </div>
+        <figure>
+          <a class="figure-link" href="assets/decisions.webp" aria-label="Enlarge the search decision matrix"><img src="assets/decisions.webp" width="1700" height="1019" alt="A matrix pairs reliable states with proceeding, and unreliable states with searching. The opposite choices lead to over-search and under-search."><span class="zoom-indicator"><svg aria-hidden="true"><use href="#zoom-icon"/></svg></span></a>
+          <figcaption>The same search action can be helpful or redundant, depending on what the agent already knows.</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section id="method" class="section washed">
+      <div class="wrap">
+        <p class="kicker">Method</p>
+        <h2>Two scores for search decisions</h2>
+        <p class="lede">During training, local probes sample alternative conclusions at each reasoning step. A calibration curve maps their uncertainty to an estimate of local accuracy.</p>
+        <figure class="framework">
+          <a class="figure-link" href="assets/method.webp" aria-label="Enlarge the training and inference diagram"><img loading="lazy" width="2399" height="1084" src="assets/method.webp" alt="Agent rollout, training-only reliability supervision, and a GRPO policy update. At inference, the learned agent searches or proceeds directly."><span class="zoom-indicator"><svg aria-hidden="true"><use href="#zoom-icon"/></svg></span></a>
+          <figcaption>GRPO combines the mean step score with answer and format rewards. At inference, the learned policy runs without calibration or local probes.</figcaption>
+        </figure>
+        <div class="scores">
+          <article><h3>Proceed with current knowledge</h3><p>A no-search step earns a positive score when its estimated reliability exceeds the backbone’s fixed calibration reference.</p></article>
+          <article><h3>Search for additional evidence</h3><p>Two probes share the same reasoning and query. Their difference in reliability, with and without the returned passages, measures the value of the search.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section id="results" class="section">
+      <div class="wrap">
+        <p class="kicker">Experiments</p>
+        <h2>Accuracy and search efficiency</h2>
+        <p class="lede">With Qwen2.5-7B, ReliSearch improves on HiPRAG’s answer accuracy across all seven benchmarks. In the controlled evaluation, the policy averages 1.64 searches per question, compared with HiPRAG’s 1.76.</p>
+        <nav class="study-links" aria-label="Experiments"><a href="#benchmark-study">Benchmarks</a><a href="#model-studies">Model &amp; reward studies</a><a href="#decision-analysis">Search behavior</a><a href="#case-study">MuSiQue case</a></nav>
+        <div id="benchmark-study"><section id="benchmark-explorer" class="bench-explorer" aria-labelledby="bench-title" hidden>
+  <div class="bench-head">
+    <div>
+      <h3 id="bench-title">Explore the seven benchmarks</h3>
+      <p>Compare ReliSearch with HiPRAG on Qwen2.5-7B. Select a dataset to inspect its reported scores.</p>
+    </div>
+    <label class="bench-metric" for="bench-metric">Chart metric
+      <select id="bench-metric">
+        <option value="calls">Change in search calls (%)</option>
+        <option value="accuracy">Accuracy gain (CEM points)</option>
+      </select>
+    </label>
+  </div>
+  <div class="bench-body">
+    <fieldset class="bench-chart">
+      <legend class="visually-hidden">Choose a benchmark</legend>
+      <div class="bench-groups"></div>
+      <p class="bench-axis-note"></p>
+    </fieldset>
+    <div class="bench-inspector" role="region" aria-label="Selected benchmark results" aria-live="polite" aria-atomic="true">
+      <p class="bench-task"></p>
+      <h4 class="bench-name"></h4>
+      <table class="bench-values" aria-label="Reported results for the selected benchmark">
+        <thead><tr><th scope="col">Method</th><th scope="col">CEM (%)</th><th scope="col">Calls / question</th></tr></thead>
+        <tbody>
+          <tr class="bench-ours"><th scope="row">ReliSearch</th><td></td><td></td></tr>
+          <tr class="bench-reference"><th scope="row">HiPRAG</th><td></td><td></td></tr>
+        </tbody>
+      </table>
+      <dl class="bench-deltas">
+        <div><dt>CEM gain</dt><dd></dd></div>
+        <div><dt>Search-call change</dt><dd></dd></div>
+      </dl>
+    </div>
+  </div>
+  <p class="bench-source">CEM values come from the main comparison. Search counts come from the controlled evaluation. <a href="https://arxiv.org/pdf/2610.41738#page=5">Tables 1–2 and Figure 4</a></p>
+</section></div>
+        <details class="full-tables" id="full-results"><summary>Full benchmark tables</summary>
+        <div class="switch" role="group" aria-label="Select results metric" hidden><button type="button" aria-controls="accuracy-panel" aria-pressed="true">Answer accuracy</button><button type="button" aria-controls="calls-panel" aria-pressed="false">Search calls</button></div>
+        <figure class="table-panel" id="accuracy-panel">
+  <div class="table-scroll" tabindex="0" role="region" aria-label="Answer accuracy (CEM, %)">
+    <table aria-label="Answer accuracy (CEM, %)" aria-describedby="accuracy-caption">
+    <thead>
+      <tr><th scope="col">Method</th><th scope="col">Overall</th><th scope="col">NQ</th><th scope="col">TriviaQA</th><th scope="col">PopQA</th><th scope="col">HotpotQA</th><th scope="col">2Wiki</th><th scope="col">MuSiQue</th><th scope="col">Bamboogle</th></tr>
+    </thead>
+    <tbody>
+      <tr><th scope="row">Direct Inference</th><td>31.5</td><td>27.0</td><td>26.8</td><td>40.1</td><td>58.7</td><td>16.0</td><td>7.9</td><td>15.9</td></tr>
+      <tr><th scope="row">Standard RAG</th><td>48.0</td><td>51.2</td><td>54.7</td><td>65.7</td><td>56.9</td><td>21.6</td><td>18.5</td><td>18.6</td></tr>
+      <tr><th scope="row">IRCoT</th><td>39.0</td><td>27.5</td><td>36.0</td><td>42.5</td><td>51.4</td><td>37.6</td><td>19.4</td><td>20.6</td></tr>
+      <tr><th scope="row">Search-o1</th><td>48.1</td><td>40.2</td><td>42.2</td><td>58.5</td><td>56.1</td><td>45.6</td><td>15.1</td><td>19.3</td></tr>
+      <tr><th scope="row">R1-Searcher</th><td>61.2</td><td>60.0</td><td>73.0</td><td>58.2</td><td>60.4</td><td>60.3</td><td>32.9</td><td>55.8</td></tr>
+      <tr><th scope="row">R1-Searcher++</th><td>62.8</td><td>61.0</td><td>73.5</td><td>59.0</td><td>64.2</td><td>63.2</td><td>32.3</td><td>58.7</td></tr>
+      <tr><th scope="row">Search-R1</th><td>60.4</td><td>61.2</td><td>73.6</td><td>56.5</td><td>54.0</td><td>63.6</td><td>24.8</td><td>48.4</td></tr>
+      <tr><th scope="row">β-GRPO</th><td>62.4</td><td>65.0</td><td>75.0</td><td>60.0</td><td>53.0</td><td>66.0</td><td>24.0</td><td>52.0</td></tr>
+      <tr><th scope="row">HiPRAG</th><td>67.2</td><td>71.2</td><td>76.3</td><td>63.2</td><td>62.4</td><td>71.7</td><td>34.1</td><td>52.8</td></tr>
+      <tr class="ours"><th scope="row">ReliSearch</th><td>69.3</td><td>74.3</td><td>77.7</td><td>66.8</td><td>66.1</td><td>71.8</td><td>35.2</td><td>58.4</td></tr>
+    </tbody>
+    </table>
+  </div>
+  <figcaption id="accuracy-caption"><strong>Answer accuracy (CEM, %).</strong> The main comparison uses the Qwen2.5-7B backbone and reports results on seven QA benchmarks. Cover Exact Match counts an answer as correct when it contains the reference answer. Higher scores indicate better accuracy. Overall scores are weighted by evaluation sample counts. <a href="https://arxiv.org/pdf/2610.41738#page=5">Table 1</a></figcaption>
+</figure>
+
+<figure class="table-panel" id="calls-panel">
+  <div class="table-scroll" tabindex="0" role="region" aria-label="Mean search calls per question">
+    <table aria-label="Mean search calls per question" aria-describedby="calls-caption">
+    <thead>
+      <tr><th scope="col">Method</th><th scope="col">Overall</th><th scope="col">NQ</th><th scope="col">TriviaQA</th><th scope="col">PopQA</th><th scope="col">HotpotQA</th><th scope="col">2Wiki</th><th scope="col">MuSiQue</th><th scope="col">Bamboogle</th></tr>
+    </thead>
+    <tbody>
+      <tr><th scope="row">Direct Inference</th><td>0.00</td><td>0.00</td><td>0.00</td><td>0.00</td><td>0.00</td><td>0.00</td><td>0.00</td><td>0.00</td></tr>
+      <tr><th scope="row">Standard RAG</th><td>1.00</td><td>1.00</td><td>1.00</td><td>1.00</td><td>1.00</td><td>1.00</td><td>1.00</td><td>1.00</td></tr>
+      <tr><th scope="row">IRCoT</th><td>1.58</td><td>1.41</td><td>1.30</td><td>1.25</td><td>1.70</td><td>2.06</td><td>2.18</td><td>1.70</td></tr>
+      <tr><th scope="row">Search-o1</th><td>1.16</td><td>1.08</td><td>1.08</td><td>1.04</td><td>1.26</td><td>1.27</td><td>1.44</td><td>1.38</td></tr>
+      <tr><th scope="row">Search-R1</th><td>1.53</td><td>1.27</td><td>1.30</td><td>1.31</td><td>1.67</td><td>1.89</td><td>2.05</td><td>1.66</td></tr>
+      <tr><th scope="row">R1-Searcher</th><td>1.41</td><td>1.19</td><td>1.20</td><td>1.21</td><td>1.53</td><td>1.75</td><td>1.80</td><td>1.49</td></tr>
+      <tr><th scope="row">Search Wisely</th><td>1.83</td><td>1.36</td><td>1.55</td><td>1.65</td><td>1.94</td><td>2.26</td><td>2.36</td><td>2.02</td></tr>
+      <tr><th scope="row">HiPRAG</th><td>1.76</td><td>1.31</td><td>1.49</td><td>1.57</td><td>1.88</td><td>2.18</td><td>2.27</td><td>1.90</td></tr>
+      <tr class="ours"><th scope="row">ReliSearch</th><td>1.64</td><td>1.09</td><td>1.20</td><td>1.21</td><td>1.91</td><td>2.38</td><td>2.43</td><td>1.94</td></tr>
+    </tbody>
+    </table>
+  </div>
+  <figcaption id="calls-caption"><strong>Mean search calls per question.</strong> Search counts come from the controlled evaluation under shared retrieval and decoding settings. Overall means are weighted across 51,713 questions. <a href="https://arxiv.org/pdf/2610.41738#page=12">Table 8</a></figcaption>
+</figure>
+        </details>
+      </div>
+    </section>
+
+    <section id="model-studies" class="section washed" aria-labelledby="study-heading">
+  <div class="wrap">
+    <h2 id="study-heading">Model and training studies</h2>
+    <div class="study-tabs" role="tablist" aria-label="Model and training studies" hidden>
+      <button type="button" role="tab" id="tab-backbones" aria-controls="study-backbones">Backbones</button>
+      <button type="button" role="tab" id="tab-ablation" aria-controls="study-ablation">Reward ablation</button>
+      <button type="button" role="tab" id="tab-weight" aria-controls="study-weight">Reward weight</button>
+      <button type="button" role="tab" id="tab-cost" aria-controls="study-cost">Training cost</button>
+    </div>
+
+    <article id="study-backbones" class="study-panel">
+      <div class="study-intro">
+        <h3>Does the gain transfer across backbones?</h3>
+        <p>ReliSearch improves average CEM over HiPRAG on all three backbones. Each backbone uses its own mapping from uncertainty to reliability.</p>
+        <a href="https://arxiv.org/pdf/2610.41738#page=6">Table 3 in the paper</a>
+      </div>
+      <div class="study-data table-scroll" tabindex="0" role="region" aria-label="Backbone accuracy comparisons">
+        <table aria-label="Average Cover Exact Match in percent and gain in percentage points">
+          <thead><tr><th scope="col">Backbone</th><th scope="col">HiPRAG<br>CEM (%)</th><th scope="col">ReliSearch<br>CEM (%)</th><th scope="col">Gain<br>(points)</th></tr></thead>
+          <tbody>
+            <tr><th scope="row">Qwen2.5-3B</th><td>64.4</td><td>65.9</td><td class="study-gain">+1.5</td></tr>
+            <tr><th scope="row">Qwen2.5-7B</th><td>67.2</td><td>69.3</td><td class="study-gain">+2.1</td></tr>
+            <tr><th scope="row">Llama-3.2-3B</th><td>64.8</td><td>66.1</td><td class="study-gain">+1.3</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </article>
+
+    <article id="study-ablation" class="study-panel">
+      <div class="study-intro">
+        <h3>What does each reward component contribute?</h3>
+        <p>Scoring both actions gives the highest CEM. With both scores active, replacing the empirical mapping with raw confidence lowers CEM by 4.0 points.</p>
+        <a href="https://arxiv.org/pdf/2610.41738#page=6">Table 4 in the paper</a>
+      </div>
+      <div class="study-data table-scroll" tabindex="0" role="region" aria-label="Reward ablation results">
+        <table aria-label="Reward ablation configurations and Cover Exact Match">
+          <thead><tr><th scope="col">Variant</th><th scope="col">Reliability scale</th><th scope="col">CEM (%)</th></tr></thead>
+          <tbody>
+            <tr><th scope="row">Base (answer and format)</th><td>—</td><td>61.2</td></tr>
+            <tr><th scope="row">Current-state score only</th><td>Empirical mapping</td><td>63.4</td></tr>
+            <tr><th scope="row">Search-action score only</th><td>Empirical mapping</td><td>62.3</td></tr>
+            <tr><th scope="row">Both scores, raw confidence</th><td>exp(−U)</td><td>61.9</td></tr>
+            <tr class="ours"><th scope="row">Full (both scores)</th><td>Empirical mapping</td><td>65.9</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </article>
+
+    <article id="study-weight" class="study-panel">
+      <div class="study-intro">
+        <h3>How much weight should the process reward receive?</h3>
+        <p>The Qwen2.5-3B-Instruct study varies the process-reward weight while keeping the answer and format rewards fixed. The default weight of 0.2 achieves the highest CEM of the tested settings.</p>
+        <a href="https://arxiv.org/pdf/2610.41738#page=7">Table 5 in the paper</a>
+      </div>
+      <fieldset class="weight-study">
+        <legend>Process-reward weight <i>λ</i><sub>p</sub></legend>
+        <div class="study-weights">
+          <label><input type="radio" name="process-weight" value="0" data-note="With zero process-reward weight, CEM is 61.2%."/><span>0</span><strong>61.2%</strong></label>
+          <label><input type="radio" name="process-weight" value="0.1" data-note="At a weight of 0.1, CEM is 2.6 points above the zero-weight baseline."/><span>0.1</span><strong>63.8%</strong></label>
+          <label><input type="radio" name="process-weight" value="0.2" data-note="At the default weight of 0.2, CEM reaches 65.9%, up from 61.2% at zero weight." checked/><span>0.2</span><strong>65.9%</strong></label>
+          <label><input type="radio" name="process-weight" value="0.4" data-note="At a weight of 0.4, CEM is 1.4 points below the default and 3.3 points above the zero-weight baseline."/><span>0.4</span><strong>64.5%</strong></label>
+        </div>
+        <p class="study-weight-caption">CEM (%) for each tested weight</p>
+        <output class="study-weight-reading" aria-live="polite" hidden></output>
+      </fieldset>
+    </article>
+
+    <article id="study-cost" class="study-panel">
+      <div class="study-intro">
+        <h3>Where does training time go?</h3>
+        <p>Mean time per optimization step increases by 14.6% over the HiPRAG reimplementation. Local probes take longer to score, while rollout generation and other operations take less time.</p>
+        <a href="https://arxiv.org/pdf/2610.41738#page=7">Figure 8 in the paper</a>
+      </div>
+      <div class="study-data table-scroll" tabindex="0" role="region" aria-label="Time per optimization step">
+        <table aria-label="Mean time in seconds per optimization step">
+          <thead><tr><th scope="col">Training phase</th><th scope="col">HiPRAG (s)</th><th scope="col">ReliSearch (s)</th><th scope="col">Change (s)</th></tr></thead>
+          <tbody>
+            <tr><th scope="row">Rollout generation</th><td>501.62</td><td>427.58</td><td>−74.04</td></tr>
+            <tr><th scope="row">Reward scoring</th><td>46.18</td><td>334.28</td><td>+288.10</td></tr>
+            <tr><th scope="row">Other operations</th><td>618.43</td><td>574.20</td><td>−44.23</td></tr>
+            <tr class="ours"><th scope="row">Total step time</th><td>1,166.23</td><td>1,336.06</td><td>+169.83</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </article>
+  </div>
+</section>
+    <section id="decision-analysis" class="section">
+      <div class="wrap">
+        <p class="kicker">Decision-level analysis</p>
+        <h2>How search changes with uncertainty</h2>
+        <div class="analysis-grid">
+          <figure>
+            <h3>Calibrating local reliability</h3>
+            <a class="figure-link" href="assets/calibration.webp" aria-label="Enlarge the Qwen2.5-7B calibration plot"><img src="assets/calibration.webp" width="1300" height="903" loading="lazy" alt="A scatter plot and fitted curve show that local-conclusion accuracy generally falls as mean uncertainty increases."><span class="zoom-indicator"><svg aria-hidden="true"><use href="#zoom-icon"/></svg></span></a>
+            <figcaption>Qwen2.5-7B samples 32 local conclusions for each of 50,000 calibration states. The curve relates mean conclusion uncertainty to local accuracy. <a href="https://arxiv.org/pdf/2610.41738#page=3">Figure 2</a></figcaption>
+          </figure>
+          <figure>
+            <h3>Which states trigger a search?</h3>
+            <a class="figure-link" href="assets/behavior.webp" aria-label="Enlarge the step-level search behavior plots"><img src="assets/behavior.webp" width="1300" height="795" loading="lazy" alt="ReliSearch and HiPRAG search proportions and evidence-induced reliability changes, plotted against uncertainty without the current evidence."><span class="zoom-indicator"><svg aria-hidden="true"><use href="#zoom-icon"/></svg></span></a>
+            <figcaption>At low no-evidence uncertainty, ReliSearch searches less often than HiPRAG. Both policies search frequently at high uncertainty, where ReliSearch’s selected searches show larger estimated reliability gains. <a href="https://arxiv.org/pdf/2610.41738#page=7">Figure 6</a></figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+    <section class="section washed" id="case-study" aria-labelledby="trace-question">
+      <svg class="icons" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <symbol id="trace-search-icon" viewBox="0 0 24 24"><circle cx="10" cy="10" r="6"/><path d="m14.5 14.5 5.5 5.5"/></symbol>
+        <symbol id="trace-finish-icon" viewBox="0 0 24 24"><path d="M5 21V4m0 1c5-4 9 4 14 0v10c-5 4-9-4-14 0"/></symbol>
+      </svg>
+      <div class="wrap">
+        <p class="kicker">Case study · MuSiQue dev_98</p>
+        <h2 id="trace-question">Who is the father of the performer of <em>Je dis aime</em>?</h2>
+        <div class="trace-intro"><p class="trace-instruction" hidden>Select a search or answer to inspect each model’s trajectory.</p><a href="https://arxiv.org/pdf/2610.41738#page=8">Figure 9 in the paper</a></div>
+        <div class="trace-comparison">
+        <article class="trace-lane trace-reli" aria-labelledby="lane-reli">
+          <header class="trace-lane-head"><div><h3 id="lane-reli">ReliSearch</h3><p>2 searches</p></div><span class="trace-outcome">Correct answer</span></header>
+          <div class="trace-path" role="tablist" aria-label="ReliSearch trajectory nodes" hidden>
+              <button class="trace-node" type="button" role="tab" id="trajectory-reli-find-tab" aria-controls="trajectory-reli-find">
+                <span class="trace-node-icon"><svg aria-hidden="true"><use href="#trace-search-icon"/></svg></span>
+                <span class="trace-action">Search 1</span><span class="trace-label">Identify performer</span>
+              </button>
+              <button class="trace-node" type="button" role="tab" id="trajectory-reli-verify-tab" aria-controls="trajectory-reli-verify">
+                <span class="trace-node-icon"><svg aria-hidden="true"><use href="#trace-search-icon"/></svg></span>
+                <span class="trace-action">Search 2</span><span class="trace-label">Verify father</span>
+              </button>
+              <button class="trace-node" type="button" role="tab" id="trajectory-reli-answer-tab" aria-controls="trajectory-reli-answer">
+                <span class="trace-node-icon"><svg aria-hidden="true"><use href="#trace-finish-icon"/></svg></span>
+                <span class="trace-action">Answer</span><span class="trace-label">Louis Chedid</span>
+              </button>
+          </div>
+          <div class="trace-details">
+            <div class="trace-detail" id="trajectory-reli-find">
+              <h4>Search 1 · Identify performer</h4>
+              <dl>
+                <dt>Query</dt><dd>performer of Je dis aime</dd>
+                <dt>Retrieved evidence</dt><dd>Je dis aime (1999) is the second studio album by French singer-songwriter Matthieu Chedid, in his persona as -M-.</dd>
+                <dt>Local conclusion</dt><dd>The performer is French singer-songwriter Matthieu Chedid, in his persona as -M-.</dd>
+              </dl>
+            </div>
+            <div class="trace-detail" id="trajectory-reli-verify">
+              <h4>Search 2 · Verify father</h4>
+              <dl>
+                <dt>Query</dt><dd>father of French singer-songwriter Matthieu Chedid</dd>
+                <dt>Retrieved evidence</dt><dd>Matthieu Chedid is the son of French singer Louis Chedid. Louis Chedid is the father of Matthieu Chedid, better known as -M-.</dd>
+                <dt>Local conclusion</dt><dd>The father of Matthieu Chedid is Louis Chedid.</dd>
+              </dl>
+            </div>
+            <div class="trace-detail" id="trajectory-reli-answer">
+              <h4>Answer · Louis Chedid</h4>
+              <dl>
+                <dt>Final answer</dt><dd>French singer Louis Chedid</dd>
+                <dt>Gold answer</dt><dd>Louis Chedid</dd>
+              </dl>
+            </div>
+          </div>
+        </article>
+        <article class="trace-lane trace-hip" aria-labelledby="lane-hip">
+          <header class="trace-lane-head"><div><h3 id="lane-hip">HiPRAG</h3><p>1 search</p></div><span class="trace-outcome">Incorrect answer</span></header>
+          <div class="trace-path" role="tablist" aria-label="HiPRAG trajectory nodes" hidden>
+              <button class="trace-node" type="button" role="tab" id="trajectory-hip-find-tab" aria-controls="trajectory-hip-find">
+                <span class="trace-node-icon"><svg aria-hidden="true"><use href="#trace-search-icon"/></svg></span>
+                <span class="trace-action">Search 1</span><span class="trace-label">Compound query</span>
+              </button>
+              <button class="trace-node" type="button" role="tab" id="trajectory-hip-answer-tab" aria-controls="trajectory-hip-answer">
+                <span class="trace-node-icon"><svg aria-hidden="true"><use href="#trace-finish-icon"/></svg></span>
+                <span class="trace-action">Answer</span><span class="trace-label">Jacques Dutronc</span>
+              </button>
+          </div>
+          <div class="trace-details">
+            <div class="trace-detail" id="trajectory-hip-find">
+              <h4>Search 1 · Compound query</h4>
+              <dl>
+                <dt>Query</dt><dd>Who is the performer of Je dis aime and who is their father</dd>
+                <dt>First-hop evidence</dt><dd>Je dis aime is the second studio album by French singer-songwriter Matthieu Chedid, in his persona as -M-.</dd>
+                <dt>Distractor evidence</dt><dd>Thomas Dutronc's father is Jacques Dutronc.</dd>
+                <dt>Local conclusion</dt><dd>The performer of Je dis aime is Matthieu Chedid, also known as -M-. Matthieu Chedid's father is Jacques Dutronc.</dd>
+              </dl>
+            </div>
+            <div class="trace-detail" id="trajectory-hip-answer">
+              <h4>Answer · Jacques Dutronc</h4>
+              <dl>
+                <dt>Final answer</dt><dd>Matthieu Chedid, who is also known as -M-, is the performer of Je dis aime. His father is Jacques Dutronc, a singer, songwriter, guitarist, and film actor.</dd>
+                <dt>Gold answer</dt><dd>Louis Chedid</dd>
+              </dl>
+            </div>
+          </div>
+        </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="citation" class="section">
+      <div class="wrap">
+        <div class="cite-head"><h2>Citation</h2><div><a class="small-button" href="citation.bib" download>Download .bib</a><button class="small-button" type="button" id="copy" hidden>Copy BibTeX</button></div></div>
+        <pre><code id="bib">@misc{sun2026searchwhenneeded,
+  title = {Search When Needed, Proceed When Reliable: Metacognitive Reliability Supervision for Efficient Agentic Search},
+  author = {Minhao Sun and Zhijing Wu and Xian-Ling Mao},
+  year = {2026},
+  eprint = {2610.41738},
+  archivePrefix = {arXiv},
+  primaryClass = {cs.IR},
+  doi = {10.48550/arXiv.2610.41738},
+  url = {https://arxiv.org/abs/2610.41738}
+}</code></pre>
+        <p class="visually-hidden" role="status" id="copy-status"></p>
+      </div>
+    </section>
+  </main>
+  <footer><div class="wrap"><span>ReliSearch · Beijing Institute of Technology</span><a href="#top">Back to top</a></div></footer>
+  <dialog id="lightbox" aria-label="Enlarged paper figure"><button class="close-dialog" type="button" aria-label="Close enlarged figure">Close ×</button><img alt=""></dialog>
+</body>
+</html>
