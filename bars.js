@@ -1,6 +1,22 @@
 // Only Minhao's own reviews; every dimension is scored out of 5.
 const reviews = [
   {
+    "name": "隔喧夜叙",
+    "scores": {
+      "price": 5,
+      "quality": 3,
+      "atmosphere": 2.5,
+      "environment": 4
+    },
+    "note": "抖音刷到新店开业套餐，冲着 69 块就来了。这个价管四个人的酒，人均 17 块 2 毛 5，算法这次是真懂我。驻唱一晚上都在唱流行歌，我私心把当晚最佳投给孙燕姿的《天黑黑》。就那句“天黑黑 欲落雨”，谁懂啊。",
+    "noteLang": "zh-CN",
+    "photo": "assets/bars/gexuan-yexu.jpg",
+    "photoAlt": "Drinks, playing cards and a decorative birdcage on the table at Gexuan Yexu",
+    "photoWidth": 1706,
+    "photoHeight": 1279,
+    "photoPosition": "50% 55%"
+  },
+  {
     "name": "虎童",
     "scores": {
       "price": 3,
@@ -141,7 +157,11 @@ function reviewRow(review) {
   title.lang = /[\u4e00-\u9fff]/.test(review.name) ? 'zh-CN' : 'en';
   heading.append(byline, title);
   content.append(heading);
-  if (review.note) content.append(element('p', 'review-note', review.note));
+  if (review.note) {
+    const note = element('p', 'review-note', review.note);
+    if (review.noteLang) note.lang = review.noteLang;
+    content.append(note);
+  }
   content.append(scoreList(review.scores));
   body.append(content);
   if (review.photo) body.append(photoLink(review));
