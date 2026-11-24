@@ -1,0 +1,48 @@
+.trace [hidden] { display: none !important; }
+.trace-heading p { max-width: 76ch; }
+.trace-toolbar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .5rem 1rem; padding: .85rem 0; margin-top: .7rem; }
+.trace-status { color: var(--text); font-size: .93rem; font-weight: 650; }
+.trace-actions { display: flex; flex-wrap: wrap; align-items: center; gap: .35rem; }
+.trace-actions button { min-height: 2.3rem; border-radius: .5rem; padding: .32rem .66rem; border: 1px solid #b8ccc5; background: white; color: var(--teal); font-size: .87rem; font-weight: 600; }
+.trace-actions [data-trace-action="play"] { color: white; background: var(--teal); border-color: var(--teal); min-width: 4.15rem; }
+.trace-actions button:hover:enabled { border-color: var(--ink); }
+.trace-actions button:disabled { color: #6a7976; background: #f3f5f4; border-color: #e3e9e6; cursor: default; }
+.trace-board { --wire: #8ca89e; --segment: 1.25rem; --fork-gap: clamp(.8rem, 3.5vw, 2.5rem); padding: clamp(.85rem, 3vw, 1.8rem); margin-top: .55rem; border: 1px solid var(--line); border-radius: 1rem; background: #f4f8f6; }
+.trace-board h4, .trace-board h5 { margin: 0; color: var(--ink); }
+.trace-shared { width: min(100%, 43rem); margin-inline: auto; }
+.trace-prompt, .trace-evidence, .trace-turn, .trace-answer { position: relative; padding: .85rem 1.05rem; background: white; border: 1px solid var(--line); border-radius: .65rem; }
+.trace-prompt { text-align: center; border-color: #b5cdc0; }
+.trace-node-label, .trace-board h5 { color: var(--muted); font-size: .85rem; letter-spacing: .018em; font-weight: 650; }
+.trace-question { color: var(--ink); font: 500 clamp(1.35rem, 3vw, 1.8rem)/1.25 var(--serif); margin-top: .28rem; }
+.trace-evidence { margin-top: var(--segment); }
+.trace-evidence h4 { font-size: 1.03rem; margin-bottom: .35rem; }
+.trace-board p:not(.trace-question, .trace-answer-text) { line-height: 1.48; }
+.trace-fork { position: relative; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--fork-gap); padding-top: calc(2 * var(--segment)); }
+.trace-fork::before, .trace-lane::before, .trace-evidence::before, .trace-turn::before, .trace-answer::before { content: ""; position: absolute; height: var(--segment); border-left: 1.5px solid var(--wire); left: 50%; top: calc(-1 * var(--segment)); }
+.trace-fork::before { top: 0; }
+.trace-fork::after { content: ""; position: absolute; top: var(--segment); left: calc(25% - var(--fork-gap) / 4); right: calc(25% - var(--fork-gap) / 4); border-top: 1.5px solid var(--wire); }
+.trace-lane { position: relative; min-width: 0; display: flex; flex-direction: column; gap: var(--segment); }
+.trace-lane h4 { align-self: center; padding: .3rem .8rem; font-size: 1rem; background: #dceedf; color: #204d3f; border-radius: 2rem; }
+.trace-lane h4 span { font-size: .82em; font-weight: 500; }
+.trace-evisd h4 { background: #e5eaf0; color: #43566c; }
+.trace-turn { flex: 1; }
+.trace-turn h5, .trace-answer h5 { margin-bottom: .35rem; }
+.trace-turn p + p { margin-top: .5rem; }
+.trace-query code { display: inline-block; padding: .24rem .45rem; border-radius: .28rem; background: #eaf3ed; color: #215849; overflow-wrap: anywhere; font-size: .9rem; }
+.trace-answer { background: #edf6ef; border-color: #bbd7c8; }
+.trace-evisd .trace-answer { background: #f5f1ee; border-color: #dbd0c8; }
+.trace-answer-text { color: var(--ink); font: 500 1.6rem/1.25 var(--serif); }
+.trace-outcome { margin-top: .23rem; color: #315745; font-weight: 650; font-size: .9rem; }
+.trace-evisd .trace-outcome { color: #774c3f; }
+@media (max-width: 575px) {
+  .trace-board { --segment: .9rem; }
+  .trace-fork { grid-template-columns: minmax(0, 1fr); gap: 1.15rem; padding-top: 1rem; }
+  .trace-fork::before { left: 0; width: 50%; height: .55rem; border: 0; border-right: 1.5px solid var(--wire); border-bottom: 1.5px solid var(--wire); }
+  .trace-fork::after { display: none; }
+  .trace-lane { padding-left: 1.05rem; }
+  .trace-lane::before { left: 0; top: -.45rem; bottom: -2.15rem; height: auto; }
+  .trace-lane:last-child::before { top: -1.15rem; height: 2.15rem; bottom: auto; }
+  .trace-lane h4 { align-self: flex-start; position: relative; }
+  .trace-lane h4::before { content: ""; position: absolute; top: 50%; left: -1.05rem; width: 1.05rem; border-top: 1.5px solid var(--wire); }
+  .trace-turn::before { left: 2rem; }
+}

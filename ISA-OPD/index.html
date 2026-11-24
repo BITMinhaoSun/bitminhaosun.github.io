@@ -18,22 +18,30 @@
   <meta name="citation_author" content="Wu, Zhijing">
   <meta name="citation_publication_date" content="2026/11/01">
   <meta name="citation_pdf_url" content="https://arxiv.org/pdf/2611.01987">
-  <link rel="icon" type="image/svg+xml" href="assets/mark.svg">
+  <link rel="icon" type="image/png" sizes="64x64" href="assets/favicon.png">
   <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="experiments.css">
+  <link rel="stylesheet" href="trajectory.css">
   <script src="site.js" defer></script>
+  <script src="benchmarks.js" defer></script>
+  <script src="search-efficiency.js" defer></script>
+  <script src="ablations.js" defer></script>
+  <script src="experiments.js" defer></script>
+  <script src="trajectory.js" defer></script>
 </head>
 <body id="top">
 <a class="skip" href="#main">Skip to content</a>
 <header class="mast">
   <nav class="wrap" aria-label="Main navigation">
-    <a class="brand" href="#top"><img src="assets/mark.svg" width="35" height="35" alt="">ISA-Distill</a>
+    <a class="brand" href="#top"><img src="assets/isa-fish.png" width="46" height="32" alt="">ISA-Distill</a>
     <div class="navlinks"><a href="#overview">Overview</a><a href="#method">Method</a><a href="#results">Results</a><a href="#citation">Citation</a></div>
   </nav>
 </header>
 <main id="main">
   <section class="hero" aria-labelledby="page-title">
     <div class="hero-inner wrap">
-      <p class="dateline"><span>arXiv:2611.01987</span><span>November 2026</span></p>
+      <img class="hero-fish" src="assets/isa-fish.png" width="640" height="451" alt="A blue fish wearing a scholar’s cap and reading a notebook">
+      <p class="dateline"><span><a href="https://arxiv.org/abs/2611.01987">arXiv:2611.01987</a></span><span>November 2026</span></p>
       <h1 id="page-title">Same Trajectory,<br><em>Different Knowledge</em><span class="sr">:</span>
         <small>Information-State-Aware <span style="white-space: nowrap">On-Policy</span> Distillation for Search Agents</small></h1>
       <p class="authors"><a href="https://bitminhaosun.github.io/">Minhao Sun<sup>1</sup></a> <span>Xian-Ling Mao<sup>1,†</sup></span> <span>Eric Tao<sup>2</sup></span> <span>Zi-Ao Ma<sup>1</sup></span> <span>Zhijing Wu<sup>1</sup></span></p>
@@ -41,7 +49,7 @@
       <p class="authornote">† Corresponding author</p>
       <div class="actions">
         <a class="button primary" href="https://arxiv.org/pdf/2611.01987"><span aria-hidden="true" class="file-icon"></span>Read paper</a>
-        <a class="button" href="https://arxiv.org/abs/2611.01987">arXiv</a>
+        <a class="button" href="#results">Experiments</a>
         <a class="button" href="https://github.com/BITMinhaoSun/ISAOPD"><span aria-hidden="true" class="code-icon">‹/›</span>GitHub</a>
         <a class="button" href="#citation"><span aria-hidden="true" class="code-icon">{ }</span>BibTeX</a>
       </div>
@@ -52,12 +60,12 @@
       <div class="plate-heading"><h2 id="framework-title">ISA-Distill at a glance</h2><a class="enlarge" href="assets/framework.png" data-enlarge aria-label="Enlarge the framework diagram"><span aria-hidden="true">⛶</span> Enlarge</a></div>
       <figure>
         <a href="assets/framework.png" data-enlarge aria-label="View the full-size ISA-Distill framework diagram"><img src="assets/framework.png" width="2400" height="961" alt="A masked probe estimates how well the student can recover a focal fact. Its score weights two views of the same action, which adjust credit in the student update."></a>
-        <figcaption><strong>One action, two teacher views.</strong> The student’s ability to recover a fact determines how much credit it receives for using that fact or searching for evidence.</figcaption>
+        <figcaption><strong>One action, two teacher views.</strong> The student’s estimated recoverability weights fact-use and evidence-seeking feedback on the same sampled action. The mixture adjusts outcome-based credit.</figcaption>
       </figure>
     </section>
     <section class="overview section" id="overview" aria-labelledby="overview-title">
       <div class="column-heading"><p class="kicker">Overview</p><h2 id="overview-title">When does a search deserve credit?</h2></div>
-      <div class="prose"><p>A teacher can follow the same reasoning steps as a student and still know more. If the teacher already knows a missing fact, it may give too little credit to a search that helps the student establish it.</p><p><strong>Information-State-Aware Distillation (ISA-Distill)</strong> estimates what the student can recover just before each action. It uses that estimate to balance feedback on finding evidence and feedback on using known facts. Across seven question-answering benchmarks, the approach improves average exact match at both 3B and 7B scales.</p></div>
+      <div class="prose"><p>A teacher can follow the same reasoning steps as a student and still know more. If the teacher already knows a missing fact, it may give too little credit to a search that helps the student establish it.</p><p><strong>Information-State-Aware Distillation (ISA-Distill)</strong> estimates whether the student can recover a focal fact from its saved pre-action context. It uses that estimate to balance feedback on finding evidence and feedback on using known facts. Across seven question-answering benchmarks, the approach improves average exact match at both 3B and 7B scales.</p></div>
     </section>
   </div>
   <section class="tint section" id="method" aria-labelledby="method-title">
@@ -70,56 +78,345 @@
         </figure>
         <div class="steps">
           <article><h3>Probe the student’s knowledge</h3><p>From the saved pre-action context, ask the student about a focal fact with its value hidden. Sample answers without retrieval to estimate how reliably it can recover the fact.</p></article>
-          <article><h3>Score the same action twice</h3><p>The fact-use view supplies the missing fact. The evidence-seeking view describes the information need while masking the answer. Both views score the action the student actually took.</p></article>
+          <article><h3>Score the same action twice</h3><p>The fact-use view supplies the focal fact. The evidence-seeking view describes the information need while masking the answer. Both views score the action the student actually took.</p></article>
           <article><h3>Weight the feedback</h3><p>Higher recoverability gives more weight to fact use. Lower recoverability favors evidence seeking. The combined signal adjusts outcome-based credit on selected action tokens during training.</p></article>
         </div>
       </div>
     </div>
   </section>
   <section class="wrap section" id="results" aria-labelledby="results-heading">
-  <p class="kicker">Results</p>
-  <h2 id="results-heading">Answer accuracy and search efficiency</h2>
-  <p>ISA-Distill achieves the highest average exact match across seven QA benchmarks at both model sizes. It improves on the strongest baseline, SD-Search, by 1.2 percentage points at 3B and 0.4 points at 7B.</p>
-  <div class="results-grid"><div><h3>Answer accuracy</h3><table class="results-table">
-    <caption>Macro-average exact match (%) on Qwen2.5-Instruct. Each benchmark has equal weight.</caption>
-    <thead>
-      <tr><th scope="col">Method</th><th scope="col">3B</th><th scope="col">7B</th></tr>
-    </thead>
-    <tbody>
-      <tr class="ours"><th scope="row">ISA-Distill</th><td><strong>43.9</strong></td><td><strong>48.0</strong></td></tr>
-      <tr><th scope="row">SD-Search</th><td>42.7</td><td>47.6</td></tr>
-      <tr><th scope="row">EviSD</th><td>42.6</td><td>47.2</td></tr>
-      <tr><th scope="row">GiGPO</th><td>37.0</td><td>47.2</td></tr>
-      <tr><th scope="row">Search-R1</th><td>33.6</td><td>39.6</td></tr>
-    </tbody>
-  </table>
-  <details>
-    <summary>ISA-Distill scores by benchmark</summary>
-    <table class="results-table">
-      <caption>Exact match (%) on Qwen2.5-Instruct</caption>
-      <thead><tr><th scope="col">Benchmark</th><th scope="col">3B</th><th scope="col">7B</th></tr></thead>
-      <tbody>
-        <tr><th scope="row">Natural Questions</th><td>47.6</td><td>50.3</td></tr>
-        <tr><th scope="row">TriviaQA</th><td>63.3</td><td>67.1</td></tr>
-        <tr><th scope="row">PopQA</th><td>47.7</td><td>48.8</td></tr>
-        <tr><th scope="row">HotpotQA</th><td>42.0</td><td>47.1</td></tr>
-        <tr><th scope="row">2WikiMultiHopQA</th><td>45.9</td><td>49.9</td></tr>
-        <tr><th scope="row">MuSiQue</th><td>20.5</td><td>22.4</td></tr>
-        <tr><th scope="row">Bamboogle</th><td>40.0</td><td>50.4</td></tr>
-      </tbody>
+    <p class="kicker">Results</p>
+    <h2 id="results-heading">Explore the experiments</h2>
+    <p class="experiment-lead">Evaluation covers 51,713 questions across seven QA benchmarks. ISA-Distill scores 43.9% macro-average exact match at 3B and 48.0% at 7B, the highest among the methods evaluated at each scale.</p>
+    <nav class="experiment-nav" aria-label="Experiments">
+      <a id="tab-accuracy" href="#accuracy">Answer accuracy</a>
+      <a id="tab-retrieval" href="#retrieval">Search calls</a>
+      <a id="tab-ablations" href="#ablations">Ablations &amp; diagnostics</a>
+      <a id="tab-training" href="#training">Training analysis</a>
+      <a id="tab-case-study" href="#case-study">Case study</a>
+    </nav>
+    <div id="accuracy" data-panel>
+<section id="bench-explorer" aria-labelledby="bench-heading">
+  <h3 id="bench-heading">Answer accuracy</h3>
+  <p>Compare ISA-Distill with the 11 baselines in the paper. Scores are exact match (EM) percentages. Each of the seven benchmarks has equal weight in the macro-average.</p>
+  <div id="bench-interactive" hidden>
+    <div class="bench-controls">
+      <label for="bench-model">Backbone
+        <select id="bench-model"><option value="7B">Qwen2.5-7B-Instruct</option><option value="3B">Qwen2.5-3B-Instruct</option></select>
+      </label>
+      <label for="bench-dataset">Benchmark
+        <select id="bench-dataset">
+          <option value="8">Macro-average (7 datasets)</option>
+          <optgroup label="Single-hop QA"><option value="1">Natural Questions</option><option value="2">TriviaQA</option><option value="3">PopQA</option></optgroup>
+          <optgroup label="Multi-hop QA"><option value="4">HotpotQA</option><option value="5">2WikiMultiHopQA</option><option value="6">MuSiQue</option><option value="7">Bamboogle</option></optgroup>
+        </select>
+      </label>
+      <label for="bench-comparator">Comparison baseline
+        <select id="bench-comparator"></select>
+      </label>
+    </div>
+    <dl class="bench-summary" aria-live="polite" aria-atomic="true">
+      <div><dt>ISA-Distill EM</dt><dd id="bench-ours"></dd></div>
+      <div><dt id="bench-baseline-label">Baseline EM</dt><dd id="bench-baseline"></dd></div>
+    </dl>
+    <div class="bench-table-controls">
+      <label for="bench-view">Show methods
+        <select id="bench-view">
+          <option value="all">All 12 methods</option>
+          <option value="pair">ISA-Distill + selected baseline</option>
+        </select>
+      </label>
+      <label for="bench-order">Sort order
+        <select id="bench-order">
+          <option value="score-desc">Exact match: high to low</option>
+          <option value="score-asc">Exact match: low to high</option>
+          <option value="method-asc">Method: A–Z</option>
+          <option value="method-desc">Method: Z–A</option>
+        </select>
+      </label>
+    </div>
+    <table class="bench-ranking">
+      <caption id="bench-caption"></caption>
+      <thead><tr>
+        <th scope="col"><button class="bench-sort" type="button" data-key="method">Method <span aria-hidden="true"></span></button></th>
+        <th scope="col"><button class="bench-sort" type="button" data-key="score">Exact match (%) <span aria-hidden="true"></span></button></th>
+      </tr></thead>
+      <tbody id="bench-rows"></tbody>
     </table>
+  </div>
+  <details class="bench-source" open>
+    <summary>Full 7B results</summary>
+    <div class="table-scroll" tabindex="0" role="region" aria-label="Full 7B results table">
+      <table data-model="7B">
+        <caption>Qwen2.5-7B-Instruct exact match (%). The average weights each benchmark equally.</caption>
+        <thead><tr><th scope="col">Method</th><th scope="col">NQ</th><th scope="col">TriviaQA</th><th scope="col">PopQA</th><th scope="col">HotpotQA</th><th scope="col">2WikiMQA</th><th scope="col">MuSiQue</th><th scope="col">Bamboogle</th><th scope="col">Avg.</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Search-R1</th><td>42.9</td><td>62.3</td><td>42.7</td><td>38.6</td><td>34.6</td><td>16.2</td><td>40.0</td><td>39.6</td></tr>
+          <tr><th scope="row">AutoRefine</th><td>42.0</td><td>60.4</td><td>41.3</td><td>39.8</td><td>33.3</td><td>17.6</td><td>39.2</td><td>39.1</td></tr>
+          <tr><th scope="row">TIPS</th><td>43.4</td><td>64.3</td><td>44.5</td><td>43.0</td><td>43.0</td><td>17.1</td><td>36.8</td><td>41.7</td></tr>
+          <tr><th scope="row">PiCA</th><td>46.0</td><td>64.1</td><td>44.2</td><td>42.4</td><td>40.1</td><td>19.7</td><td>41.9</td><td>42.6</td></tr>
+          <tr><th scope="row">GiGPO</th><td>46.4</td><td>64.7</td><td>46.1</td><td>41.6</td><td>43.6</td><td>18.9</td><td>68.9</td><td>47.2</td></tr>
+          <tr><th scope="row">SD-Search</th><td>49.5</td><td>66.8</td><td>49.4</td><td>47.1</td><td>44.1</td><td>22.2</td><td>54.4</td><td>47.6</td></tr>
+          <tr><th scope="row">Skill-SD</th><td>47.1</td><td>64.5</td><td>44.2</td><td>47.8</td><td>42.1</td><td>20.2</td><td>38.4</td><td>43.5</td></tr>
+          <tr><th scope="row">RLSD (skill)</th><td>46.8</td><td>63.0</td><td>44.4</td><td>45.5</td><td>48.9</td><td>21.5</td><td>46.4</td><td>45.2</td></tr>
+          <tr><th scope="row">SDAR</th><td>46.3</td><td>63.5</td><td>48.2</td><td>43.8</td><td>48.4</td><td>19.6</td><td>46.4</td><td>45.2</td></tr>
+          <tr><th scope="row">RLSD (answer)</th><td>46.7</td><td>64.2</td><td>45.5</td><td>41.8</td><td>42.9</td><td>16.6</td><td>32.0</td><td>41.4</td></tr>
+          <tr><th scope="row">EviSD</th><td>48.9</td><td>66.5</td><td>48.6</td><td>46.6</td><td>48.6</td><td>21.6</td><td>49.6</td><td>47.2</td></tr>
+          <tr class="ours"><th scope="row">ISA-Distill</th><td>50.3</td><td>67.1</td><td>48.8</td><td>47.1</td><td>49.9</td><td>22.4</td><td>50.4</td><td>48.0</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </details>
+  <details class="bench-source">
+    <summary>Full 3B results</summary>
+    <div class="table-scroll" tabindex="0" role="region" aria-label="Full 3B results table">
+      <table data-model="3B">
+        <caption>Qwen2.5-3B-Instruct exact match (%). The average weights each benchmark equally.</caption>
+        <thead><tr><th scope="col">Method</th><th scope="col">NQ</th><th scope="col">TriviaQA</th><th scope="col">PopQA</th><th scope="col">HotpotQA</th><th scope="col">2WikiMQA</th><th scope="col">MuSiQue</th><th scope="col">Bamboogle</th><th scope="col">Avg.</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Search-R1</th><td>39.7</td><td>56.5</td><td>39.1</td><td>33.1</td><td>31.0</td><td>12.4</td><td>23.2</td><td>33.6</td></tr>
+          <tr><th scope="row">AutoRefine</th><td>43.6</td><td>59.7</td><td>44.7</td><td>40.4</td><td>38.0</td><td>16.9</td><td>33.6</td><td>39.6</td></tr>
+          <tr><th scope="row">TIPS</th><td>43.5</td><td>58.8</td><td>42.8</td><td>31.4</td><td>29.3</td><td>8.7</td><td>20.8</td><td>33.6</td></tr>
+          <tr><th scope="row">PiCA</th><td>42.6</td><td>61.2</td><td>41.7</td><td>40.0</td><td>40.8</td><td>16.0</td><td>34.7</td><td>39.6</td></tr>
+          <tr><th scope="row">GiGPO</th><td>42.0</td><td>59.5</td><td>42.4</td><td>36.9</td><td>37.0</td><td>12.6</td><td>28.8</td><td>37.0</td></tr>
+          <tr><th scope="row">SD-Search</th><td>46.9</td><td>62.4</td><td>46.5</td><td>42.4</td><td>41.9</td><td>18.4</td><td>40.4</td><td>42.7</td></tr>
+          <tr><th scope="row">Skill-SD</th><td>44.4</td><td>60.4</td><td>44.0</td><td>39.5</td><td>40.4</td><td>15.4</td><td>30.4</td><td>39.2</td></tr>
+          <tr><th scope="row">RLSD (skill)</th><td>41.5</td><td>58.6</td><td>42.3</td><td>40.4</td><td>40.2</td><td>16.8</td><td>34.4</td><td>39.2</td></tr>
+          <tr><th scope="row">SDAR</th><td>44.8</td><td>58.1</td><td>44.3</td><td>38.6</td><td>36.2</td><td>15.7</td><td>32.8</td><td>38.6</td></tr>
+          <tr><th scope="row">RLSD (answer)</th><td>44.8</td><td>61.8</td><td>47.5</td><td>40.1</td><td>41.3</td><td>14.6</td><td>28.8</td><td>39.8</td></tr>
+          <tr><th scope="row">EviSD</th><td>46.6</td><td>63.1</td><td>48.7</td><td>42.4</td><td>44.9</td><td>17.5</td><td>35.2</td><td>42.6</td></tr>
+          <tr class="ours"><th scope="row">ISA-Distill</th><td>47.6</td><td>63.3</td><td>47.7</td><td>42.0</td><td>45.9</td><td>20.5</td><td>40.0</td><td>43.9</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </details>
+</section>
+<p class="source-line"><a href="https://arxiv.org/pdf/2611.01987v1#page=4">Table 1 · 7B results</a><a href="https://arxiv.org/pdf/2611.01987v1#page=5">Table 2 · 3B results</a></p>
+    </div>
+    <div id="retrieval" data-panel>
+<div class="efficiency-experiment">
+  <h3>How does ISA-Distill allocate its searches?</h3>
+  <p>The 7B student makes fewer search calls on all three single-hop datasets and more on all four multi-hop datasets. Its exact-match accuracy improves on all seven against EviSD.</p>
+  <div class="eff-controls" hidden>
+    <fieldset class="eff-groups">
+      <legend>Task group</legend>
+      <label><input type="radio" name="efficiency-group" value="all" checked> All datasets</label>
+      <label><input type="radio" name="efficiency-group" value="single"> Single-hop</label>
+      <label><input type="radio" name="efficiency-group" value="multi"> Multi-hop</label>
+    </fieldset>
+    <label class="eff-measure">Chart measure
+      <select id="efficiency-measure">
+        <option value="change">Change in search calls (%)</option>
+        <option value="means">Mean calls per question</option>
+      </select>
+    </label>
+  </div>
+  <div class="eff-graphic" hidden>
+    <p class="eff-summary" id="efficiency-summary" aria-live="polite"></p>
+    <div class="eff-chart" id="efficiency-chart"></div>
+  </div>
+  <details class="eff-data" open>
+    <summary>Search calls by dataset and task group</summary>
+    <div class="eff-table-wrap">
+      <table class="results-table">
+        <caption>Mean search calls per question with Qwen2.5-7B-Instruct. Percentage changes use the reproduced EviSD baseline and the underlying values before rounding. Group averages weight each dataset by its question count.</caption>
+        <thead><tr><th scope="col">Dataset or group</th><th scope="col">EviSD</th><th scope="col">ISA-Distill</th><th scope="col">Change</th></tr></thead>
+        <tbody>
+          <tr data-eff-average="all"><th scope="row">Overall</th><td>2.28</td><td>2.22</td><td>−2.45%</td></tr>
+          <tr data-eff-average="single"><th scope="row">Single-hop average</th><td>2.14</td><td>1.99</td><td>−7.21%</td></tr>
+          <tr data-eff-group="single"><th scope="row">NQ</th><td>2.14</td><td>1.87</td><td>−12.45%</td></tr>
+          <tr data-eff-group="single"><th scope="row">PopQA</th><td>2.20</td><td>2.08</td><td>−5.41%</td></tr>
+          <tr data-eff-group="single"><th scope="row">TriviaQA</th><td>2.08</td><td>1.92</td><td>−7.88%</td></tr>
+          <tr data-eff-average="multi"><th scope="row">Multi-hop average</th><td>2.46</td><td>2.53</td><td>+2.94%</td></tr>
+          <tr data-eff-group="multi"><th scope="row">MuSiQue</th><td>2.71</td><td>2.78</td><td>+2.77%</td></tr>
+          <tr data-eff-group="multi"><th scope="row">HotpotQA</th><td>2.32</td><td>2.40</td><td>+3.58%</td></tr>
+          <tr data-eff-group="multi"><th scope="row">2WikiMQA</th><td>2.49</td><td>2.56</td><td>+2.61%</td></tr>
+          <tr data-eff-group="multi"><th scope="row">Bamboogle</th><td>2.30</td><td>2.40</td><td>+4.53%</td></tr>
+        </tbody>
+      </table>
+    </div>
   </details>
 </div>
-    <aside class="allocation"><h3>Where did search calls change?</h3>
-      <p>Change in mean calls per question for the 7B student, compared with the reproduced EviSD baseline.</p>
-      <dl><div><dt>Single-hop QA</dt><dd>−7.21%</dd></div>
-      <div><dt>Multi-hop QA</dt><dd>+2.94%</dd></div>
-      <div><dt>All questions</dt><dd>−2.45%</dd></div></dl>
-      <p>Calls fell on all three single-hop datasets and rose on all four multi-hop datasets.</p>
-    </aside>
+<p class="source-line"><a href="https://arxiv.org/pdf/2611.01987v1#page=5">Figure 5 and Table 3 · Search allocation</a></p>
+    </div>
+    <div id="ablations" data-panel>
+<div class="ablation-studies" id="ablation-studies">
+  <section class="study-block" aria-labelledby="routing-heading">
+    <h3 id="routing-heading">What does adaptive weighting contribute?</h3>
+    <p>On Qwen2.5-3B-Instruct, ISA-Distill reaches 43.9% macro-average exact match with 2.22 searches per question. The ablation compares this adaptive feedback with a single teacher view and with fixed weights of 20% fact use and 80% evidence seeking.</p>
+    <div class="study-comparison" id="routing-comparison" hidden>
+      <label class="study-control" for="routing-reference">Comparison setting
+        <select id="routing-reference">
+          <option value="base">Base</option>
+          <option value="fact">Fact-use feedback only</option>
+          <option value="seek" selected>Evidence-seeking feedback only</option>
+          <option value="fixed">Fixed feedback mixture</option>
+        </select>
+      </label>
+      <div class="study-metrics" aria-live="polite" aria-atomic="true">
+        <div><strong id="routing-em"></strong><span>Macro-average exact match</span></div>
+        <div><strong id="routing-calls"></strong><span>Mean search calls per question</span></div>
+      </div>
+    </div>
+    <table class="results-table" id="routing-data">
+      <caption>Qwen2.5-3B-Instruct, seven-benchmark macro-average exact match (EM) and mean search calls.</caption>
+      <thead><tr><th scope="col">Feedback setting</th><th scope="col">EM (%)</th><th scope="col">Calls</th></tr></thead>
+      <tbody>
+        <tr data-setting="base"><th scope="row">Base</th><td>34.1</td><td>1.53</td></tr>
+        <tr data-setting="fact"><th scope="row">Fact-use only</th><td>41.2</td><td>1.92</td></tr>
+        <tr data-setting="seek"><th scope="row">Evidence-seeking only</th><td>43.3</td><td>2.97</td></tr>
+        <tr data-setting="fixed"><th scope="row">Fixed mixture (20% / 80%)</th><td>41.3</td><td>2.13</td></tr>
+        <tr class="ours" data-setting="adaptive"><th scope="row">ISA-Distill</th><td>43.9</td><td>2.22</td></tr>
+      </tbody>
+    </table>
+<p class="source-line"><a href="https://arxiv.org/pdf/2611.01987v1#page=6">Table 4 · Routing ablations</a></p>
+  </section>
+  <section class="study-block" aria-labelledby="diagnostic-heading">
+    <h3 id="diagnostic-heading">Does the teacher undervalue useful searches?</h3>
+    <p>In 698 state–search pairs from 228 HotpotQA training questions, keeping the retrieved support improved the frozen 3B student’s answer accuracy on 396 pairs. Giving the teacher the focal fact lowered its score for the original search in 251 of those 396 pairs.</p>
+    <div class="study-comparison" id="diagnostic-comparison" hidden>
+      <label class="study-control" for="diagnostic-condition">Diagnostic condition
+        <select id="diagnostic-condition">
+          <option value="original">Original paired comparison</option>
+          <option value="length">Length-matched control</option>
+          <option value="strict">Stricter drop threshold</option>
+          <option value="halves">Consistent evidence utility</option>
+        </select>
+      </label>
+      <div id="diagnostic-reading" aria-live="polite" aria-atomic="true">
+        <p><strong class="study-value" id="diagnostic-rate"></strong> <span id="diagnostic-count"></span></p>
+        <div class="diagnostic-track" aria-hidden="true"><span></span></div>
+        <p id="diagnostic-description"></p>
+        <p class="study-note" id="diagnostic-interval"></p>
+      </div>
+    </div>
+    <details>
+      <summary>All diagnostic conditions and confidence intervals</summary>
+      <table class="results-table" id="diagnostic-data">
+        <caption>Searches meeting each score-decrease criterion among pairs with positive observed evidence utility. Confidence intervals use question-cluster bootstrap resampling.</caption>
+        <thead><tr><th scope="col">Condition</th><th scope="col">Pairs</th><th scope="col">Share</th><th scope="col">95% CI</th></tr></thead>
+        <tbody>
+          <tr data-condition="original"><th scope="row">Add the focal fact</th><td>251 / 396</td><td>63.4%</td><td>56.9–69.9%</td></tr>
+          <tr data-condition="length"><th scope="row">Length-matched control</th><td>258 / 396</td><td>65.2%</td><td>58.8–71.3%</td></tr>
+          <tr data-condition="strict"><th scope="row">Drop over 0.01 nats/token in all four contrasts</th><td>171 / 396</td><td>43.2%</td><td>37.2–49.2%</td></tr>
+          <tr data-condition="halves"><th scope="row">Positive utility in both halves</th><td>183 / 293</td><td>62.5%</td><td>54.7–70.0%</td></tr>
+        </tbody>
+      </table>
+    </details>
+<p class="source-line"><a href="https://arxiv.org/pdf/2611.01987v1#page=2">Figure 2 · Paired diagnostic</a><a href="https://arxiv.org/pdf/2611.01987v1#page=12">Appendix B.6 · Controls</a></p>
+  </section>
+  <section class="study-block" aria-labelledby="backbone-heading">
+    <h3 id="backbone-heading">Does the gain carry over to Llama?</h3>
+    <p>Across the same seven benchmarks, ISA-Distill improves average exact match over EviSD by 1.3 points on Llama-3B, matching the gain on Qwen2.5-3B-Instruct.</p>
+    <table class="results-table" id="backbone-data">
+      <caption>Macro-average EM (%) by instruction-tuned backbone.</caption>
+      <thead><tr><th scope="col">Backbone</th><th scope="col">EviSD</th><th scope="col">ISA-Distill</th><th scope="col">Gain (pts)</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">Qwen2.5-3B</th><td>42.6</td><td>43.9</td><td>+1.3</td></tr>
+        <tr><th scope="row">Qwen2.5-7B</th><td>47.2</td><td>48.0</td><td>+0.8</td></tr>
+        <tr><th scope="row">Llama-3B</th><td>43.5</td><td>44.8</td><td>+1.3</td></tr>
+      </tbody>
+    </table>
+<p class="source-line"><a href="https://arxiv.org/pdf/2611.01987v1#page=6">Table 5 · Cross-backbone results</a></p>
+  </section>
+</div>
+    </div>
+    <div id="training" data-panel>
+<div class="training-gallery" data-switch="training-choice">
+  <h3>Training dynamics and cost</h3>
+  <label hidden for="training-choice">Analysis
+    <select id="training-choice">
+    <option value="coverage">Supervision coverage</option>
+    <option value="weights">Teacher-view weights</option>
+    <option value="calibration">Calibration across backbones</option>
+    <option value="cost">Training-step time</option>
+    </select>
+  </label>
+  <figure data-view="coverage">
+    <a href="assets/supervision-coverage.webp" data-enlarge aria-label="Enlarge the supervision coverage chart">
+      <img src="assets/supervision-coverage.webp" width="1512" height="936" loading="lazy" alt="The share of generated tokens eligible for supervision fluctuates across 300 updates, rising from 9.43% in the first 50 updates to 12.07% in the last 50.">
+    </a>
+    <figcaption><strong>Which tokens are eligible for local feedback?</strong> Search-query bodies and non-search conclusion bodies account for 11.32% of generated tokens in the saved Qwen 3B training prefixes. Its share rises from 9.43% over the first 50 updates to 12.07% over the last 50. <a href="https://arxiv.org/pdf/2611.01987v1#page=6">Figure 6, p. 6</a></figcaption>
+  </figure>
+  <figure data-view="weights">
+    <a href="assets/recoverability-weights.webp" data-enlarge aria-label="Enlarge the teacher-view weights chart">
+      <img src="assets/recoverability-weights.webp" width="2349" height="666" loading="lazy" alt="Three panels show teacher-view mixing weights, variance within each update and the minimum and maximum fact-use weights during training.">
+    </a>
+    <figcaption><strong>How do the two views share credit?</strong> The mean weight is 0.163 for fact use and 0.837 for evidence seeking. In 91 updates, individual probes within the same update span both extremes, with fact-use weights below 0.1 and above 0.9. <a href="https://arxiv.org/pdf/2611.01987v1#page=7">Figure 7, p. 7</a></figcaption>
+  </figure>
+  <figure data-view="calibration">
+    <a href="assets/backbone-calibration.webp" data-enlarge aria-label="Enlarge the Qwen and Llama calibration charts">
+      <img src="assets/backbone-calibration.webp" width="1512" height="780" loading="lazy" alt="Side-by-side plots for Qwen2.5-3B and Llama-3.2-3B show declining local-conclusion correctness as mean negative log-likelihood increases.">
+    </a>
+    <figcaption><strong>How does uncertainty track correctness?</strong> Each state contributes 32 sampled conclusions. Correctness declines as mean negative log-likelihood rises for both Qwen2.5-3B and Llama-3.2-3B. The two curves differ in shape and range, motivating a separate calibration for each backbone. <a href="https://arxiv.org/pdf/2611.01987v1#page=7">Figure 8, p. 7</a></figcaption>
+  </figure>
+  <figure data-view="cost">
+    <a href="assets/training-step-time.webp" data-enlarge aria-label="Enlarge the training-step time breakdown">
+      <img src="assets/training-step-time.webp" width="1512" height="960" loading="lazy" alt="Stacked bars split training-step time into rollout and retrieval, supervision and scoring, the reference forward pass, and the parameter update.">
+    </a>
+    <figcaption><strong>What does a training step cost?</strong> Measured step time rises from 161.9 seconds for EviSD to 168.8 seconds for ISA-Distill, a 4.3% increase. Parameter updates add 12.4 seconds, while rollout and retrieval save 7.5 seconds. <a href="https://arxiv.org/pdf/2611.01987v1#page=7">Figure 9, p. 7</a></figcaption>
+  </figure>
+</div>
+    </div>
+    <div id="case-study" data-panel>
+<div class="trace" id="trajectory-reader">
+  <div class="trace-heading">
+    <h3>One question, two search paths</h3>
+    <p>Two 7B agents tackle the same 2WikiMultiHopQA question. Follow the evidence each uses to reach its answer.</p>
   </div>
-</section>
-
+  <div class="trace-toolbar" hidden>
+    <p class="trace-status" role="status" aria-live="polite" aria-atomic="true"></p>
+    <div class="trace-actions" role="group" aria-label="Trajectory playback">
+      <button type="button" data-trace-action="play">Replay</button>
+      <button type="button" data-trace-action="back">Previous</button>
+      <button type="button" data-trace-action="next">Next</button>
+      <button type="button" data-trace-action="complete">Show complete</button>
+    </div>
+  </div>
+  <div class="trace-board" aria-label="Two search trajectories">
+    <div class="trace-shared">
+      <div class="trace-prompt" data-trace-step="1">
+        <p class="trace-node-label">Question</p>
+        <p class="trace-question">Where did Brooklyn Sudano’s mother die?</p>
+      </div>
+      <div class="trace-evidence" data-trace-step="2">
+        <h4>First search · Shared evidence</h4>
+        <p>Both agents retrieve the same three documents in the same order. The passages identify <strong>Donna Summer</strong> as Sudano’s mother and place her funeral in <strong>Nashville</strong>. The passages do not state where she died.</p>
+      </div>
+    </div>
+    <div class="trace-fork" data-trace-step="3">
+      <section class="trace-lane trace-isa" aria-labelledby="trace-isa-title">
+        <h4 id="trace-isa-title">ISA-Distill <span>7B</span></h4>
+        <div class="trace-turn">
+          <h5>Search again</h5>
+          <p>The agent identifies the missing location and issues a targeted query.</p>
+          <p class="trace-query"><code>where did donna summer die</code></p>
+          <p>The new passage states that Summer died at her home in Naples, Florida.</p>
+        </div>
+        <div class="trace-answer" data-trace-step="4">
+          <h5>Final answer</h5>
+          <p class="trace-answer-text">Naples, Florida</p>
+          <p class="trace-outcome">Correct · 2 searches</p>
+        </div>
+      </section>
+      <section class="trace-lane trace-evisd" aria-labelledby="trace-evisd-title">
+        <h4 id="trace-evisd-title">EviSD <span>7B</span></h4>
+        <div class="trace-turn">
+          <h5>Stop searching</h5>
+          <p>The agent concludes that Summer died in a Miami hospital. The retrieved documents provide no evidence for that claim.</p>
+        </div>
+        <div class="trace-answer" data-trace-step="4">
+          <h5>Final answer</h5>
+          <p class="trace-answer-text">Miami, Florida</p>
+          <p class="trace-outcome">Incorrect · 1 search</p>
+        </div>
+      </section>
+    </div>
+  </div>
+</div>
+<p class="source-line"><a href="https://arxiv.org/pdf/2611.01987v1#page=8">Figure 10 · Paired trajectories</a><a href="https://arxiv.org/pdf/2611.01987v1#page=12">Appendix B.5 · Case record</a></p>
+    </div>
+  </section>
   <section class="tint section" id="citation" aria-labelledby="citation-title">
     <div class="wrap">
       <div class="cite-head"><div><p class="kicker">Citation</p><h2 id="citation-title">Cite this work</h2></div><div class="cite-actions"><a class="textlink" href="assets/isa-distill.bib" download>Download .bib</a><button id="copy" class="button" type="button" hidden>Copy BibTeX</button></div></div>
@@ -137,7 +434,7 @@
     </div>
   </section>
 </main>
-<footer><div class="wrap"><a class="brand" href="#top"><img src="assets/mark.svg" alt="" width="28" height="28">ISA-Distill</a><a href="#top">Back to top</a></div></footer>
+<footer><div class="wrap"><a class="brand" href="#top"><img src="assets/isa-fish.png" alt="" width="40" height="28">ISA-Distill</a><a href="#top">Back to top</a></div></footer>
 <dialog id="viewer" aria-label="Enlarged paper figure"><div class="dialog-tools"><a href="assets/framework.png" id="original">Open original image</a><button type="button" id="close">Close</button></div><img alt="" id="large-image"></dialog>
 </body>
 </html>

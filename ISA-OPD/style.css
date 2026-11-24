@@ -72,13 +72,12 @@ figcaption strong, .prose strong { color: var(--ink); }
 .overview { display: grid; grid-template-columns: .85fr 1.35fr; gap: 7%; }
 .prose p + p { margin-top: .85rem; }
 .tint { background: var(--pale); border-block: 1px solid #e1eae6; }
-.method-grid, .results-grid { display: grid; grid-template-columns: 1.15fr 1fr; align-items: start; gap: clamp(1.6rem, 5vw, 4rem); margin-top: 2rem; }
+.method-grid { display: grid; grid-template-columns: 1.15fr 1fr; align-items: start; gap: clamp(1.6rem, 5vw, 4rem); margin-top: 2rem; }
 .example { padding: 1.1rem; border: 1px solid var(--line); border-radius: 14px; background: white; }
 h3 { color: var(--ink); font-size: 1.21rem; letter-spacing: -.026em; line-height: 1.35; margin-bottom: .45rem; }
 .steps article { padding: 1.15rem 0; border-top: 1px solid #c9dbd3; }
 .steps article:first-child { padding-top: 0; border: 0; }
 #results > p:not(.kicker) { max-width: 800px; margin-top: 1.1rem; }
-.results-grid { grid-template-columns: 1.3fr .85fr; }
 table { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; font-size: 1rem; }
 caption { text-align: left; font-size: .92rem; color: var(--muted); padding: .3rem 0 .85rem; }
 th, td { padding: .55rem .8rem; text-align: right; border-bottom: 1px solid var(--line); }
@@ -89,12 +88,6 @@ tbody th { font-weight: 550; }
 details { margin-top: 1.1rem; }
 summary { cursor: pointer; color: var(--teal); font-weight: 600; }
 details table { margin-top: .8rem; }
-.allocation { background: #1c3b43; color: #e5eeea; border-radius: 14px; padding: clamp(1.25rem, 3vw, 2rem); }
-.allocation h3 { color: white; }
-.allocation p { font-size: .94rem; }
-.allocation dl { margin: 1rem 0; }
-.allocation dl div { display: flex; align-items: center; justify-content: space-between; padding: .55rem 0; border-block-start: 1px solid #49626a; }
-.allocation dd { font: 500 1.65rem/1.1 var(--serif); color: #bdebd9; font-variant-numeric: tabular-nums; }
 .cite-head { align-items: end; }
 .cite-actions { gap: 1rem; }
 pre { white-space: pre-wrap; overflow-wrap: anywhere; font: .88rem/1.7 ui-monospace, SFMono-Regular, Consolas, monospace; border-radius: 12px; background: #fff; border: 1px solid var(--line); padding: clamp(1rem, 3vw, 1.7rem); margin: 1.4rem 0 0; }
@@ -107,7 +100,7 @@ dialog::backdrop { background: #102128cf; }
 dialog img { width: auto; max-height: 78vh; margin: auto; object-fit: contain; }
 @media (max-width: 720px) {
   .wrap { width: calc(100% - 2rem); }
-  .overview, .method-grid, .results-grid { grid-template-columns: 1fr; gap: 1.4rem; }
+  .overview, .method-grid { grid-template-columns: 1fr; gap: 1.4rem; }
   .hero-inner { padding-top: 2.75rem; }
   .cite-head { align-items: start; flex-direction: column; }
   .authornote { margin-top: .3rem; }
@@ -128,3 +121,11 @@ dialog img { width: auto; max-height: 78vh; margin: auto; object-fit: contain; }
   .enlarge { font-size: .82rem; }
 }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+.hero-fish { width: clamp(6.5rem, 10vw, 8.6rem); height: auto; margin: 0 auto .8rem; }
+.hero-inner { padding-top: clamp(1.4rem, 3.5vw, 2.6rem); }
+.mast .brand img { width: 46px; height: auto; }
+footer .brand img { width: 40px; height: auto; }
+@media (max-width: 500px) { .mast .brand img { width: 37px; } }
+.dateline a { text-decoration: none; }
+.dateline a:hover { text-decoration: underline; }
