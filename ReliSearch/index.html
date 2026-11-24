@@ -106,7 +106,7 @@
         <p class="kicker">Experiments</p>
         <h2>Accuracy and search efficiency</h2>
         <p class="lede">With Qwen2.5-7B, ReliSearch improves on HiPRAG’s answer accuracy across all seven benchmarks. In the controlled evaluation, the policy averages 1.64 searches per question, compared with HiPRAG’s 1.76.</p>
-        <nav class="study-links" aria-label="Experiments"><a href="#benchmark-study">Benchmarks</a><a href="#model-studies">Model &amp; reward studies</a><a href="#decision-analysis">Search behavior</a><a href="#case-study">MuSiQue case</a></nav>
+        <nav class="study-links" aria-label="Experiments"><a href="#benchmark-study">Benchmarks</a><a href="#full-results">Full tables</a><a href="#model-studies">Model &amp; reward studies</a><a href="#decision-analysis">Search behavior</a><a href="#case-study">MuSiQue case</a></nav>
         <div id="benchmark-study"><section id="benchmark-explorer" class="bench-explorer" aria-labelledby="bench-title" hidden>
   <div class="bench-head">
     <div>
@@ -144,13 +144,20 @@
   </div>
   <p class="bench-source">CEM values come from the main comparison. Search counts come from the controlled evaluation. <a href="https://arxiv.org/pdf/2610.41738#page=5">Tables 1–2 and Figure 4</a></p>
 </section></div>
-        <details class="full-tables" id="full-results"><summary>Full benchmark tables</summary>
-        <div class="switch" role="group" aria-label="Select results metric" hidden><button type="button" aria-controls="accuracy-panel" aria-pressed="true">Answer accuracy</button><button type="button" aria-controls="calls-panel" aria-pressed="false">Search calls</button></div>
+        <section class="full-tables" id="full-results" aria-labelledby="full-results-title">
+          <h3 id="full-results-title">Full benchmark tables</h3>
+          <div class="table-tools" hidden>
+            <div class="switch" role="group" aria-label="Select results metric"><button type="button" aria-controls="accuracy-panel" aria-pressed="true">Answer accuracy</button><button type="button" aria-controls="calls-panel" aria-pressed="false">Search calls</button></div>
+            <label class="table-datasets">Datasets
+              <select id="table-datasets"><option value="all">All datasets</option><option value="single">Single-hop</option><option value="multi">Multi-hop</option></select>
+            </label>
+          </div>
+          <div class="sort-tools" hidden><p>Click a column heading to sort. Overall covers all seven datasets.</p><button type="button" id="paper-order" disabled>Restore paper order</button></div>
         <figure class="table-panel" id="accuracy-panel">
   <div class="table-scroll" tabindex="0" role="region" aria-label="Answer accuracy (CEM, %)">
     <table aria-label="Answer accuracy (CEM, %)" aria-describedby="accuracy-caption">
     <thead>
-      <tr><th scope="col">Method</th><th scope="col">Overall</th><th scope="col">NQ</th><th scope="col">TriviaQA</th><th scope="col">PopQA</th><th scope="col">HotpotQA</th><th scope="col">2Wiki</th><th scope="col">MuSiQue</th><th scope="col">Bamboogle</th></tr>
+      <tr><th scope="col">Method</th><th scope="col">Overall</th><th scope="col" data-hop="single">NQ</th><th scope="col" data-hop="single">TriviaQA</th><th scope="col" data-hop="single">PopQA</th><th scope="col" data-hop="multi">HotpotQA</th><th scope="col" data-hop="multi">2Wiki</th><th scope="col" data-hop="multi">MuSiQue</th><th scope="col" data-hop="multi">Bamboogle</th></tr>
     </thead>
     <tbody>
       <tr><th scope="row">Direct Inference</th><td>31.5</td><td>27.0</td><td>26.8</td><td>40.1</td><td>58.7</td><td>16.0</td><td>7.9</td><td>15.9</td></tr>
@@ -173,7 +180,7 @@
   <div class="table-scroll" tabindex="0" role="region" aria-label="Mean search calls per question">
     <table aria-label="Mean search calls per question" aria-describedby="calls-caption">
     <thead>
-      <tr><th scope="col">Method</th><th scope="col">Overall</th><th scope="col">NQ</th><th scope="col">TriviaQA</th><th scope="col">PopQA</th><th scope="col">HotpotQA</th><th scope="col">2Wiki</th><th scope="col">MuSiQue</th><th scope="col">Bamboogle</th></tr>
+      <tr><th scope="col">Method</th><th scope="col">Overall</th><th scope="col" data-hop="single">NQ</th><th scope="col" data-hop="single">TriviaQA</th><th scope="col" data-hop="single">PopQA</th><th scope="col" data-hop="multi">HotpotQA</th><th scope="col" data-hop="multi">2Wiki</th><th scope="col" data-hop="multi">MuSiQue</th><th scope="col" data-hop="multi">Bamboogle</th></tr>
     </thead>
     <tbody>
       <tr><th scope="row">Direct Inference</th><td>0.00</td><td>0.00</td><td>0.00</td><td>0.00</td><td>0.00</td><td>0.00</td><td>0.00</td><td>0.00</td></tr>
@@ -190,7 +197,7 @@
   </div>
   <figcaption id="calls-caption"><strong>Mean search calls per question.</strong> Search counts come from the controlled evaluation under shared retrieval and decoding settings. Overall means are weighted across 51,713 questions. <a href="https://arxiv.org/pdf/2610.41738#page=12">Table 8</a></figcaption>
 </figure>
-        </details>
+        </section>
       </div>
     </section>
 
