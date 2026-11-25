@@ -13,7 +13,9 @@
   <meta property="og:image" content="https://bitminhaosun.github.io/assets/portrait.jpg">
   <link rel="canonical" href="https://bitminhaosun.github.io/">
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="styles.css?v=87d8f8a6a1">
+  <link rel="stylesheet" href="hobbies.css">
+  <script src="hobbies.js" defer></script>
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -48,27 +50,25 @@
       <section id="about" class="about" aria-labelledby="name">
         <p class="eyebrow">Academic homepage</p>
         <h1 id="name">Minhao Sun<span class="name-dot" aria-hidden="true">.</span></h1>
-        <p class="intro">Exploring how language models<br class="wide-break"> learn, reason, and search.</p>
+        <p class="research-focus">I study <em>search agents</em> and <em>personalized large language models</em>, with a focus on post-training.</p>
         <div class="bio">
-          <p>I am at <strong>Beijing Institute of Technology</strong>. My research focuses on search agents, post-training, and personalized large language models.</p>
-          <p>Since July 2026, I have been an intern with the <strong>Post-Training Team at Huawei</strong>.</p>
+          <p>I’m at <strong>Beijing Institute of Technology</strong> and I’m an intern on <a href="#experience">Huawei’s Post-Training Team</a>.</p>
         </div>
-        <ul class="research-topics" aria-label="Research interests">
-          <li>Search agents</li>
-          <li>Post-training</li>
-          <li>Personalized large language models</li>
-        </ul>
       </section>
 
       <section id="experience" class="section experience" aria-labelledby="experience-title">
         <div class="section-heading"><h2 id="experience-title">Experience</h2></div>
-        <div class="experience-row">
-          <p class="experience-date"><time datetime="2026-07">Jul 2026</time> — Present</p>
-          <div>
-            <h3>Huawei</h3>
-            <p>Intern · Post-Training Team</p>
+        <article class="experience-card" aria-labelledby="huawei-title">
+          <div class="experience-identity">
+            <div class="employer-mark"><img src="assets/huawei-logo.svg" alt="" width="76" height="54"></div>
+            <div class="experience-role">
+              <h3 id="huawei-title">Huawei</h3>
+              <p>Intern · Post-Training Team</p>
+            </div>
+            <p class="experience-date"><time datetime="2026-07">Jul 2026</time> — Present</p>
           </div>
-        </div>
+          <p class="experience-work">I work on post-training for search agents, with a focus on data synthesis, on-policy distillation (OPD), and evaluation.</p>
+        </article>
       </section>
 
       <section id="publications" class="section" aria-labelledby="publications-title">
@@ -137,33 +137,47 @@
 
       <section id="hobbies" class="section hobbies" aria-labelledby="hobbies-title">
         <div class="section-heading"><h2 id="hobbies-title">Hobbies</h2></div>
-          <p class="hobbies-intro">In my free time, I enjoy hiking, swimming and fitness, bouldering, and card games.</p>
-        <div class="hobby-grid">
-          <figure class="hobby">
-            <a href="assets/hobbies/hiking.jpg" aria-label="View hiking photo">
-              <img src="assets/hobbies/hiking.jpg" alt="A moment outdoors with mountains at sunset" width="1440" height="1017" loading="lazy" decoding="async">
-            </a>
-            <figcaption><span class="hobby-title">Hiking</span></figcaption>
-          </figure>
-          <figure class="hobby">
-            <a href="assets/hobbies/swimming-fitness.png" aria-label="View swimming and fitness photo">
-              <img src="assets/hobbies/swimming-fitness.png" alt="Fitness mirror selfie" width="1440" height="1169" loading="lazy" decoding="async">
-            </a>
-            <figcaption><span class="hobby-title">Swimming &amp; fitness</span></figcaption>
-          </figure>
-          <figure class="hobby">
-            <a href="assets/hobbies/climbing.jpg" aria-label="View bouldering photo">
-              <img src="assets/hobbies/climbing.jpg" alt="Climbing an indoor wall with a safety harness" width="1206" height="804" loading="lazy" decoding="async">
-            </a>
-            <figcaption><span class="hobby-title">Bouldering</span><span class="hobby-tags" aria-label="Bouldering grade"><span>V3</span></span></figcaption>
-          </figure>
-          <figure class="hobby">
-            <a href="assets/hobbies/poker.jpg" aria-label="View poker photo">
-              <img src="assets/hobbies/poker.jpg" alt="A hand of playing cards" width="1762" height="1279" loading="lazy" decoding="async">
-            </a>
-            <figcaption><span class="hobby-title">Poker &amp; card games</span></figcaption>
-          </figure>
+        <div class="hobby-album">
+          <div class="album-tabs" role="tablist" aria-label="Choose a hobby" hidden></div>
+          <div class="album-photos">
+            <div class="album-panel" id="album-hiking">
+              <figure>
+                <a class="album-open" href="assets/hobbies/hiking.jpg" aria-label="View hiking photo">
+                  <img src="assets/hobbies/hiking.jpg" alt="A moment outdoors with mountains at sunset" width="1440" height="1017" loading="lazy" decoding="async">
+                </a>
+                <figcaption><span class="album-name">Hiking</span></figcaption>
+              </figure>
+            </div>
+            <div class="album-panel" id="album-fitness">
+              <figure>
+                <a class="album-open" href="assets/hobbies/swimming-fitness.png" aria-label="View swimming and fitness photo">
+                  <img src="assets/hobbies/swimming-fitness.png" alt="Fitness mirror selfie" width="1440" height="1169" loading="lazy" decoding="async">
+                </a>
+                <figcaption><span class="album-name">Swimming &amp; fitness</span></figcaption>
+              </figure>
+            </div>
+            <div class="album-panel" id="album-bouldering">
+              <figure>
+                <a class="album-open" href="assets/hobbies/climbing.jpg" aria-label="View bouldering photo">
+                  <img src="assets/hobbies/climbing.jpg" alt="Climbing an indoor wall with a safety harness" width="1206" height="804" loading="lazy" decoding="async">
+                </a>
+                <figcaption><span class="album-name">Bouldering</span><span class="album-grade" aria-label="Bouldering grade V3">V3</span></figcaption>
+              </figure>
+            </div>
+            <div class="album-panel" id="album-cards">
+              <figure>
+                <a class="album-open" href="assets/hobbies/poker.jpg" aria-label="View poker photo">
+                  <img src="assets/hobbies/poker.jpg" alt="A hand of playing cards" width="1762" height="1279" loading="lazy" decoding="async">
+                </a>
+                <figcaption><span class="album-name">Poker &amp; card games</span></figcaption>
+              </figure>
+            </div>
+          </div>
         </div>
+        <dialog class="album-viewer" aria-labelledby="album-viewer-title">
+          <div class="album-viewer-bar"><span id="album-viewer-title"></span><button type="button" class="album-close" aria-label="Close full-size photo">Close <span aria-hidden="true">×</span></button></div>
+          <img alt="">
+        </dialog>
       </section>
 
       <section id="bar-notes" class="section" aria-labelledby="bar-notes-title">

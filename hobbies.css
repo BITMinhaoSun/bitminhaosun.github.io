@@ -1,0 +1,92 @@
+.hobby-album { --album-ink: var(--ink, #202d29); --album-border: #bac8be; }
+.hobby-album [hidden] { display: none !important; }
+.album-tabs {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 7px;
+  margin: 0 0 12px;
+}
+.album-tab {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  min-width: 0;
+  padding: 5px;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  background: transparent;
+  color: var(--album-ink);
+  font-family: inherit;
+  font-size: .88rem;
+  font-weight: 550;
+  line-height: 1.25;
+  text-align: left;
+  cursor: pointer;
+}
+.album-tab img {
+  width: 37px;
+  height: 37px;
+  flex: none;
+  object-fit: cover;
+  border-radius: 4px;
+}
+.album-tab:hover { background: #eaf0eb; border-color: var(--album-border); }
+.album-tab[aria-selected="true"] { background: #244e40; color: #fff; border-color: #244e40; }
+.album-tab:focus-visible, .album-close:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+.album-photos { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+.hobby-album.is-interactive .album-photos { display: block; touch-action: pan-y pinch-zoom; }
+.album-panel { min-width: 0; }
+.album-panel figure { position: relative; margin: 0; }
+.album-open { display: block; position: relative; overflow: hidden; border-radius: 7px; cursor: zoom-in; }
+.album-open > img { display: block; width: 100%; height: auto; aspect-ratio: 4/3; object-fit: cover; }
+.hobby-album.is-interactive .album-open > img { aspect-ratio: 1.9; object-position: center 43%; }
+.album-open::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(0deg, rgb(12 24 18 / 77%), transparent 41%);
+}
+.album-open::after {
+  content: "";
+  position: absolute;
+  width: 32px;
+  height: 32px;
+  right: 12px;
+  top: 12px;
+  border-radius: 50%;
+  background: rgb(18 28 24 / 66%) center/15px 15px no-repeat url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none' stroke='white' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 8V3h5m4 0h5v5m0 4v5h-5m-4 0H3v-5'/%3E%3C/svg%3E");
+}
+.album-panel figcaption { display: flex; gap: 11px; align-items: center; position: absolute; left: 14px; right: 12px; bottom: 12px; color: #fff; pointer-events: none; }
+.album-name { font: 500 1.2rem/1.15 Georgia, serif; letter-spacing: -.025em; }
+.hobby-album.is-interactive .album-panel figcaption { left: 22px; bottom: 20px; }
+.hobby-album.is-interactive .album-name { font-size: clamp(1.55rem, 3.4vw, 2.4rem); }
+.album-grade { padding: 2px 8px; border: 1px solid #c5d1c9; border-radius: 4px; font-size: .82rem; line-height: 1.5; }
+.album-viewer {
+  max-width: 94vw;
+  max-height: 94vh;
+  max-height: 94dvh;
+  margin: auto;
+  padding: 0;
+  overflow: auto;
+  border: 0;
+  border-radius: 8px;
+  background: #17231f;
+  color: #fff;
+}
+.album-viewer::backdrop { background: rgb(13 20 17 / 83%); }
+.album-viewer-bar { display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 8px 12px 8px 16px; font-size: 1rem; }
+.album-close { padding: 7px; border: 0; background: transparent; font: inherit; font-size: .9rem; color: inherit; cursor: pointer; }
+.album-viewer > img { display: block; width: auto; height: auto; max-width: 92vw; max-height: 80vh; max-height: 80dvh; margin: 0 auto; }
+@media(max-width: 1000px) and (min-width: 651px), (max-width: 550px) {
+  .album-tabs { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media(max-width: 550px) {
+  .hobby-album.is-interactive .album-open > img { aspect-ratio: 1.43; }
+  .hobby-album.is-interactive .album-panel figcaption { left: 14px; bottom: 13px; }
+  .album-photos { grid-template-columns: minmax(0, 1fr); }
+}
+@media print {
+  .album-tabs, .album-viewer, .album-open::after { display: none !important; }
+  .hobby-album .album-panel[hidden] { display: block !important; }
+  .hobby-album.is-interactive .album-photos { display: grid; grid-template-columns: 1fr 1fr; }
+}
