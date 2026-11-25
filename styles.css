@@ -119,6 +119,9 @@ footer { flex-wrap: wrap; }
   nav { width: 100%; }
 
 }
+@media (max-width: 360px) {
+  .research-focus { font-size: 1.125rem; }
+}
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
 @media print {
   body { background: white; font-size: 12px; }
