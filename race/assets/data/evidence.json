@@ -1,0 +1,914 @@
+{
+  "data_comparison": {
+    "title": "Training-data comparison",
+    "unit": "%",
+    "decimals": 1,
+    "source": {
+      "tex_lines": [495, 518],
+      "where": "Table 2 (training-data comparison)"
+    },
+    "categories": [
+      {"id": "mmbc", "label": "MM-BC", "full": "MM-BrowseComp"},
+      {"id": "msplus", "label": "MS+", "full": "MMSearch-Plus"},
+      {"id": "bcv3", "label": "BC-V³", "full": "BrowseComp-V³"},
+      {"id": "visb", "label": "VisB", "full": "VisBrowse-Bench"}
+    ],
+    "series": [
+      {
+        "id": "base",
+        "label": "Base agent",
+        "paper_label": "Qwen3.5-27B (Agentic)",
+        "role": "base",
+        "values": [31.3, 37.6, 31.7, 48.5],
+        "tex_line": 510
+      },
+      {
+        "id": "opensource",
+        "label": "Open-source only (28K)",
+        "paper_label": "Open-source only (28K)",
+        "role": "base-2",
+        "values": [32.1, 37.9, 36.3, 48.5],
+        "tex_line": 511
+      },
+      {
+        "id": "ra",
+        "label": "RA only (12K)",
+        "paper_label": "RA only (12K)",
+        "role": "ra",
+        "values": [31.7, 39.9, 35.3, 49.7],
+        "tex_line": 513
+      },
+      {
+        "id": "race",
+        "label": "RACE (12K)",
+        "paper_label": "Ours only (12K)",
+        "role": "race",
+        "values": [33.5, 40.2, 36.7, 51.5],
+        "tex_line": 514
+      }
+    ],
+    "annotations": [
+      {
+        "id": "vs_opensource_range",
+        "label": "0.4–3.0 points",
+        "text": "12K RACE trajectories exceed 28K open-source trajectories by 0.4–3.0 percentage points across all four primary benchmarks.",
+        "tex_line": 462
+      }
+    ],
+    "notes": [
+      "Each SFT variant uses only the indicated training data on the Qwen3.5-27B backbone.",
+      "The 28K open-source mixture combines OpenSearch-VL, Vision-DeepResearch, and REDSearcher-MM.",
+      "RA only uses the same teacher and number of trajectories as Ours, with single-target tasks."
+    ]
+  },
+  "ablation": {
+    "title": "RA-only ablation",
+    "unit": "%",
+    "decimals": 1,
+    "source": {
+      "tex_lines": [1098, 1113],
+      "where": "Table: RA-only ablation (Appendix D)"
+    },
+    "categories": [
+      {"id": "mmbc", "label": "MM-BC"},
+      {"id": "msplus", "label": "MS+"},
+      {"id": "bcv3", "label": "BC-V³"},
+      {"id": "visb", "label": "VisB"},
+      {"id": "avg", "label": "Avg."}
+    ],
+    "series": [
+      {
+        "id": "base",
+        "label": "Base agent",
+        "paper_label": "None (base agent)",
+        "role": "base",
+        "trajectories": null,
+        "values": [31.3, 37.6, 31.7, 48.5, 37.3],
+        "tex_line": 1108
+      },
+      {
+        "id": "ra",
+        "label": "RA only (12K)",
+        "paper_label": "RA only",
+        "role": "ra",
+        "trajectories": "12K",
+        "values": [31.7, 39.9, 35.3, 49.7, 39.2],
+        "tex_line": 1109
+      },
+      {
+        "id": "race",
+        "label": "RACE (12K)",
+        "paper_label": "RACE (RA + CE)",
+        "role": "race",
+        "trajectories": "12K",
+        "values": [33.5, 40.2, 36.7, 51.5, 40.5],
+        "tex_line": 1110
+      }
+    ],
+    "steps": [
+      {
+        "from": "base",
+        "to": "ra",
+        "category": "avg",
+        "label": "+1.9",
+        "tag": "RA",
+        "tex_line": 1094
+      },
+      {
+        "from": "ra",
+        "to": "race",
+        "category": "avg",
+        "label": "+1.3",
+        "tag": "CE",
+        "tex_line": 1095
+      },
+      {
+        "from": "ra",
+        "to": "race",
+        "category": "mmbc",
+        "label": "+1.8",
+        "tag": "CE",
+        "tex_line": 1095
+      },
+      {
+        "from": "ra",
+        "to": "race",
+        "category": "msplus",
+        "label": "+0.3",
+        "tag": "CE",
+        "tex_line": 1095
+      },
+      {
+        "from": "ra",
+        "to": "race",
+        "category": "bcv3",
+        "label": "+1.4",
+        "tag": "CE",
+        "tex_line": 1095
+      },
+      {
+        "from": "ra",
+        "to": "race",
+        "category": "visb",
+        "label": "+1.8",
+        "tag": "CE",
+        "tex_line": 1095
+      }
+    ],
+    "annotations": [
+      {
+        "id": "primary_avg_gain",
+        "from": "base",
+        "to": "race",
+        "category": "avg",
+        "label": "+3.2",
+        "text": "Averaging 3.2 points over the matched base agent across the four primary benchmarks",
+        "tex_line": 452
+      }
+    ],
+    "notes": [
+      "All variants use Qwen3.5-27B. RA only and RACE use the same teacher (Qwen3.7-Plus) and the same number of training trajectories (12K).",
+      "Each RA-only task contains a single target and requires no compositional evidence."
+    ]
+  },
+  "composition_control": {
+    "title": "Composition-matched open-source control",
+    "unit": "%",
+    "decimals": 1,
+    "source": {
+      "tex_lines": [875, 891],
+      "where": "Table: Composition-matched open-source control (Appendix B.3)"
+    },
+    "categories": [
+      {"id": "mmbc", "label": "MM-BC"},
+      {"id": "msplus", "label": "MS+"},
+      {"id": "bcv3", "label": "BC-V³"},
+      {"id": "visb", "label": "VisB"},
+      {"id": "avg", "label": "Avg."}
+    ],
+    "series": [
+      {
+        "id": "opensource_full",
+        "label": "Open-source mixture (full)",
+        "paper_label": "Open-source mixture (full)",
+        "role": "base-2",
+        "values": [32.1, 37.9, 36.3, 48.5, 38.7],
+        "meta": {
+          "trajectories": 28198,
+          "multi_image_share": 18.1,
+          "multi_image_count": 5113
+        },
+        "tex_line": 886
+      },
+      {
+        "id": "opensource_matched",
+        "label": "Open-source, composition-matched",
+        "paper_label": "Open-source, composition-matched",
+        "role": "base",
+        "values": [31.7, 37.9, 33.7, 47.9, 37.8],
+        "meta": {
+          "trajectories": 12309,
+          "multi_image_share": 41.2,
+          "multi_image_count": 5071,
+          "single_image_count": 7238
+        },
+        "tex_line": 887
+      },
+      {
+        "id": "race",
+        "label": "RACE",
+        "paper_label": "RACE",
+        "role": "race",
+        "values": [33.5, 40.2, 36.7, 51.5, 40.5],
+        "meta": {
+          "trajectories": 12309,
+          "multi_image_share": 41.2,
+          "multi_image_count": 5071
+        },
+        "tex_line": 888
+      }
+    ],
+    "annotations": [
+      {
+        "id": "avg_gain",
+        "from": "opensource_matched",
+        "to": "race",
+        "category": "avg",
+        "label": "+2.7",
+        "text": "2.7 points higher on average",
+        "tex_line": 871
+      },
+      {
+        "id": "per_benchmark_range",
+        "label": "1.8–3.6",
+        "text": "1.8–3.6 points higher on every primary benchmark",
+        "tex_line": 871
+      }
+    ],
+    "notes": [
+      "All variants use Qwen3.5-27B. The composition-matched control has RACE's exact trajectory count (12,309) and multi-image share (41.2%, 5,071 multi-image and 7,238 single-image trajectories).",
+      "On MMSearch-Plus, where 89 of the 311 questions have multiple input images, the composition-matched control scores the same as the full mixture (37.9)."
+    ]
+  },
+  "audit": {
+    "title": "Training-data audit",
+    "unit": "%",
+    "decimals": 1,
+    "source": {
+      "tex_lines": [1210, 1226],
+      "where": "Table: Training-data audit (Appendix F)"
+    },
+    "meta": {
+      "sample_per_source": 500,
+      "judge": "Qwen3.8-Max",
+      "tex_lines": [1199, 1200]
+    },
+    "categories": [
+      {"id": "osvl", "label": "OpenSearch-VL", "paper_label": "OpenSearch-VL"},
+      {"id": "vdr", "label": "Vision-DeepResearch", "paper_label": "Vision-DeepResearch"},
+      {"id": "rsmm", "label": "REDSearcher-MM", "paper_label": "REDSearcher-MM"},
+      {"id": "race", "label": "RACE", "paper_label": "RACE", "role": "race"}
+    ],
+    "series": [
+      {
+        "id": "both",
+        "label": "Both behaviors",
+        "default": true,
+        "values": [22.3, 31.8, 61.8, 96.2],
+        "tex_lines": [1220, 1223]
+      },
+      {
+        "id": "both_ge3",
+        "label": "Both, ≥3 entities verified",
+        "values": [7.8, 16.2, 60.6, 86.8],
+        "tex_lines": [1220, 1223]
+      },
+      {
+        "id": "multi_entity",
+        "label": "Multi-entity",
+        "values": [26.1, 41.6, 100.0, 99.4],
+        "tex_lines": [1220, 1223]
+      }
+    ],
+    "annotations": [
+      {
+        "id": "baseline_both_range",
+        "label": "22.3–61.8%",
+        "text": "22.3–61.8% across the three open-source training sets vs. 96.2% for RACE",
+        "tex_line": 127
+      }
+    ],
+    "notes": [
+      "500 randomly sampled training trajectories per source, judged by Qwen3.8-Max (% of validly judged trajectories).",
+      "A trajectory demonstrates both behaviors when the target identity is obtained from the image, the question involves multiple entities, and every answer-relevant entity obtains evidence from tool returns or images."
+    ]
+  },
+  "image_removal": {
+    "title": "Cross-image image-removal test",
+    "unit": "%",
+    "decimals": 1,
+    "source": {
+      "tex_lines": [1070, 1084],
+      "where": "Table: Cross-image image-removal test (Appendix C.2)"
+    },
+    "n": 499,
+    "probe_model": "Qwen3.8-Flash",
+    "judge_model": "Qwen3.8-Max",
+    "categories": [
+      {"id": "both", "label": "Both images"},
+      {"id": "withheld", "label": "One image withheld"}
+    ],
+    "series": [
+      {
+        "id": "probe_accuracy",
+        "label": "Search probe accuracy",
+        "values": [40.9, 8.2],
+        "tex_lines": [1080, 1081]
+      }
+    ],
+    "notes": [
+      "499 randomly sampled cross-image composition tasks.",
+      "Qwen3.8-Flash search probe judged by Qwen3.8-Max; 'One image withheld' is the mean of withholding image 0 and withholding image 1."
+    ]
+  },
+  "probe": {
+    "title": "Question-only probe outcomes",
+    "unit": "%",
+    "decimals": 1,
+    "source": {
+      "tex_lines": [1056, 1060],
+      "where": "Question-only probe statistics (Appendix C.1)"
+    },
+    "categories": [
+      {"id": "revised_retained", "label": "Flagged and retained after being revised"},
+      {"id": "discarded", "label": "Failed after a second pass and discarded"}
+    ],
+    "series": [
+      {
+        "id": "candidate_share",
+        "label": "Share of candidate tasks",
+        "role": "probe",
+        "values": [2.4, 2.7],
+        "tex_line": 1060
+      }
+    ],
+    "notes": [
+      "Runs after RA reference construction and static identity-leakage checks to test whether web search from the question alone recovers a target identity or the answer."
+    ]
+  },
+  "masking": {
+    "title": "Masking visual search returns",
+    "unit": "%",
+    "decimals": 1,
+    "source": {
+      "tex_lines": [1248, 1264],
+      "where": "Table: Masking the returns of visual search tools (Appendix G)"
+    },
+    "categories": [
+      {"id": "visb", "label": "VisB", "full": "VisBrowse-Bench"},
+      {"id": "msplus", "label": "MS+", "full": "MMSearch-Plus"}
+    ],
+    "series": [
+      {
+        "id": "none",
+        "label": "None",
+        "role": "race",
+        "values": [51.5, 40.2],
+        "tex_line": 1258
+      },
+      {
+        "id": "image_search",
+        "label": "Image search",
+        "role": "base",
+        "values": [43.8, 35.7],
+        "tex_line": 1259
+      },
+      {
+        "id": "text_to_image",
+        "label": "Text-to-image search",
+        "role": "base-2",
+        "values": [36.7, 36.1],
+        "tex_line": 1260
+      },
+      {
+        "id": "both",
+        "label": "Both",
+        "role": "base-2",
+        "values": [36.1, 35.2],
+        "tex_line": 1261
+      }
+    ],
+    "notes": [
+      "Evaluated on RACE-27B with the tool set and interaction limits unchanged; image cropping, web search, page fetching, and input images remain unaffected."
+    ]
+  },
+  "checklist": {
+    "title": "Required steps on evaluation trajectories",
+    "unit": "%",
+    "decimals": 1,
+    "source": {
+      "tex_lines": [1266, 1284],
+      "where": "Table: Required steps on the evaluation trajectories (Appendix G)"
+    },
+    "categories": [
+      {
+        "id": "mmbc_accuracy",
+        "label": "MM-BC accuracy",
+        "tex_line": 1276
+      },
+      {
+        "id": "mmbc_strict",
+        "label": "Every checklist step completed (Strict Accuracy)",
+        "parent": "mmbc_accuracy",
+        "tex_line": 1277
+      },
+      {
+        "id": "mmbc_incomplete",
+        "label": "Correct with some checklist steps missing",
+        "parent": "mmbc_accuracy",
+        "tex_line": 1278
+      },
+      {
+        "id": "mmbc_checklist",
+        "label": "MM-BC checklist score",
+        "tex_line": 1279
+      },
+      {
+        "id": "bcv3_accuracy",
+        "label": "BC-V³ accuracy",
+        "tex_line": 1280
+      },
+      {
+        "id": "bcv3_subgoal",
+        "label": "BC-V³ subgoal completion",
+        "tex_line": 1281
+      }
+    ],
+    "series": [
+      {
+        "id": "base",
+        "label": "Base agent",
+        "paper_label": "Base",
+        "role": "base",
+        "values": [31.3, 21.9, 9.4, 53.0, 31.7, 56.0],
+        "tex_lines": [1276, 1281]
+      },
+      {
+        "id": "race",
+        "label": "RACE",
+        "paper_label": "RACE",
+        "role": "race",
+        "values": [33.5, 24.1, 9.4, 55.3, 36.7, 62.5],
+        "tex_lines": [1276, 1281]
+      },
+      {
+        "id": "delta",
+        "label": "Change",
+        "paper_label": "Change",
+        "role": "delta",
+        "values": [2.2, 2.2, 0.0, 2.3, 5.0, 6.5],
+        "display": ["+2.2", "+2.2", "0.0", "+2.3", "+5.0", "+6.5"],
+        "tex_lines": [1276, 1281]
+      }
+    ],
+    "notes": [
+      "Judged with each benchmark's official protocol and the same judge for Base and RACE."
+    ]
+  },
+  "budget": {
+    "title": "Accuracy under tool-call budgets",
+    "unit": "%",
+    "decimals": 1,
+    "source": {
+      "tex_lines": [1172, 1193],
+      "where": "Table: Accuracy under tool-call budgets (Appendix E)"
+    },
+    "panels": [
+      {
+        "id": "mmbc",
+        "label": "MM-BC",
+        "full": "MM-BrowseComp",
+        "gain_range": "0.8–2.2",
+        "budgets": ["≤30", "≤40", "≤50", "≤60", "≤100", "No budget"],
+        "base": [29.0, 31.3, 31.3, 31.3, 31.3, 31.3],
+        "race": [29.9, 32.1, 32.1, 32.6, 33.5, 33.5],
+        "delta": [0.9, 0.8, 0.8, 1.3, 2.2, 2.2],
+        "delta_labels": ["+0.9", "+0.8", "+0.8", "+1.3", "+2.2", "+2.2"],
+        "tex_lines": [1180, 1184]
+      },
+      {
+        "id": "bcv3",
+        "label": "BC-V³",
+        "full": "BrowseComp-V³",
+        "gain_range": "2.7–7.0",
+        "budgets": ["≤10", "≤13", "≤15", "≤20", "≤30", "No budget"],
+        "base": [18.7, 22.7, 25.7, 31.3, 31.7, 31.7],
+        "race": [23.0, 29.7, 30.7, 34.0, 36.3, 36.7],
+        "delta": [4.3, 7.0, 5.0, 2.7, 4.6, 5.0],
+        "delta_labels": ["+4.3", "+7.0", "+5.0", "+2.7", "+4.6", "+5.0"],
+        "tex_lines": [1186, 1190]
+      }
+    ],
+    "notes": [
+      "A trajectory that has not produced an answer within the tool-call budget is counted as incorrect."
+    ]
+  },
+  "variability": {
+    "title": "Accuracy over four sampled runs",
+    "unit": "%",
+    "decimals": 1,
+    "runs": 4,
+    "source": {
+      "tex_lines": [1129, 1145],
+      "where": "Table: Accuracy over four sampled runs (Appendix E)"
+    },
+    "categories": [
+      {"id": "mmbc", "label": "MM-BC"},
+      {"id": "msplus", "label": "MS+"},
+      {"id": "bcv3", "label": "BC-V³"},
+      {"id": "visb", "label": "VisB"}
+    ],
+    "series": [
+      {
+        "id": "base",
+        "label": "Base agent",
+        "paper_label": "Base",
+        "role": "base",
+        "mean": [31.3, 37.6, 31.7, 48.5],
+        "std": [0.9, 1.0, 1.6, 1.1],
+        "tex_lines": [1139, 1142]
+      },
+      {
+        "id": "race",
+        "label": "RACE",
+        "paper_label": "RACE",
+        "role": "race",
+        "mean": [33.5, 40.2, 36.7, 51.5],
+        "std": [1.1, 1.4, 1.3, 1.4],
+        "tex_lines": [1139, 1142]
+      }
+    ],
+    "notes": [
+      "Mean ± standard deviation across four sampled runs per question (temperature = 0.7, top-p = 0.9)."
+    ]
+  },
+  "rounds": {
+    "title": "Interaction rounds and tool calls per trajectory",
+    "source": {
+      "tex_lines": [1147, 1163],
+      "where": "Table: Interaction rounds and tool calls per trajectory (Appendix E)"
+    },
+    "categories": [
+      {"id": "mmbc", "label": "MM-BC", "turn_limit": 100},
+      {"id": "msplus", "label": "MS+", "turn_limit": 20},
+      {"id": "bcv3", "label": "BC-V³", "turn_limit": 20},
+      {"id": "visb", "label": "VisB", "turn_limit": 15}
+    ],
+    "rounds": {
+      "label": "Interaction rounds per trajectory",
+      "decimals": 1,
+      "base": [30.8, 9.9, 14.3, 10.6],
+      "race": [35.8, 9.0, 11.9, 8.9],
+      "tex_lines": [1157, 1160]
+    },
+    "tool_calls": {
+      "label": "Tool calls per trajectory",
+      "decimals": 1,
+      "base": [30.0, 9.0, 13.6, 9.6],
+      "race": [50.4, 13.0, 17.5, 12.6],
+      "tex_lines": [1157, 1160]
+    },
+    "calls_per_round": {
+      "label": "Tool calls per round",
+      "decimals": 2,
+      "base": [0.97, 0.91, 0.95, 0.91],
+      "race": [1.41, 1.44, 1.47, 1.42],
+      "tex_lines": [1157, 1160]
+    },
+    "annotations": [
+      {
+        "id": "fewer_rounds",
+        "label": "0.9–2.4 fewer rounds",
+        "text": "On MS+, BC-V³, and VisB, RACE uses 0.9–2.4 fewer rounds than Base and achieves 2.6–5.0 points higher accuracy.",
+        "tex_line": 1125
+      },
+      {
+        "id": "parallel_calls",
+        "label": "1.41–1.47 vs. 0.91–0.97 calls/round",
+        "text": "Additional calls come mainly from parallel calls within a round.",
+        "tex_line": 577
+      },
+      {
+        "id": "eval_behavior_gains",
+        "post_first_round_gain": "12.5–19.5",
+        "visual_share_gain": "5.4–12.3",
+        "tool_calls_gain": "3.0–20.4",
+        "tex_lines": [569, 571]
+      }
+    ],
+    "notes": [
+      "An interaction round is one model generation; both agents share per-benchmark turn limits and may issue multiple tool calls within a round."
+    ]
+  },
+  "training_behavior": {
+    "title": "Training-trajectory behavioral characteristics",
+    "unit": "%",
+    "decimals": 1,
+    "source": {
+      "tex_lines": [484, 541],
+      "where": "Section 4.4 and Appendices B.3–B.5"
+    },
+    "categories": [
+      {
+        "id": "osvl",
+        "label": "OpenSearch-VL",
+        "short": "OS-VL",
+        "trajectories": 10752,
+        "multi_image_count": 470
+      },
+      {
+        "id": "vdr",
+        "label": "Vision-DeepResearch",
+        "short": "VDR",
+        "trajectories": 1393,
+        "multi_image_count": 0
+      },
+      {
+        "id": "rsmm",
+        "label": "REDSearcher-MM",
+        "short": "RS-MM",
+        "trajectories": 16053,
+        "multi_image_count": 4643
+      },
+      {
+        "id": "ours",
+        "label": "RACE",
+        "paper_label": "Ours",
+        "short": "RACE",
+        "role": "race",
+        "trajectories": 12309,
+        "multi_image_count": 5071
+      }
+    ],
+    "series": [
+      {
+        "id": "post_first_round_visual",
+        "label": "Visual calls after round 1",
+        "unit": "%",
+        "decimals": 1,
+        "values": [6.0, 5.6, 1.7, 34.6],
+        "tex_line": 534
+      },
+      {
+        "id": "visual_web_visual",
+        "label": "Visual-web-visual pattern",
+        "unit": "%",
+        "decimals": 1,
+        "values": [4.8, 4.5, 1.4, 28.8],
+        "tex_line": 538
+      },
+      {
+        "id": "mean_visual_span",
+        "label": "Mean normalized visual span",
+        "unit": "%",
+        "decimals": 1,
+        "values": [4.7, 4.9, 1.0, 22.5],
+        "tex_line": 925
+      }
+    ],
+    "summary_stats": {
+      "distinct_tool_types": {
+        "ours": 3.16,
+        "baselines_range": "2.86–2.93",
+        "decimals": 2,
+        "tex_line": 540
+      },
+      "visual_span_gt_half": {
+        "ours": 21.8,
+        "baselines_range": "1.0–3.8",
+        "unit": "%",
+        "decimals": 1,
+        "tex_line": 924
+      },
+      "multi_image_share": {
+        "ours": 41.2,
+        "baselines_max": 28.9,
+        "baselines_label": "at most 28.9%",
+        "unit": "%",
+        "decimals": 1,
+        "tex_lines": [485, 862]
+      },
+      "round_range_advantage": {
+        "ranges": ["1–5", "6–10", "11–15", "16+"],
+        "above_highest_baseline_points": [16.8, 34.3, 32.2, 26.1],
+        "decimals": 1,
+        "tex_lines": [897, 899]
+      }
+    },
+    "notes": [
+      "Visual tools comprise image search, text-to-image search, and image cropping.",
+      "Visual-web-visual counts trajectories with a visual call, web search or page fetching, and another visual call in serialized order (intervening calls allowed).",
+      "Normalized visual span summarizes trajectories with at least one visual call."
+    ]
+  },
+  "strata": {
+    "title": "Task-stratified search behavior",
+    "unit": "%",
+    "decimals": 1,
+    "total_matched_pairs": 790,
+    "source": {
+      "tex_lines": [729, 839],
+      "where": "Tables: Task-stratified search behavior (Appendix B.2)"
+    },
+    "panels": [
+      {
+        "id": "bcv3",
+        "label": "BrowseComp-V³ (dependency depth)",
+        "short": "BC-V³",
+        "axis": "Dependency depth",
+        "pairs": 284,
+        "tex_lines": [741, 763],
+        "rows": [
+          {
+            "id": "bcv3_2_3",
+            "label": "Depth 2–3 (n=107)",
+            "stratum": "2–3",
+            "n": 107,
+            "base": 43.9,
+            "trained": 57.0,
+            "visual_search_fetch": {"base": 61.7, "trained": 95.3},
+            "tex_line": 757
+          },
+          {
+            "id": "bcv3_4_5",
+            "label": "Depth 4–5 (n=123)",
+            "stratum": "4–5",
+            "n": 123,
+            "base": 46.3,
+            "trained": 61.0,
+            "visual_search_fetch": {"base": 52.0, "trained": 93.5},
+            "tex_line": 758
+          },
+          {
+            "id": "bcv3_6p",
+            "label": "Depth 6+ (n=54)",
+            "stratum": "6+",
+            "n": 54,
+            "base": 57.4,
+            "trained": 64.8,
+            "visual_search_fetch": {"base": 51.9, "trained": 92.6},
+            "tex_line": 759
+          }
+        ]
+      },
+      {
+        "id": "mmbc",
+        "label": "MM-BrowseComp (checklist items)",
+        "short": "MM-BC",
+        "axis": "Checklist items",
+        "pairs": 195,
+        "omitted_note": "Seven pairs with one item are omitted.",
+        "tex_lines": [767, 789],
+        "rows": [
+          {
+            "id": "mmbc_2",
+            "label": "2 items (n=63)",
+            "stratum": "2",
+            "n": 63,
+            "base": 57.1,
+            "trained": 77.8,
+            "visual_search_fetch": {"base": 42.9, "trained": 74.6},
+            "tex_line": 783
+          },
+          {
+            "id": "mmbc_3",
+            "label": "3 items (n=76)",
+            "stratum": "3",
+            "n": 76,
+            "base": 43.4,
+            "trained": 55.3,
+            "visual_search_fetch": {"base": 51.3, "trained": 71.1},
+            "tex_line": 784
+          },
+          {
+            "id": "mmbc_4p",
+            "label": "4+ items (n=56)",
+            "stratum": "4+",
+            "n": 56,
+            "base": 46.4,
+            "trained": 62.5,
+            "visual_search_fetch": {"base": 53.6, "trained": 75.0},
+            "tex_line": 785
+          }
+        ]
+      },
+      {
+        "id": "msplus",
+        "label": "MMSearch-Plus (input images)",
+        "short": "MS+",
+        "axis": "Input images",
+        "pairs": 311,
+        "tex_lines": [799, 821],
+        "rows": [
+          {
+            "id": "msplus_1",
+            "label": "1 image (n=222)",
+            "stratum": "1",
+            "n": 222,
+            "base": 22.5,
+            "trained": 34.2,
+            "visual_search_fetch": {"base": 42.3, "trained": 83.3},
+            "tex_line": 815
+          },
+          {
+            "id": "msplus_2",
+            "label": "2 images (n=54)",
+            "stratum": "2",
+            "n": 54,
+            "base": 27.8,
+            "trained": 51.9,
+            "visual_search_fetch": {"base": 44.4, "trained": 98.1},
+            "tex_line": 816
+          },
+          {
+            "id": "msplus_3p",
+            "label": "3+ images (n=35)",
+            "stratum": "3+",
+            "n": 35,
+            "base": 31.4,
+            "trained": 37.1,
+            "visual_search_fetch": {"base": 34.3, "trained": 88.6},
+            "tex_line": 817
+          }
+        ]
+      }
+    ],
+    "annotations": [
+      {
+        "id": "largest_pfr_diff",
+        "label": "+24.1 points",
+        "stratum_id": "msplus_2",
+        "text": "Largest post-first-round visual-use difference: 24.1 points on two-image MMSearch-Plus questions.",
+        "tex_line": 835
+      },
+      {
+        "id": "vsf_bcv3",
+        "text": "Visual-search-fetch on BC-V³: 92.6–95.3% trained vs. 51.9–61.7% base.",
+        "tex_line": 838
+      },
+      {
+        "id": "vsf_other_diffs",
+        "text": "Visual-search-fetch paired differences: 19.7–31.7 points on MM-BC and 41.0–54.3 points on MS+.",
+        "tex_line": 839
+      }
+    ],
+    "notes": [
+      "790 matched question pairs across three benchmarks with structural metadata; positive post-first-round visual-use point differences in all nine strata."
+    ]
+  },
+  "key_numbers": {
+    "source": {
+      "tex_lines": [83, 602],
+      "where": "Abstract, Section 1, Table 1, Section 4.1, Appendix B.3, Appendix F"
+    },
+    "items": [
+      {
+        "id": "trajectories",
+        "display": "12K",
+        "exact_count": 12309,
+        "label": "teacher trajectories",
+        "tex_lines": [83, 106, 864]
+      },
+      {
+        "id": "ten_benchmark_avg",
+        "from": 53.5,
+        "to": 56.0,
+        "delta": "+2.5",
+        "relative_gain": "4.7%",
+        "label": "average accuracy over 10 benchmarks",
+        "tex_lines": [106, 428, 430, 431, 602]
+      },
+      {
+        "id": "primary_four_gain",
+        "display": "+3.2",
+        "range": "2.2–5.0",
+        "label": "average gain on 4 primary benchmarks",
+        "tex_lines": [86, 452]
+      },
+      {
+        "id": "benchmarks_improved",
+        "display": "9/10",
+        "label": "benchmarks improved",
+        "tex_lines": [453]
+      },
+      {
+        "id": "audit_complete",
+        "value": 96.2,
+        "baselines_range": "22.3–61.8%",
+        "baselines_max": 61.8,
+        "label": "image-grounded identification & complete evidence",
+        "tex_lines": [127, 479, 1220, 1221, 1222, 1223]
+      }
+    ]
+  }
+}

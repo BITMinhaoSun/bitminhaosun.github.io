@@ -1,0 +1,135 @@
+{
+  "id": "fig1c-relational-ra-ce",
+  "kind": "construction",
+  "title": "Ambiguous relational reference and directed comparison",
+  "subtitle": "Paper example (Fig. 1c) · 6 construction steps",
+  "provenance": "Construction steps documented in the paper (Fig. 1c, Sections 1 and 3.1–3.5, Appendix C)",
+  "images": [
+    {
+      "id": "img_1",
+      "src": "assets/img/examples/fig1c-two-women.webp",
+      "width": 575,
+      "height": 240,
+      "alt": "Film still showing two women, labeled candidate A on the left and candidate B in profile on the right",
+      "caption": "Input image (one scene, two depicted candidates A and B)",
+      "boxes": [
+        {
+          "id": "A",
+          "x": 0.116,
+          "y": 0.036,
+          "w": 0.405,
+          "h": 0.928,
+          "tone": "ra"
+        },
+        {
+          "id": "B",
+          "x": 0.615,
+          "y": 0.036,
+          "w": 0.367,
+          "h": 0.928,
+          "tone": "ce"
+        }
+      ]
+    }
+  ],
+  "question": "For the woman in the image whose first Golden Globe nomination was for a supporting role, what is her first nomination year minus the other woman's? Use award ceremony years.",
+  "spans": [
+    {
+      "text": "the woman in the image",
+      "tone": "ra"
+    },
+    {
+      "text": "supporting role",
+      "tone": "ra"
+    },
+    {
+      "text": "the other woman's",
+      "tone": "ce"
+    }
+  ],
+  "answer": "Year difference u − v (requires both candidates' first Golden Globe nomination years)",
+  "construction": {
+    "ra": [
+      {
+        "candidate": "A",
+        "condition": "Supporting role",
+        "status": "Condition matches"
+      },
+      {
+        "candidate": "B",
+        "condition": "Leading role",
+        "status": "Condition ruled out"
+      }
+    ],
+    "ce": "Directed comparison u − v: both u (Candidate A) and v (Candidate B) are required."
+  },
+  "turns": [
+    {
+      "n": 1,
+      "tool": "ground",
+      "label": "GR",
+      "summary": "Establish grounded candidates in the source image",
+      "input": "source_image: img_1\ncandidates: C(V, \"the woman in the image\") = {A, B}\nroute: source annotations or visual analysis + retrieval",
+      "observation": {
+        "text": "Source annotations or visual analysis and retrieval establish grounded identities and provenance for candidates A and B. The visible cue \"the woman in the image\" fits both women (|C(V, ν)| > 1), so a retrieved condition must select one."
+      },
+      "focus": ["A", "B"]
+    },
+    {
+      "n": 2,
+      "tool": "ra",
+      "label": "RA",
+      "summary": "Search every candidate to resolve the relational reference",
+      "input": "reference ρ = (ν = \"the woman in the image\", φ = \"first Golden Globe nomination was for a supporting role\")\nrequirement: M(V, ρ; F) = {e*} (one supported match; all alternatives ruled out)",
+      "observation": {
+        "text": "For ambiguous relational references, construction searches every candidate in C(V, ν), supports one match, and rules out all alternatives (unresolved cases are rejected). In Figure 1(c), Candidate A matches (Supporting role) and Candidate B is ruled out (Leading role), deciding whose year is u."
+      },
+      "focus": ["A", "B"]
+    },
+    {
+      "n": 3,
+      "tool": "search",
+      "label": "SR",
+      "summary": "Retrieve target-specific evidence and record provenance",
+      "input": "targets: {A (matched referent), B (the other woman)}\nfact: first Golden Globe nomination year (award ceremony years)",
+      "observation": {
+        "text": "Construction searches each selected target and records its retrieved facts, sources, and image provenance. In Figure 1(c), this assigns Year u to Candidate A and Year v to Candidate B."
+      },
+      "focus": ["A", "B"]
+    },
+    {
+      "n": 4,
+      "tool": "ce",
+      "label": "CE",
+      "summary": "Compose both years into a directed comparison u − v",
+      "input": "contributions: z_1 = Year u (A), z_2 = Year v (B)\nrelation: c(u, v) = u − v\nrequirements: Y_c([k]) = {a} and |Y_c([k] \\ {j})| > 1 for every j",
+      "observation": {
+        "text": "Compositional Evidence requires joint sufficiency and individual necessity: all designated facts determine one answer, and removing any one leaves it undetermined. In Figure 1(c), both u and v are needed to determine the directed comparison u − v."
+      },
+      "focus": ["A", "B"]
+    },
+    {
+      "n": 5,
+      "tool": "probe",
+      "label": "PR",
+      "summary": "Check the question alone for text-only identity or answer leakage",
+      "input": "question_only_probe(q)  # input image withheld\nretention criterion: g_ref(T) = g_sup(T) = g_dep(T) = 1 and b(T) = 0",
+      "observation": {
+        "text": "The relational condition must remain non-unique outside the image. A bounded question-only search probe tests whether web search from the question alone recovers an identity or the answer; a task is kept only when g_ref = g_sup = g_dep = 1 and b(T) = 0, and flagged tasks are revised or discarded."
+      },
+      "focus": []
+    },
+    {
+      "n": 6,
+      "tool": "teacher",
+      "label": "TR",
+      "summary": "Collect verified teacher trajectories for supervised fine-tuning",
+      "input": "teacher: Qwen3.7-Plus + search tools\ninputs: (img_1, q)  # reference answer and synthesis records withheld",
+      "observation": {
+        "text": "The teacher (Qwen3.7-Plus) receives only the image and question and solves retained tasks with search tools. Protocol-valid trajectories whose final answers are judged correct against the reference answer are retained for one SFT stage on Qwen3.5-27B."
+      },
+      "focus": ["A", "B"]
+    }
+  ],
+  "takeaway": "What changes? RA ties the reference to the depicted candidates, and CE's directed comparison u − v needs both candidates' facts."
+}

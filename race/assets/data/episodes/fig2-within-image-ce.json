@@ -1,0 +1,137 @@
+{
+  "id": "fig2-within-image-ce",
+  "kind": "construction",
+  "title": "Specific visual references and within-image composition",
+  "subtitle": "Paper example (Fig. 2, single-image layout) · 6 construction steps",
+  "provenance": "Construction steps documented in the paper (Fig. 2, Sections 3.1–3.3 and 3.5)",
+  "images": [
+    {
+      "id": "img_1",
+      "src": "assets/img/examples/fig2-actors.webp",
+      "width": 426,
+      "height": 240,
+      "alt": "Film still showing a man in a cream racing suit raising both hands on the left (target A) and a man wearing a black cap on the right (target B)",
+      "caption": "Input image with grounded targets A and B",
+      "boxes": [
+        {
+          "id": "A",
+          "x": 0.133,
+          "y": 0.088,
+          "w": 0.482,
+          "h": 0.905,
+          "tone": "ra"
+        },
+        {
+          "id": "B",
+          "x": 0.653,
+          "y": 0.183,
+          "w": 0.339,
+          "h": 0.810,
+          "tone": "ce"
+        }
+      ]
+    }
+  ],
+  "question": "How many years apart were these actors' first credited feature-film appearances? (The actors playing the man raising both hands and the capped man.)",
+  "spans": [
+    {
+      "text": "the man raising both hands",
+      "tone": "ra"
+    },
+    {
+      "text": "the capped man",
+      "tone": "ra"
+    },
+    {
+      "text": "How many years apart",
+      "tone": "ce"
+    }
+  ],
+  "answer": "|tA − tB| years (reference answer a)",
+  "construction": {
+    "ra": [
+      {
+        "candidate": "A",
+        "condition": "person raising both hands",
+        "status": "Unique visual match"
+      },
+      {
+        "candidate": "B",
+        "condition": "capped person on the right of the image",
+        "status": "Unique visual match"
+      }
+    ],
+    "ce": "Within-image composition (m = 1, |S_1| = 2): compare first credited feature-film years as |tA − tB|."
+  },
+  "turns": [
+    {
+      "n": 1,
+      "tool": "ground",
+      "label": "GR",
+      "summary": "Establish grounded identities and provenance for A and B",
+      "input": "source_image: img_1\nroute: source annotations or visual analysis + retrieval\noutputs: e_A + identity source, e_B + identity source",
+      "observation": {
+        "text": "In stage (a), source annotations or visual analysis and retrieval establish grounded identities (e_A, e_B) and identity provenance for internal construction."
+      },
+      "focus": ["A", "B"]
+    },
+    {
+      "n": 2,
+      "tool": "ra",
+      "label": "RA",
+      "summary": "Express targets through specific visual references",
+      "input": "e_A → ν_A = \"person raising both hands\" (φ ≡ 1)\ne_B → ν_B = \"capped person on the right of the image\" (φ ≡ 1)",
+      "observation": {
+        "text": "Specific visual references (φ ≡ 1, C(V, ν) = {e*}) use appearance, position, order, spatial relations, or occlusion to locate each target before retrieval instead of naming it directly: here, \"person raising both hands\" and \"capped person on the right of the image\".",
+        "image": "assets/img/examples/fig2-crop-a.webp"
+      },
+      "focus": ["A"]
+    },
+    {
+      "n": 3,
+      "tool": "search",
+      "label": "SR",
+      "summary": "Explore supporting evidence for each target separately",
+      "input": "target A: retrieve year of first credited feature-film appearance → t_A\ntarget B: retrieve year of first credited feature-film appearance → t_B",
+      "observation": {
+        "text": "The generator searches each target and records its retrieved facts, sources, and image provenance. In Figure 2(b), this retrieves Source for A (t_A = year) and Source for B (t_B = year).",
+        "image": "assets/img/examples/fig2-crop-b.webp"
+      },
+      "focus": ["B"]
+    },
+    {
+      "n": 4,
+      "tool": "ce",
+      "label": "CE",
+      "summary": "Connect both facts through a joint comparison |tA − tB|",
+      "input": "layout: within one image (A + B)\nrelation: |t_A − t_B| years\nrequirement: remove either fact → answer undetermined",
+      "observation": {
+        "text": "Within-image Compositional Evidence (m = 1, |S_1| ≥ 2) connects retrieved facts into a joint relation—here |t_A − t_B| years—requiring joint sufficiency and individual necessity: removing either t_A or t_B leaves the answer undetermined."
+      },
+      "focus": ["A", "B"]
+    },
+    {
+      "n": 5,
+      "tool": "probe",
+      "label": "PR",
+      "summary": "Run question-only search feedback to check for leakage",
+      "input": "question: \"How many years apart were these actors' first credited feature-film appearances?\"\nreferents: \"the man raising both hands and the capped man\"\nprobe: bounded question-only search (no image)",
+      "observation": {
+        "text": "Static checks and a bounded question-only search probe test whether an identity or the answer can be recovered without the image; detected leakage guides changes to the references and relation, followed by renewed checks, or leads to discarding the task."
+      },
+      "focus": []
+    },
+    {
+      "n": 6,
+      "tool": "teacher",
+      "label": "TR",
+      "summary": "Collect verified teacher trajectories for supervised fine-tuning",
+      "input": "stage_c: (I, q) → Teacher (Qwen3.7-Plus) + tools → Keep trajectories with correct final answers → SFT (Qwen3.5-27B)",
+      "observation": {
+        "text": "In stage (c), the teacher (Qwen3.7-Plus) receives only (I, q) and solves retained tasks with search tools. Protocol-valid trajectories whose final answers are judged correct against reference answer a are retained for one SFT stage on Qwen3.5-27B."
+      },
+      "focus": ["A", "B"]
+    }
+  ],
+  "takeaway": "What changes? Specific visual references locate both actors without naming them, and |tA − tB| needs both actors' credits."
+}

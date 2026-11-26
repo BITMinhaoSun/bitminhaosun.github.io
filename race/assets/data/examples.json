@@ -1,0 +1,186 @@
+{
+  "source": {
+    "tex_lines": [129, 141],
+    "where": "Figure 1 (motivation) and Figure 2 (synthesis pipeline)"
+  },
+  "fig1a": {
+    "title": "Text supplies the target identity",
+    "image": {
+      "src": "assets/img/examples/fig1a-shortcut.webp",
+      "thumb": "assets/img/examples/fig1a-shortcut-480.webp",
+      "width": 576,
+      "height": 240,
+      "alt": "Film still showing a man in a burgundy number 26 jersey sitting at a table"
+    },
+    "question": "The man shown plays Glen Whitmann in Transformers (2007). Who is the actor?",
+    "spans": [
+      {
+        "text": "Glen Whitmann in Transformers (2007)",
+        "tone": "break"
+      }
+    ],
+    "chain": ["Text clues", "Web search", "Answer"],
+    "bypass_label": "Image bypassed",
+    "note": "The character and film names supply the query.",
+    "takeaway": "RA: keep target resolution tied to the image.",
+    "panel_image": "assets/img/fig/fig1a-panel@2x.webp"
+  },
+  "fig1b": {
+    "title": "A target's evidence is unnecessary",
+    "image": null,
+    "question": "This poster shows a man with a knife and another with a gun. What is the name of the police officer played by the man with the gun?",
+    "spans": [
+      {
+        "text": "a man with a knife",
+        "tone": "break"
+      },
+      {
+        "text": "the man with the gun",
+        "tone": "ra"
+      }
+    ],
+    "chain": ["Gun-holder", "Role lookup", "Answer"],
+    "unused": "Knife-holder",
+    "note": "No separate lookup",
+    "takeaway": "CE: make each target's evidence necessary.",
+    "panel_image": "assets/img/fig/fig1b-panel@2x.webp"
+  },
+  "fig1c": {
+    "title": "RACE: preserve the dependency from image to answer",
+    "image": {
+      "src": "assets/img/examples/fig1c-two-women.webp",
+      "thumb": "assets/img/examples/fig1c-two-women-480.webp",
+      "width": 575,
+      "height": 240,
+      "alt": "Film still showing two women, labeled candidate A on the left and candidate B in profile on the right",
+      "boxes": [
+        {
+          "id": "A",
+          "x": 0.116,
+          "y": 0.036,
+          "w": 0.405,
+          "h": 0.928,
+          "tone": "ra"
+        },
+        {
+          "id": "B",
+          "x": 0.615,
+          "y": 0.036,
+          "w": 0.367,
+          "h": 0.928,
+          "tone": "ce"
+        }
+      ]
+    },
+    "question": "For the woman in the image whose first Golden Globe nomination was for a supporting role, what is her first nomination year minus the other woman's? Use award ceremony years.",
+    "spans": [
+      {
+        "text": "the woman in the image",
+        "tone": "ra"
+      },
+      {
+        "text": "supporting role",
+        "tone": "ra"
+      },
+      {
+        "text": "the other woman's",
+        "tone": "ce"
+      }
+    ],
+    "chain": ["Image candidates", "Resolved targets", "Retrieved evidence", "Answer"],
+    "chain_edges": ["RA", "Search", "CE"],
+    "candidates": [
+      {
+        "id": "A",
+        "label": "Candidate A",
+        "condition": "Supporting role",
+        "status": "Condition matches",
+        "matched": true,
+        "value": "Year u"
+      },
+      {
+        "id": "B",
+        "label": "Candidate B",
+        "condition": "Leading role",
+        "status": "Condition ruled out",
+        "matched": false,
+        "value": "Year v"
+      }
+    ],
+    "compose": {
+      "expr": "u − v",
+      "note": "Both facts are required",
+      "answer": "Answer: year difference"
+    },
+    "ra_note": "RA: decide whose year is u.",
+    "ce_note": "CE: both u and v are needed to determine u − v.",
+    "panel_image": "assets/img/fig/fig1c-panel@2x.webp"
+  },
+  "fig2": {
+    "title": "RACE task synthesis and training",
+    "source": {
+      "tex_lines": [225, 236],
+      "where": "Figure 2 (synthesis pipeline)"
+    },
+    "image": {
+      "src": "assets/img/examples/fig2-actors.webp",
+      "thumb": "assets/img/examples/fig2-actors-480.webp",
+      "width": 426,
+      "height": 240,
+      "alt": "Film still showing a man in a cream racing suit raising both hands on the left (target A) and a man wearing a black cap on the right (target B)",
+      "boxes": [
+        {
+          "id": "A",
+          "x": 0.133,
+          "y": 0.088,
+          "w": 0.482,
+          "h": 0.905,
+          "tone": "ra"
+        },
+        {
+          "id": "B",
+          "x": 0.653,
+          "y": 0.183,
+          "w": 0.339,
+          "h": 0.810,
+          "tone": "ce"
+        }
+      ]
+    },
+    "crops": {
+      "A": {
+        "src": "assets/img/examples/fig2-crop-a.webp",
+        "width": 205,
+        "height": 217,
+        "alt": "Crop of target A: person raising both hands"
+      },
+      "B": {
+        "src": "assets/img/examples/fig2-crop-b.webp",
+        "width": 144,
+        "height": 194,
+        "alt": "Crop of target B: capped person on the right of the image"
+      }
+    },
+    "references": {
+      "A": "person raising both hands",
+      "B": "capped person on the right of the image"
+    },
+    "question": "How many years apart were these actors' first credited feature-film appearances?",
+    "layouts": {
+      "one_image": "The actors playing the man raising both hands and the capped man.",
+      "two_images": "The actor in image 1 and the actor in image 2."
+    },
+    "evidence": {
+      "task": "Retrieve years of first credited feature-film appearances",
+      "A": "tA = year",
+      "B": "tB = year",
+      "compose": "|tA − tB| years",
+      "necessity": "Remove either fact: answer undetermined"
+    },
+    "panel_images": {
+      "a": "assets/img/fig/fig2a-panel@2x.webp",
+      "b": "assets/img/fig/fig2b-panel@2x.webp",
+      "c": "assets/img/fig/fig2c-panel@2x.webp"
+    }
+  }
+}

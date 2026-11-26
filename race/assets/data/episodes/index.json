@@ -1,0 +1,19 @@
+{
+  "episodes": [
+    {
+      "id": "fig1c-relational-ra-ce",
+      "file": "assets/data/episodes/fig1c-relational-ra-ce.json",
+      "tab": "Ambiguous RA + CE"
+    },
+    {
+      "id": "fig2-within-image-ce",
+      "file": "assets/data/episodes/fig2-within-image-ce.json",
+      "tab": "Specific RA + CE (1 image)"
+    },
+    {
+      "id": "fig2-cross-image-ce",
+      "file": "assets/data/episodes/fig2-cross-image-ce.json",
+      "tab": "Cross-image CE (2 images)"
+    }
+  ]
+}

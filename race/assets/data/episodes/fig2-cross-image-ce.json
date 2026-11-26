@@ -1,0 +1,125 @@
+{
+  "id": "fig2-cross-image-ce",
+  "kind": "construction",
+  "title": "Cross-image composition and image necessity",
+  "subtitle": "Paper example (Fig. 2, two-image layout) · 6 construction steps",
+  "provenance": "Construction steps documented in the paper (Fig. 2, Section 3.3, Appendix B.3 and Appendix C.2); the two-image layout is illustrated with crops of the paper's Fig. 2 still",
+  "images": [
+    {
+      "id": "img_1",
+      "src": "assets/img/examples/fig2-crop-a.webp",
+      "width": 205,
+      "height": 217,
+      "alt": "Target A cropped from the Figure 2 film still: man raising both hands",
+      "caption": "Target A, cropped from the Fig. 2 still (illustrating the two-image layout)"
+    },
+    {
+      "id": "img_2",
+      "src": "assets/img/examples/fig2-crop-b.webp",
+      "width": 144,
+      "height": 194,
+      "alt": "Target B cropped from the Figure 2 film still: capped man",
+      "caption": "Target B, cropped from the Fig. 2 still (illustrating the two-image layout)"
+    }
+  ],
+  "question": "How many years apart were these actors' first credited feature-film appearances? (The actor in image 1 and the actor in image 2.)",
+  "spans": [
+    {
+      "text": "The actor in image 1",
+      "tone": "ra"
+    },
+    {
+      "text": "the actor in image 2",
+      "tone": "ra"
+    },
+    {
+      "text": "How many years apart",
+      "tone": "ce"
+    }
+  ],
+  "answer": "|tA − tB| years (each image supplies one necessary year)",
+  "construction": {
+    "ra": [
+      {
+        "candidate": "Image 1: A",
+        "condition": "Grounded target in image 1",
+        "status": "Image-anchored referent"
+      },
+      {
+        "candidate": "Image 2: B",
+        "condition": "Grounded target in image 2",
+        "status": "Image-anchored referent"
+      }
+    ],
+    "ce": "Cross-image composition (m = 2, S_1 = {e_A}, S_2 = {e_B}): removing either image must leave |tA − tB| undetermined."
+  },
+  "turns": [
+    {
+      "n": 1,
+      "tool": "ground",
+      "label": "GR",
+      "summary": "Ground one distinct target in each of two source images",
+      "input": "images: {Image 1, Image 2}\nS_1 = {e_A} ⊆ E_1, S_2 = {e_B} ⊆ E_2\nrule: reject pairs lacking either grounded identity",
+      "observation": {
+        "text": "Cross-image construction grounds one distinct target in each image (m ≥ 2, S_i = {e_i}) with identity and image provenance, and rejects pairs lacking either identity."
+      },
+      "focus": []
+    },
+    {
+      "n": 2,
+      "tool": "ra",
+      "label": "RA",
+      "summary": "Attach each image with a placeholder next to its reference",
+      "input": "Image 1 → \"The actor in image 1\"\nImage 2 → \"the actor in image 2\"\nstatic check: one image placeholder per attached image",
+      "observation": {
+        "text": "Both images remain attached to the final question, with one image placeholder next to each corresponding reference. Static checks enforce one image placeholder per attached image and reject direct identity or answer leakage."
+      },
+      "focus": []
+    },
+    {
+      "n": 3,
+      "tool": "search",
+      "label": "SR",
+      "summary": "Seed separate opening searches for each image's target",
+      "input": "search(e_A) → Source for A: t_A = year (provenance: Image 1)\nsearch(e_B) → Source for B: t_B = year (provenance: Image 2)",
+      "observation": {
+        "text": "The two grounded identities seed separate opening searches. The generator receives both images and the combined evidence, then constructs a relation supported by both targets' facts."
+      },
+      "focus": []
+    },
+    {
+      "n": 4,
+      "tool": "ce",
+      "label": "CE",
+      "summary": "Check both fact necessity and per-image necessity",
+      "input": "relation: |t_A − t_B| years\nimage necessity: removing an image's contributions must leave the answer undetermined",
+      "observation": {
+        "text": "Each image must supply necessary evidence through its target, so removing an image's contributions must leave the answer undetermined. In the paper's removal test on 499 cross-image tasks, withholding either image lowers a Qwen3.8-Flash search probe's accuracy from 40.9% to 8.2% on average."
+      },
+      "focus": []
+    },
+    {
+      "n": 5,
+      "tool": "probe",
+      "label": "PR",
+      "summary": "Screen for question-only shortcuts with a bounded probe",
+      "input": "question_only_probe(q)  # both images withheld\nretention: g_ref = g_sup = g_dep = 1, b(T) = 0",
+      "observation": {
+        "text": "After reference construction and static leakage checks, a bounded question-only search probe tests whether web search from the question alone recovers an identity or the answer. Across all candidate tasks, 2.4% were flagged and retained after being revised, and 2.7% still failed after a second pass and were discarded."
+      },
+      "focus": []
+    },
+    {
+      "n": 6,
+      "tool": "teacher",
+      "label": "TR",
+      "summary": "Collect teacher trajectories for multi-image SFT supervision",
+      "input": "teacher: Qwen3.7-Plus + search tools\ninputs: (Image 1, Image 2, q)",
+      "observation": {
+        "text": "The teacher (Qwen3.7-Plus) receives only the images and question and solves retained tasks with search tools; trajectories with correct final answers enter SFT. Cross-image constructions give RACE a 41.2% multi-image input share (5,071 of 12,309 training trajectories), vs. at most 28.9% across the three open-source baselines."
+      },
+      "focus": []
+    }
+  ],
+  "takeaway": "What changes? Pairing grounded targets across separate images makes each image's evidence necessary for the joint answer; in the paper's removal test on 499 cross-image tasks, withholding either image lowers a search probe's accuracy from 40.9% to 8.2% on average."
+}

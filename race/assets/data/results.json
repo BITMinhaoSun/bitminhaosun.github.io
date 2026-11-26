@@ -1,0 +1,486 @@
+{
+  "source": {
+    "tex_lines": [384, 445],
+    "where": "Table 1 (main results)"
+  },
+  "unit": "%",
+  "decimals": 1,
+  "columns": [
+    {
+      "id": "mmbc",
+      "label": "MM-BC",
+      "full": "MM-BrowseComp",
+      "group": "search",
+      "primary": true
+    },
+    {
+      "id": "msplus",
+      "label": "MS+",
+      "full": "MMSearch-Plus",
+      "group": "search",
+      "primary": true
+    },
+    {
+      "id": "bcv3",
+      "label": "BC-V³",
+      "full": "BrowseComp-V³",
+      "group": "search",
+      "primary": true
+    },
+    {
+      "id": "visb",
+      "label": "VisB",
+      "full": "VisBrowse-Bench",
+      "group": "search",
+      "primary": true
+    },
+    {
+      "id": "bcvl",
+      "label": "BC-VL",
+      "full": "BrowseComp-VL",
+      "group": "search",
+      "primary": false
+    },
+    {
+      "id": "vdr",
+      "label": "VDR",
+      "full": "Vision-DeepResearch Benchmark",
+      "group": "search",
+      "primary": false
+    },
+    {
+      "id": "mmsearch",
+      "label": "MMSearch",
+      "full": "MMSearch",
+      "group": "factual",
+      "primary": false
+    },
+    {
+      "id": "simplevqa",
+      "label": "SimpleVQA",
+      "full": "SimpleVQA",
+      "group": "factual",
+      "primary": false
+    },
+    {
+      "id": "livevqa",
+      "label": "LiveVQA",
+      "full": "LiveVQA",
+      "group": "factual",
+      "primary": false
+    },
+    {
+      "id": "fvqa",
+      "label": "FVQA",
+      "full": "FVQA",
+      "group": "factual",
+      "primary": false
+    },
+    {
+      "id": "avg",
+      "label": "Avg.",
+      "full": "Unweighted mean over all ten benchmarks",
+      "group": "avg",
+      "primary": false
+    }
+  ],
+  "groups": [
+    {
+      "id": "search",
+      "label": "Multimodal search"
+    },
+    {
+      "id": "factual",
+      "label": "Factual generalization"
+    }
+  ],
+  "row_groups": [
+    {
+      "id": "references",
+      "label": "Frontier API and large-backbone references"
+    },
+    {
+      "id": "agents",
+      "label": "Specialized multimodal search agents (30B–32B)",
+      "marker": "†"
+    },
+    {
+      "id": "ours",
+      "label": "Our study with the Qwen3.5-27B backbone under identical settings"
+    }
+  ],
+  "rows": [
+    {
+      "id": "qwen35_397b",
+      "group": "references",
+      "model": "Qwen3.5-397B-A17B",
+      "scores": {
+        "mmbc": 46.0,
+        "msplus": 42.1,
+        "bcv3": 31.0,
+        "visb": 52.7,
+        "bcvl": 49.4,
+        "vdr": null,
+        "mmsearch": 78.3,
+        "simplevqa": 76.4,
+        "livevqa": 85.2,
+        "fvqa": 77.1,
+        "avg": null
+      },
+      "markers": {},
+      "tex_line": 406
+    },
+    {
+      "id": "qwen37_plus",
+      "group": "references",
+      "model": "Qwen3.7-Plus",
+      "scores": {
+        "mmbc": 37.1,
+        "msplus": 46.3,
+        "bcv3": 42.3,
+        "visb": 59.8,
+        "bcvl": 55.6,
+        "vdr": 30.2,
+        "mmsearch": 80.7,
+        "simplevqa": 77.7,
+        "livevqa": 84.6,
+        "fvqa": 79.7,
+        "avg": 59.4
+      },
+      "markers": {},
+      "tex_line": 407
+    },
+    {
+      "id": "qwen38_max",
+      "group": "references",
+      "model": "Qwen3.8-Max",
+      "scores": {
+        "mmbc": 53.2,
+        "msplus": 59.1,
+        "bcv3": 56.3,
+        "visb": 66.9,
+        "bcvl": null,
+        "vdr": 33.2,
+        "mmsearch": 84.0,
+        "simplevqa": 83.8,
+        "livevqa": 88.8,
+        "fvqa": 85.6,
+        "avg": null
+      },
+      "markers": {},
+      "tex_line": 408
+    },
+    {
+      "id": "gemini31_pro",
+      "group": "references",
+      "model": "Gemini-3.1-Pro",
+      "scores": {
+        "mmbc": 48.7,
+        "msplus": 51.5,
+        "bcv3": 50.0,
+        "visb": 62.1,
+        "bcvl": 65.9,
+        "vdr": 40.8,
+        "mmsearch": 86.1,
+        "simplevqa": 81.0,
+        "livevqa": 87.3,
+        "fvqa": 84.0,
+        "avg": 65.7
+      },
+      "markers": {
+        "model": "‡"
+      },
+      "tex_line": 409
+    },
+    {
+      "id": "webwatcher_32b",
+      "group": "agents",
+      "model": "WebWatcher-32B",
+      "scores": {
+        "mmbc": null,
+        "msplus": null,
+        "bcv3": 8.7,
+        "visb": null,
+        "bcvl": 27.0,
+        "vdr": null,
+        "mmsearch": 55.3,
+        "simplevqa": 59.0,
+        "livevqa": 58.7,
+        "fvqa": null,
+        "avg": null
+      },
+      "markers": {
+        "bcv3": "‡"
+      },
+      "tex_line": 414
+    },
+    {
+      "id": "sensenova_mars_32b",
+      "group": "agents",
+      "model": "SenseNova-MARS-32B",
+      "scores": {
+        "mmbc": null,
+        "msplus": null,
+        "bcv3": null,
+        "visb": null,
+        "bcvl": null,
+        "vdr": null,
+        "mmsearch": 74.3,
+        "simplevqa": 74.1,
+        "livevqa": 60.8,
+        "fvqa": 72.6,
+        "avg": null
+      },
+      "markers": {},
+      "tex_line": 415
+    },
+    {
+      "id": "vdr_30b",
+      "group": "agents",
+      "model": "Vision-DeepResearch-30B-A3B",
+      "scores": {
+        "mmbc": null,
+        "msplus": 28.5,
+        "bcv3": null,
+        "visb": null,
+        "bcvl": 53.7,
+        "vdr": 37.8,
+        "mmsearch": 69.6,
+        "simplevqa": null,
+        "livevqa": 77.6,
+        "fvqa": 74.2,
+        "avg": null
+      },
+      "markers": {},
+      "tex_line": 416
+    },
+    {
+      "id": "opensearch_vl_30b",
+      "group": "agents",
+      "model": "OpenSearch-VL-30B-A3B",
+      "scores": {
+        "mmbc": null,
+        "msplus": null,
+        "bcv3": null,
+        "visb": null,
+        "bcvl": 41.1,
+        "vdr": 33.5,
+        "mmsearch": 68.7,
+        "simplevqa": 74.9,
+        "livevqa": 67.4,
+        "fvqa": 73.2,
+        "avg": null
+      },
+      "markers": {},
+      "tex_line": 417
+    },
+    {
+      "id": "redsearcher_30b",
+      "group": "agents",
+      "model": "REDSearcher-MM-RL-30B-A3B",
+      "scores": {
+        "mmbc": 23.5,
+        "msplus": 26.6,
+        "bcv3": null,
+        "visb": null,
+        "bcvl": 57.2,
+        "vdr": null,
+        "mmsearch": 72.9,
+        "simplevqa": null,
+        "livevqa": 79.3,
+        "fvqa": null,
+        "avg": null
+      },
+      "markers": {},
+      "tex_line": 418
+    },
+    {
+      "id": "skywork_r1v4_30b",
+      "group": "agents",
+      "model": "Skywork-R1V4-30B-A3B",
+      "scores": {
+        "mmbc": null,
+        "msplus": null,
+        "bcv3": null,
+        "visb": null,
+        "bcvl": 38.4,
+        "vdr": null,
+        "mmsearch": 66.1,
+        "simplevqa": null,
+        "livevqa": null,
+        "fvqa": 67.2,
+        "avg": null
+      },
+      "markers": {},
+      "tex_line": 419
+    },
+    {
+      "id": "mm_deepresearch_32b",
+      "group": "agents",
+      "model": "MM-DeepResearch-32B",
+      "scores": {
+        "mmbc": null,
+        "msplus": null,
+        "bcv3": null,
+        "visb": null,
+        "bcvl": 43.0,
+        "vdr": null,
+        "mmsearch": 69.0,
+        "simplevqa": 67.6,
+        "livevqa": 68.0,
+        "fvqa": 70.1,
+        "avg": null
+      },
+      "markers": {},
+      "tex_line": 420
+    },
+    {
+      "id": "lmm_searcher_30t",
+      "group": "agents",
+      "model": "LMM-Searcher-30B-A3B (30 turns)",
+      "scores": {
+        "mmbc": 22.3,
+        "msplus": 32.9,
+        "bcv3": null,
+        "visb": 42.0,
+        "bcvl": null,
+        "vdr": null,
+        "mmsearch": 71.0,
+        "simplevqa": null,
+        "livevqa": null,
+        "fvqa": null,
+        "avg": null
+      },
+      "markers": {
+        "model": "§"
+      },
+      "tex_line": 421
+    },
+    {
+      "id": "lmm_searcher_100t",
+      "group": "agents",
+      "model": "same model, 100 turns",
+      "indent": true,
+      "scores": {
+        "mmbc": 30.1,
+        "msplus": 34.8,
+        "bcv3": null,
+        "visb": 48.3,
+        "bcvl": null,
+        "vdr": null,
+        "mmsearch": 72.3,
+        "simplevqa": null,
+        "livevqa": null,
+        "fvqa": null,
+        "avg": null
+      },
+      "markers": {
+        "model": "§"
+      },
+      "tex_line": 422
+    },
+    {
+      "id": "simplesearch_vl_30b",
+      "group": "agents",
+      "model": "SimpleSearch-VL-30B-A3B",
+      "scores": {
+        "mmbc": null,
+        "msplus": 34.4,
+        "bcv3": null,
+        "visb": null,
+        "bcvl": 55.9,
+        "vdr": null,
+        "mmsearch": 83.6,
+        "simplevqa": 79.6,
+        "livevqa": 81.1,
+        "fvqa": 79.0,
+        "avg": null
+      },
+      "markers": {},
+      "tex_line": 423
+    },
+    {
+      "id": "base",
+      "group": "ours",
+      "model": "Qwen3.5-27B (base agent)",
+      "scores": {
+        "mmbc": 31.3,
+        "msplus": 37.6,
+        "bcv3": 31.7,
+        "visb": 48.5,
+        "bcvl": 47.9,
+        "vdr": 24.4,
+        "mmsearch": 79.3,
+        "simplevqa": 74.5,
+        "livevqa": 84.5,
+        "fvqa": 75.7,
+        "avg": 53.5
+      },
+      "markers": {},
+      "tex_line": 428
+    },
+    {
+      "id": "race",
+      "group": "ours",
+      "model": "RACE-27B (ours)",
+      "highlight": true,
+      "scores": {
+        "mmbc": 33.5,
+        "msplus": 40.2,
+        "bcv3": 36.7,
+        "visb": 51.5,
+        "bcvl": 54.2,
+        "vdr": 27.4,
+        "mmsearch": 78.7,
+        "simplevqa": 75.5,
+        "livevqa": 85.0,
+        "fvqa": 76.8,
+        "avg": 56.0
+      },
+      "markers": {},
+      "tex_line": 430
+    },
+    {
+      "id": "delta",
+      "group": "ours",
+      "model": "Δ",
+      "kind": "delta",
+      "scores": {
+        "mmbc": 2.2,
+        "msplus": 2.6,
+        "bcv3": 5.0,
+        "visb": 3.0,
+        "bcvl": 6.3,
+        "vdr": 3.0,
+        "mmsearch": -0.6,
+        "simplevqa": 1.0,
+        "livevqa": 0.5,
+        "fvqa": 1.1,
+        "avg": 2.5
+      },
+      "display": {
+        "mmbc": "+2.2",
+        "msplus": "+2.6",
+        "bcv3": "+5.0",
+        "visb": "+3.0",
+        "bcvl": "+6.3",
+        "vdr": "+3.0",
+        "mmsearch": "−0.6",
+        "simplevqa": "+1.0",
+        "livevqa": "+0.5",
+        "fvqa": "+1.1",
+        "avg": "+2.5"
+      },
+      "markers": {},
+      "tex_line": 431
+    }
+  ],
+  "notes": [
+    "Sources and evaluation settings are detailed in Appendix A.",
+    "Abbreviations are MM-BC (MM-BrowseComp), MS+ (MMSearch-Plus), BC-V³ (BrowseComp-V³), VisB (VisBrowse-Bench), and BC-VL (BrowseComp-VL). Avg. is the unweighted mean of all ten aggregate scores. Published scores retain their source-specific evaluation settings.",
+    "Here — denotes unavailable scores. § LMM-Searcher uses Thinking initialization and the MS+ single-image subset. Turn budgets are listed by row.",
+    "† Scores reported in each agent's original paper under its own evaluation setting, shown for reference.",
+    "‡ From the agentic-workflow evaluation compiled by Zhang et al. (2026) (DeepVoyager-VL), except Gemini-3.1-Pro's MM-BC, MMSearch, and FVQA scores, which are our evaluations.",
+    "Δ denotes SFT minus matched base-agent performance, computed from displayed scores, in percentage points."
+  ]
+}
