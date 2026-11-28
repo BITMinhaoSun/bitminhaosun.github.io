@@ -2,7 +2,8 @@
 
 /* ---------- Base ---------- */
 *, *::before, *::after { box-sizing: border-box; }
-html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; scroll-behavior: smooth; scroll-padding-top: 76px; }
+html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; scroll-behavior: smooth; scroll-padding-top: 88px; }
+section[id], div[id="watch"] { scroll-margin-top: 88px; }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
 body {
   margin: 0;
@@ -649,10 +650,11 @@ s.mark-break { text-decoration-thickness: 1.5px; }
 
 /* ---------- Reveal on scroll (classes set by js/main.js) ---------- */
 .reveal-ready [data-reveal] {
-  transition: opacity .9s var(--ease-out), transform .9s var(--ease-out);
-  transition-delay: calc(var(--i, 0) * 70ms);
+  transition: opacity .42s var(--ease-out), transform .42s var(--ease-out);
+  transition-delay: min(calc(var(--i, 0) * 38ms), 160ms);
 }
-.reveal-ready [data-reveal]:not(.is-in) { opacity: 0; transform: translateY(18px); }
+.reveal-ready [data-reveal]:not(.is-in) { opacity: 0; transform: translateY(10px); }
+.disclosure[open] [data-reveal] { opacity: 1 !important; transform: none !important; transition: none !important; }
 @media (prefers-reduced-motion: reduce) {
   .reveal-ready [data-reveal], .reveal-ready [data-reveal]:not(.is-in) { opacity: 1; transform: none; transition: none; }
 }

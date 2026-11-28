@@ -48,10 +48,10 @@ function reveal() {
   });
   const observer=new IntersectionObserver(entries=>{
     for(const e of entries) if(e.isIntersecting) {e.target.classList.add('is-in');observer.unobserve(e.target);}
-  },{threshold:.15});
+  },{threshold:.02,rootMargin:'0px 0px -20px 0px'});
   nodes.forEach(node=>{
     const bounds=node.getBoundingClientRect();
-    if(motion.matches||(bounds.top<innerHeight&&bounds.bottom>0)) node.classList.add('is-in');
+    if(motion.matches||(bounds.top<innerHeight+40&&bounds.bottom>-40)) node.classList.add('is-in');
     else observer.observe(node);
   });
   document.documentElement.classList.add('reveal-ready');
@@ -71,13 +71,14 @@ function countUp() {
     node.after(el('span','pl-sr',original.trim()));
     const places=(printed.split('.')[1]||'').length;
     const formatter=new Intl.NumberFormat('en-US',{minimumFractionDigits:places,maximumFractionDigits:places,useGrouping:printed.includes(',')});
+    const dur=650;
     let elapsed=0,previous,frame=0,seen=false,done=false;
     function finish() {done=true;node.textContent=original;observer.disconnect();cancelAnimationFrame(frame);frame=0;}
     function tick(t) {
-      if(previous!=null) elapsed+=Math.min(t-previous,1200);
+      if(previous!=null) elapsed+=Math.min(t-previous,dur);
       previous=t;
-      if(elapsed>=1200||motion.matches) {finish();return;}
-      const value=from+(target-from)*(1-2**(-10*elapsed/1200));
+      if(elapsed>=dur||motion.matches) {finish();return;}
+      const value=from+(target-from)*(1-2**(-10*elapsed/dur));
       node.textContent=before+(value<0?'−':sign==='+'?'+':'')+formatter.format(Math.abs(value))+after;
       frame=requestAnimationFrame(tick);
     }

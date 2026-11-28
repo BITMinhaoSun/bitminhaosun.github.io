@@ -1,7 +1,7 @@
 import { button, el, getJSON, instrumentStyles, motion, pad, unavailable, visibility } from './common.js';
 import { createInstrument } from './hero-stage.js';
 
-const durations = [4500, 5000, 3500, 6000, 4000, 5000];
+const durations = [5500, 5800, 4600, 6800, 5200, 5800];
 
 export async function mount(root) {
   const stage = root.querySelector('.hero-demo__stage');
@@ -29,12 +29,17 @@ export async function mount(root) {
   status.setAttribute('role','status');status.setAttribute('aria-live','off');status.setAttribute('aria-atomic','true');
   dots.setAttribute('role','group'); dots.setAttribute('aria-label','Scenes');
   const buttons = captions.map((caption,i)=>{
-    const b = button('','hd-dot',()=>select(i,true));
+    const pillLabel = caption.dataset.pill || (pad(i+1)+' · '+(caption.querySelector('strong')?.textContent||'').replace(/\.$/,''));
+    const b = button('','hd-step',()=>select(i,true));
+    b.dataset.scene = caption.dataset.scene || '';
+    const bar = el('span','hd-step__bar');
+    bar.setAttribute('aria-hidden','true');
+    b.append(el('span','hd-step__txt',pillLabel), bar);
     b.setAttribute('aria-label','Scene '+(i+1)+' of '+captions.length+', '+(caption.querySelector('strong')?.textContent||caption.textContent).trim());
     dots.append(b);
     return b;
   });
-  let views = [], mounted, index = 0, elapsed = 0, previous = 0, frame = 0;
+  let views = [], mounted, index = 3, elapsed = 0, previous = 0, frame = 0;
   let inView = false, hovered = false, focused = false, paused = false;
   const play = button('Pause','hd-play',()=>{
     paused = !paused;
@@ -45,11 +50,16 @@ export async function mount(root) {
   play.setAttribute('aria-label','Pause scenes');
   controls.append(counter,dots,play,status);
   root.querySelector('.hero-demo__controls').append(controls);
+  function paintPill(p) {
+    buttons.forEach((b,j)=>b.style.setProperty('--pill-p', j===index ? p.toFixed(3) : '0'));
+  }
   function select(i,manual=false) {
     const changed=i!==index || !status.textContent;
     index=i; elapsed=manual?durations[i]*.92:0; previous=0;
-    views[0].show(i,elapsed/durations[i]);
+    const p=elapsed/durations[i];
+    views[0].show(i,p,manual);
     buttons.forEach((b,j)=>b.setAttribute('aria-pressed',String(i===j)));
+    paintPill(p);
     captions.forEach((c,j)=>{
       c.classList.toggle('is-active',i===j);
       c.setAttribute('aria-hidden',String(i!==j));
@@ -64,7 +74,11 @@ export async function mount(root) {
     if (previous) elapsed+=Math.min(now-previous,150);
     previous=now;
     if (elapsed>=durations[index]) select((index+1)%durations.length);
-    else views[0].paint(elapsed/durations[index]);
+    else {
+      const p = elapsed/durations[index];
+      views[0].paint(p);
+      paintPill(p);
+    }
     frame=requestAnimationFrame(tick);
   }
   function sync() {
@@ -91,7 +105,8 @@ export async function mount(root) {
       });
     } else {
       const view=createInstrument(data);
-      mounted=view.frame;stage.append(mounted);views.push(view);select(index);
+      mounted=view.frame;stage.append(mounted);views.push(view);select(index,true);
+      elapsed=0;paintPill(0);
     }
     sync();
   }

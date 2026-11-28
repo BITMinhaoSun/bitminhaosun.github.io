@@ -98,9 +98,11 @@
     <symbol id="i-down" viewBox="0 0 24 24"><path d="M12 4v12M7 11l5 5 5-5M5 20h14"/></symbol>
     <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
     <symbol id="i-expand" viewBox="0 0 24 24"><path d="M14 4h6v6M10 20H4v-6M20 4l-7 7M4 20l7-7"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12.5 4.5 4.5L19 7.5"/></symbol>
+    <symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6 18 18M18 6 6 18"/></symbol>
   </svg>
 
-  <a class="skip" href="#overview">Skip to content</a>
+  <a class="skip" href="#problem">Skip to content</a>
 
   <header class="topbar">
     <div class="topbar__inner">
@@ -109,10 +111,11 @@
         <svg class="icon" aria-hidden="true"><use href="#i-menu"/></svg><span class="sr-only">Menu</span>
       </button>
       <nav id="site-nav" class="nav" aria-label="Sections">
-        <a href="#problem" data-spy>Problem</a>
+        <a href="#problem" data-spy>Core Idea</a>
         <a href="#method" data-spy>Method</a>
+        <a href="#watch" data-spy>Examples</a>
         <a href="#results" data-spy>Results</a>
-        <a href="#analysis" data-spy>Analysis</a>
+        <a href="#analysis" data-spy>Why It Works</a>
         <a href="#bibtex" data-spy>BibTeX</a>
         <a class="nav__ext" href="https://arxiv.org/abs/2610.28382">arXiv<svg class="icon" aria-hidden="true"><use href="#i-out"/></svg></a>
       </nav>
@@ -131,6 +134,11 @@
             <span class="hero__subtitle">Learning Multimodal Search through <span class="t-ra">Referential&nbsp;Abstraction</span> and <span class="t-ce">Compositional&nbsp;Evidence</span></span>
           </h1>
 
+          <p class="hero__hook">
+            Most synthetic search questions can be solved <strong>without looking at the image</strong> or by <strong>ignoring extra targets</strong>.
+            RACE eliminates both shortcuts—making visually grounded search <em>strictly necessary</em> for the answer.
+          </p>
+
           <ul class="authors" aria-label="Authors">
             <li>Eric Tao<sup>1,*</sup></li>
             <li>Minhao Sun<sup>2,*</sup></li>
@@ -145,11 +153,10 @@
             <li>Siyu Mo<sup>1</sup></li>
             <li>Chong Chen<sup>1,†</sup></li>
           </ul>
-          <p class="affils"><span><sup>1</sup>Huawei</span> <span><sup>2</sup>Beijing Institute of Technology</span></p>
-          <p class="affils affils--notes"><span><sup>*</sup>Equal contribution</span> <span><sup>†</sup>Corresponding author</span></p>
+          <p class="affils"><span><sup>1</sup>Huawei</span> <span><sup>2</sup>Beijing Institute of Technology</span> <span class="affils__sep" aria-hidden="true">·</span> <span class="affils__note"><sup>*</sup>Equal contribution</span> <span class="affils__note"><sup>†</sup>Corresponding author</span></p>
 
           <div class="actions">
-            <a class="btn btn--primary" href="https://arxiv.org/pdf/2610.28382"><svg class="icon" aria-hidden="true"><use href="#i-pdf"/></svg>Paper</a>
+            <a class="btn btn--primary" href="https://arxiv.org/pdf/2610.28382"><svg class="icon" aria-hidden="true"><use href="#i-pdf"/></svg>Paper (PDF)</a>
             <a class="btn btn--ra" href="https://arxiv.org/abs/2610.28382"><svg class="icon" aria-hidden="true"><use href="#i-arxiv"/></svg>arXiv</a>
             <a class="btn btn--ce" href="#bibtex"><svg class="icon" aria-hidden="true"><use href="#i-quote"/></svg>BibTeX</a>
             <span class="btn btn--soon" aria-disabled="true" title="Code coming soon">Code<span class="btn__soon">soon</span><span class="sr-only">, coming soon</span></span>
@@ -158,12 +165,32 @@
           </div>
         </div>
 
-        <aside class="tldr" aria-label="TL;DR">
-          <p class="tldr__label">TL;DR</p>
+        <aside class="tldr" aria-label="Core takeaway">
+          <div class="tldr__top">
+            <p class="tldr__label">Core Takeaway · At a Glance</p>
+            <ol class="tldr__chain" aria-label="Unbreakable dependency chain">
+              <li class="tldr__node">Image</li>
+              <li class="tldr__edge tldr__edge--ra">RA</li>
+              <li class="tldr__node">Targets</li>
+              <li class="tldr__edge tldr__edge--search">Search</li>
+              <li class="tldr__node">Facts</li>
+              <li class="tldr__edge tldr__edge--ce">CE</li>
+              <li class="tldr__node tldr__node--ans">Answer</li>
+            </ol>
+          </div>
           <dl class="tldr__list">
-            <div class="tldr__row"><dt>Problem</dt><dd>Synthetic search questions let a solver skip the image, because the text already names the target, or skip a target's evidence, because the answer never needs it.</dd></div>
-            <div class="tldr__row"><dt>RACE</dt><dd><span class="t-ra">Referential Abstraction</span> ties each target to the image; <span class="t-ce">Compositional Evidence</span> makes every target's retrieved evidence necessary for the answer.</dd></div>
-            <div class="tldr__row"><dt>Result</dt><dd>Fine-tuning Qwen3.5-27B on only <strong>12K</strong> teacher trajectories raises average accuracy over ten benchmarks from <strong>53.5 to 56.0</strong>.</dd></div>
+            <div class="tldr__row tldr__row--flaw">
+              <dt>Why prior data leaks</dt>
+              <dd>Text clues reveal who to search, or extra targets go unused—only <strong>22.3–61.8%</strong> of open-source trajectories ground targets in the image <em>and</em> verify every entity.</dd>
+            </div>
+            <div class="tldr__row tldr__row--fix">
+              <dt>How RACE locks it</dt>
+              <dd><strong class="t-ra">RA</strong> binds target identity to the image; <strong class="t-ce">CE</strong> makes every target's retrieved fact required for the answer (<strong class="t-ra">96.2%</strong> grounded trajectories).</dd>
+            </div>
+            <div class="tldr__row tldr__row--win">
+              <dt>12K beats 28K</dt>
+              <dd>One SFT stage on <strong>only 12K</strong> RACE trajectories lifts Qwen3.5-27B from <strong>53.5 → 56.0</strong> (<strong>9/10</strong> benchmarks improved, <strong>+6.3</strong> BC-VL, <strong>+5.0</strong> BC-V³) and beats <strong>28K</strong> open-source trajectories.</dd>
+            </div>
           </dl>
         </aside>
       </div>
@@ -171,107 +198,99 @@
       <div class="container">
         <figure class="hero-demo" data-hero aria-labelledby="hero-demo-title">
           <figcaption class="hero-demo__head">
-            <span class="hero-demo__title" id="hero-demo-title"><span class="hero-demo__chip">Case</span>How RACE builds a task that cannot be shortcut</span>
-            <span class="hero-demo__hint">Paper example, Figure&nbsp;1</span>
+            <span class="hero-demo__title" id="hero-demo-title"><span class="hero-demo__chip">Interactive Figure 1</span>How RACE builds a task that cannot be shortcut</span>
+            <span class="hero-demo__hint">Click any step below · Pauses on hover</span>
           </figcaption>
           <div class="hero-demo__stage">
             <noscript><img class="hero-demo__fallback" src="assets/img/fig/fig1-motivation@1x.webp" srcset="assets/img/fig/fig1-motivation@1x.webp 1x, assets/img/fig/fig1-motivation@2x.webp 2x" width="1201" height="824" alt="Figure 1 of the paper: two shortcuts that break the dependency from image to answer, and the RACE construction that preserves it."></noscript>
           </div>
           <ol class="hero-demo__captions">
-            <li data-scene="shortcut"><strong>The shortcut.</strong> When the question names the character and the film, a text search finds the actor and the image is never used.</li>
-            <li data-scene="abstraction"><strong>Referential Abstraction.</strong> RA replaces identity text with a reference to the image. This reference fits both women, so construction searches each candidate: A matches the supporting-role condition, B is ruled out.</li>
-            <li data-scene="evidence"><strong>Retrieved evidence.</strong> Search assigns each resolved target its own fact: year <var>u</var> for A and year <var>v</var> for B.</li>
-            <li data-scene="composition"><strong>Compositional Evidence.</strong> The answer is the directed comparison <var>u</var>&nbsp;−&nbsp;<var>v</var>. Remove either year and the answer is undetermined, so both targets' evidence is required.</li>
-            <li data-scene="probe"><strong>Question-only probe.</strong> Before a task is kept, a search probe tries to answer from the question alone. Tasks that leak a target's identity or the answer are revised or discarded.</li>
-            <li data-scene="training"><strong>Training.</strong> Qwen3.7-Plus solves the kept tasks with search tools, and trajectories with correct final answers fine-tune Qwen3.5-27B. With 12K of them, average accuracy over ten benchmarks rises from 53.5 to 56.0.</li>
+            <li data-scene="shortcut" data-pill="01 · Shortcut ✗"><strong>Prior Failure — Text Shortcut.</strong> Naming the character and film (<q>Glen Whitmann in Transformers (2007)</q>) lets text search find the actor directly—the image is completely bypassed.</li>
+            <li data-scene="abstraction" data-pill="02 · RA Lock"><strong>Step 1 — Referential Abstraction (RA).</strong> Strip name clues and refer via the image (<q>the woman in the image … supporting role</q>). Both women fit visually, forcing search over each candidate: A matches, B is ruled out.</li>
+            <li data-scene="evidence" data-pill="03 · Search Facts"><strong>Step 2 — Target-Specific Retrieval.</strong> Visual target resolution anchors external search, assigning first nomination year <var>u</var> to Candidate A and year <var>v</var> to Candidate B.</li>
+            <li data-scene="composition" data-pill="04 · RACE Chain ★"><strong>Step 3 — Compositional Evidence (CE).</strong> Combine both facts into the directed difference <var>u</var>&nbsp;−&nbsp;<var>v</var>. Withhold either target's year and the answer becomes undetermined—every target is necessary.</li>
+            <li data-scene="probe" data-pill="05 · Blind Probe"><strong>Step 4 — Question-Only Search Probe.</strong> A blind web-search probe attacks the question <em>without the image</em>. Any task whose identity or answer can still be guessed is revised or discarded.</li>
+            <li data-scene="training" data-pill="06 · 12K SFT"><strong>Step 5 — Teacher Rollout &amp; 1-Stage SFT.</strong> Qwen3.7-Plus solves kept tasks from images + question alone. Fine-tuning Qwen3.5-27B on just 12K verified trajectories lifts 10-benchmark average accuracy from 53.5 to 56.0.</li>
           </ol>
           <div class="hero-demo__controls"></div>
         </figure>
       </div>
     </section>
 
-    <!-- Key numbers -->
-    <section id="numbers" class="numbers" aria-label="Key numbers">
+    <!-- Key numbers bento -->
+    <section id="numbers" class="numbers" aria-label="Headline metrics">
       <div class="container">
         <dl class="readout" data-reveal-stagger>
-          <div class="ro" data-reveal>
-            <dt class="ro__label">teacher trajectories, one SFT stage</dt>
+          <div class="ro ro--purity" data-reveal>
+            <dt class="ro__label"><span class="ro__badge ro__badge--ra">vs. 22.3–61.8% open-source</span>trajectories grounding targets in the image &amp; verifying every entity</dt>
+            <dd class="ro__value"><span class="ro__hl" data-count data-from="70">96.2</span><span class="ro__of">%</span></dd>
+          </div>
+          <div class="ro ro--eff" data-reveal>
+            <dt class="ro__label"><span class="ro__badge ro__badge--train">beats 28K open-source</span>teacher trajectories in one SFT stage, ahead by 0.4–3.0 pts</dt>
             <dd class="ro__value"><span data-count data-from="0">12</span>K</dd>
           </div>
           <div class="ro ro--key" data-reveal>
-            <dt class="ro__label">average accuracy over ten multimodal benchmarks</dt>
+            <dt class="ro__label"><span class="ro__badge ro__badge--ra">9 / 10 benchmarks up</span>average accuracy over ten multimodal benchmarks (+2.5 pts)</dt>
             <dd class="ro__value">53.5<span class="ro__arrow" aria-hidden="true">→</span><span class="sr-only"> to </span><span class="ro__hl" data-count data-from="53.5">56.0</span></dd>
           </div>
-          <div class="ro" data-reveal>
-            <dt class="ro__label">points on average across the four primary search benchmarks</dt>
+          <div class="ro ro--gain" data-reveal>
+            <dt class="ro__label"><span class="ro__badge ro__badge--ce">+6.3 BC-VL · +5.0 BC-V³</span>average point gain across the four primary search benchmarks</dt>
             <dd class="ro__value">+<span data-count data-from="0">3.2</span></dd>
           </div>
-          <div class="ro" data-reveal>
-            <dt class="ro__label">benchmarks improved over the matched base agent</dt>
-            <dd class="ro__value"><span data-count data-from="0">9</span><span class="ro__of">/10</span></dd>
+          <div class="ro ro--deep" data-reveal>
+            <dt class="ro__label"><span class="ro__badge ro__badge--train">vs. 1.7–6.0% baselines</span>RACE trajectories continuing visual-tool use beyond round 1</dt>
+            <dd class="ro__value"><span data-count data-from="10">34.6</span><span class="ro__of">%</span></dd>
           </div>
         </dl>
       </div>
     </section>
 
-    <!-- Abstract -->
-    <section id="overview" class="abstract-block" aria-labelledby="overview-title">
-      <div class="container container--narrow">
-        <div class="abstract" data-reveal>
-          <h2 id="overview-title" class="abstract__title">Abstract</h2>
-          <p class="abstract__lead">Training multimodal search agents requires tasks that make visually grounded search necessary for determining the answer. Textual identity clues and unused target evidence allow shortcuts in synthetic questions, weakening supervision for visual search and evidence integration.</p>
-            <p>We propose <strong>RACE</strong>, an image-conditioned task synthesis framework that constructs dependencies from images to targets and from target-specific evidence to answers.</p>
-            <details class="more">
-              <summary><span class="more__open">Read the full abstract</span><span class="more__close">Show less</span></summary>
-              <p><em class="t-ra">Referential Abstraction</em> (RA) replaces identity-revealing text with specific visual references or ambiguous relational references resolved by searching among depicted candidates. <em class="t-ce">Compositional Evidence</em> (CE) links retrieved facts about multiple entities in one image or entities from different images into joint questions whose answers require every designated contribution. Both operations also apply to images found during search, allowing new visual observations to determine subsequent search targets or supply answer evidence.</p>
-              <p>Fine-tuning Qwen3.5-27B on only 12K teacher-generated trajectories from RACE raises average accuracy across ten multimodal benchmarks from 53.5 to 56.0, a relative improvement of approximately 4.7% over the matched base agent. Our code, data, and model will be publicly available.</p>
-            </details>
-        </div>
-      </div>
-    </section>
-
-    <!-- 01 Problem -->
+    <!-- 01 The Problem & Core Idea (Side-by-side visual contrast, zero hidden tabs!) -->
     <section id="problem" class="section section--band" aria-labelledby="problem-title">
       <div class="container">
         <header class="section__head" data-reveal>
-          <p class="section__label"><span class="section__num">01</span><span class="section__rule" aria-hidden="true"></span>The problem</p>
-          <h2 id="problem-title" class="section__title">Two shortcuts let a solver <em>skip</em> visual search</h2>
-          <p class="section__lead">A task needs two links: from the image to each target, and from every target's evidence to the answer. Text that names the target breaks the first. A question that mentions two targets but needs only one target's evidence breaks the second.</p>
+          <p class="section__label"><span class="section__num">01</span><span class="section__rule" aria-hidden="true"></span>The Core Insight</p>
+          <h2 id="problem-title" class="section__title">Why synthetic search data fails—and how <em>RACE</em> locks the chain</h2>
+          <p class="section__lead">Real multimodal search requires an unbroken chain: <strong>Image → Targets → Retrieved Evidence → Answer</strong>. Existing synthetic pipelines inadvertently leave two backdoors open, letting agents reach the right answer for the wrong reason.</p>
         </header>
 
-        <div class="tabs shortcut-tabs" data-tabs data-reveal>
-          <div class="tabs__list" role="tablist" aria-label="Shortcut examples from Figure 1">
-            <button class="tabs__tab" role="tab" id="sc-tab-a" aria-controls="sc-panel-a" aria-selected="true"><span class="tabs__key">a</span>Text supplies the identity</button>
-            <button class="tabs__tab" role="tab" id="sc-tab-b" aria-controls="sc-panel-b" aria-selected="false" tabindex="-1"><span class="tabs__key">b</span>A target's evidence is unnecessary</button>
-            <button class="tabs__tab tabs__tab--race" role="tab" id="sc-tab-c" aria-controls="sc-panel-c" aria-selected="false" tabindex="-1"><span class="tabs__key">c</span>RACE</button>
-          </div>
-
-          <div class="tabs__panel shortcut" role="tabpanel" id="sc-panel-a" aria-labelledby="sc-tab-a">
-            <div class="shortcut__media">
-              <img src="assets/img/examples/fig1a-shortcut-480.webp" width="480" height="200" loading="lazy" decoding="async" alt="Film still of the man the question asks about.">
-              <span class="shortcut__stamp shortcut__stamp--break">Image bypassed</span>
+        <div class="contrast-grid" data-reveal-stagger>
+          <!-- Broken Shortcut A -->
+          <article class="sc-card sc-card--break" data-reveal>
+            <div class="sc-card__top">
+              <span class="sc-pill sc-pill--break"><svg class="icon" aria-hidden="true"><use href="#i-x"/></svg>Shortcut A · Image Bypassed</span>
+              <span class="sc-card__fig">Fig. 1(a)</span>
             </div>
-            <div class="shortcut__body">
-              <p class="shortcut__kicker">Example question</p>
-              <p class="shortcut__q">The man shown plays <mark class="mark-break">Glen Whitmann in Transformers (2007)</mark>. Who is the actor?</p>
-              <p class="shortcut__why">The character and film names supply the query, so a text search reaches the answer without looking at the image.</p>
-              <ol class="chain" aria-label="Dependency chain">
-                <li class="chain__node is-off">Image</li>
-                <li class="chain__link is-broken chain__link--long"><span class="chain__tag">text clue</span></li>
-                <li class="chain__node">Target</li>
-                <li class="chain__link chain__link--long"><span class="chain__tag">web search</span></li>
-                <li class="chain__node">Evidence</li>
-                <li class="chain__link"></li>
-                <li class="chain__node chain__node--end">Answer</li>
-              </ol>
-              <p class="shortcut__fix shortcut__fix--ra"><strong>RA</strong> keeps target resolution tied to the image.</p>
+            <h3 class="sc-card__title">Text already gives away who to search</h3>
+            <div class="sc-card__media">
+              <img src="assets/img/examples/fig1a-shortcut-480.webp" width="480" height="200" loading="lazy" decoding="async" alt="Film still showing a man in a burgundy number 26 jersey sitting at a table.">
+              <span class="sc-card__badge sc-card__badge--break">Image never needed</span>
             </div>
-          </div>
+            <div class="sc-card__qbox">
+              <p class="sc-card__kicker">Shortcut Question</p>
+              <p class="sc-card__q">The man shown plays <mark class="mark-break">Glen Whitmann in Transformers (2007)</mark>. Who is the actor?</p>
+            </div>
+            <p class="sc-card__why">Because character and movie names appear directly in the text, a blind web search solves it instantly without inspecting pixels.</p>
+            <ol class="chain chain--compact" aria-label="Broken image-to-target chain">
+              <li class="chain__node is-off">Image</li>
+              <li class="chain__link is-broken chain__link--long"><span class="chain__tag">text clue</span></li>
+              <li class="chain__node">Target</li>
+              <li class="chain__link chain__link--long"><span class="chain__tag">web search</span></li>
+              <li class="chain__node chain__node--end">Answer</li>
+            </ol>
+            <p class="sc-card__remedy sc-card__remedy--ra"><strong>Closed by RA:</strong> Strip identity clues; resolve targets strictly from visual &amp; candidate cues.</p>
+          </article>
 
-          <div class="tabs__panel shortcut" role="tabpanel" id="sc-panel-b" aria-labelledby="sc-tab-b" hidden>
-            <div class="shortcut__media shortcut__media--diagram">
-              <div class="branch" role="group" aria-label="Evidence used by the question">
-                <p class="branch__root"><span class="branch__dot" aria-hidden="true"></span>Poster with two men</p>
+          <!-- Broken Shortcut B -->
+          <article class="sc-card sc-card--warn" data-reveal>
+            <div class="sc-card__top">
+              <span class="sc-pill sc-pill--ce"><svg class="icon" aria-hidden="true"><use href="#i-x"/></svg>Shortcut B · Decorative Target</span>
+              <span class="sc-card__fig">Fig. 1(b)</span>
+            </div>
+            <h3 class="sc-card__title">Extra targets are mentioned, never used</h3>
+            <div class="sc-card__media sc-card__media--diagram">
+              <div class="branch" role="group" aria-label="Evidence branches">
+                <p class="branch__root"><span class="branch__dot" aria-hidden="true"></span>Poster depicting two men</p>
                 <ol class="chain chain--branchline" aria-label="Used branch">
                   <li class="chain__node">Gun-holder</li>
                   <li class="chain__link chain__link--long"><span class="chain__tag">role lookup</span></li>
@@ -283,411 +302,521 @@
                   <li class="chain__node is-off">unused</li>
                 </ol>
               </div>
-              <span class="shortcut__stamp shortcut__stamp--ce">One target's evidence is never needed</span>
             </div>
-            <div class="shortcut__body">
-              <p class="shortcut__kicker">Example question</p>
-              <p class="shortcut__q">This poster shows a man with a knife and another with a gun. What is the name of the police officer played by <mark class="mark-ce">the man with the gun</mark>?</p>
-              <p class="shortcut__why">The question uses the gun-holder's evidence while leaving the knife-holder's evidence unused: the knife-holder needs no separate lookup, so the question mentions two targets but depends on one.</p>
-              <ol class="chain" aria-label="Dependency chain">
-                <li class="chain__node">Image</li>
-                <li class="chain__link"></li>
-                <li class="chain__node">Gun-holder</li>
-                <li class="chain__link chain__link--long"><span class="chain__tag">role lookup</span></li>
-                <li class="chain__node">Evidence</li>
-                <li class="chain__link"></li>
-                <li class="chain__node chain__node--end">Answer</li>
-              </ol>
-              <p class="shortcut__fix shortcut__fix--ce"><strong>CE</strong> makes each target's evidence necessary.</p>
+            <div class="sc-card__qbox">
+              <p class="sc-card__kicker">Shortcut Question</p>
+              <p class="sc-card__q">This poster shows <mark class="mark-break">a man with a knife</mark> and another with a gun. What is the name of the police officer played by <mark class="mark-ra">the man with the gun</mark>?</p>
             </div>
-          </div>
+            <p class="sc-card__why">The prompt mentions two people, yet only the gun-holder's lookup affects the answer—teaching zero multi-entity integration.</p>
+            <ol class="chain chain--compact" aria-label="Single-branch dependency">
+              <li class="chain__node">Image</li>
+              <li class="chain__link"></li>
+              <li class="chain__node">1 Target Used</li>
+              <li class="chain__link is-broken chain__link--long"><span class="chain__tag">2nd ignored</span></li>
+              <li class="chain__node chain__node--end">Answer</li>
+            </ol>
+            <p class="sc-card__remedy sc-card__remedy--ce"><strong>Closed by CE:</strong> Formulate joint relations where dropping <em>any</em> target leaves the answer undetermined.</p>
+          </article>
+        </div>
 
-          <div class="tabs__panel shortcut shortcut--race" role="tabpanel" id="sc-panel-c" aria-labelledby="sc-tab-c" hidden>
-            <div class="shortcut__media">
-              <img src="assets/img/examples/fig1c-two-women-480.webp" width="480" height="200" loading="lazy" decoding="async" alt="Film still with two women: candidate A on the left, and candidate B in profile on the right.">
-              <span class="shortcut__stamp">One image, two candidates</span>
-            </div>
-            <div class="shortcut__body">
-              <p class="shortcut__kicker">RACE question</p>
-              <p class="shortcut__q">For <mark class="mark-ra">the woman in the image</mark> whose first Golden Globe nomination was for a <mark class="mark-ra">supporting role</mark>, what is her first nomination year minus <mark class="mark-ce">the other woman's</mark>? Use award ceremony years.</p>
-              <div class="cands">
-                <p class="cand cand--ok"><span class="cand__id">A</span><span>Supporting role</span><span class="cand__status">condition matches</span><span class="cand__val">year <var>u</var></span></p>
-                <p class="cand cand--out"><span class="cand__id">B</span><span>Leading role</span><span class="cand__status">condition ruled out</span><span class="cand__val">year <var>v</var></span></p>
+        <!-- Full-width RACE Spotlight Card -->
+        <article class="race-spotlight" data-reveal>
+          <div class="race-spotlight__head">
+            <span class="sc-pill sc-pill--race"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>RACE Construction · Full Dependency Preserved</span>
+            <span class="sc-card__fig">Fig. 1(c) · Unbreakable Chain</span>
+          </div>
+          <div class="race-spotlight__grid">
+            <div class="race-spotlight__visual">
+              <div class="annotated-still">
+                <img src="assets/img/examples/fig1c-two-women-480.webp" width="480" height="200" loading="lazy" decoding="async" alt="Film still with two women: candidate A on the left, and candidate B in profile on the right.">
+                <span class="still-box still-box--a" aria-hidden="true"><b>A</b></span>
+                <span class="still-box still-box--b" aria-hidden="true"><b>B</b></span>
               </div>
-              <ol class="chain" aria-label="Dependency chain">
+              <div class="cands">
+                <p class="cand cand--ok"><span class="cand__id">A</span><span><strong>Supporting role</strong> · matches condition</span><span class="cand__val">Year <var>u</var></span></p>
+                <p class="cand cand--out"><span class="cand__id cand__id--ce">B</span><span><strong>Leading role</strong> · ruled out, still needed</span><span class="cand__val">Year <var>v</var></span></p>
+              </div>
+            </div>
+            <div class="race-spotlight__logic">
+              <p class="shortcut__kicker">Synthesized RACE Question</p>
+              <p class="shortcut__q">For <mark class="mark-ra">the woman in the image</mark> whose first Golden Globe nomination was for a <mark class="mark-ra">supporting role</mark>, what is her first nomination year minus <mark class="mark-ce">the other woman's</mark>? Use award ceremony years.</p>
+              <div class="race-steps">
+                <div class="race-step race-step--ra">
+                  <span class="race-step__tag">1 · RA</span>
+                  <p><strong>Cannot skip the image:</strong> Neither woman is named, and both fit <q>the woman in the image</q>. The solver must inspect both faces, search both filmographies, and match A (<var>u</var>) vs. B (<var>v</var>).</p>
+                </div>
+                <div class="race-step race-step--ce">
+                  <span class="race-step__tag">2 · CE</span>
+                  <p><strong>Cannot skip either target:</strong> Computing the directed difference <var>u</var>&nbsp;−&nbsp;<var>v</var> requires <em>both</em> nomination years. Missing A or B leaves the answer undetermined.</p>
+                </div>
+              </div>
+              <ol class="chain" aria-label="RACE dependency chain">
                 <li class="chain__node">Image</li>
                 <li class="chain__link chain__link--ra"><span class="chain__tag">RA</span></li>
                 <li class="chain__node">Targets A, B</li>
                 <li class="chain__link"><span class="chain__tag">search</span></li>
-                <li class="chain__node"><var>u</var>, <var>v</var></li>
+                <li class="chain__node">Years <var>u</var>, <var>v</var></li>
                 <li class="chain__link chain__link--ce"><span class="chain__tag">CE</span></li>
                 <li class="chain__node chain__node--end"><var>u</var> − <var>v</var></li>
               </ol>
-              <p class="shortcut__fix">RA decides whose year is <var>u</var>. CE needs both <var>u</var> and <var>v</var> to determine <var>u</var>&nbsp;−&nbsp;<var>v</var>.</p>
             </div>
           </div>
-        </div>
 
-        <p class="callout" data-reveal>In three open-source training sets, <strong>22.3–61.8%</strong> of trajectories both identify the target from the image and obtain evidence for each of multiple relevant entities, compared with <strong class="t-ra">96.2%</strong> for RACE.</p>
+          <div class="purity-strip" aria-label="Trajectory audit comparison">
+            <div class="purity-strip__copy">
+              <p class="purity-strip__title">Audit of 500 trajectories per dataset</p>
+              <p class="purity-strip__sub">Share of trajectories that <strong>both</strong> identify targets from the image <em>and</em> gather evidence for every relevant entity:</p>
+            </div>
+            <div class="purity-bars">
+              <div class="pbar"><span class="pbar__name">OpenSearch-VL</span><span class="pbar__track"><i style="width:22.3%"></i></span><span class="pbar__val">22.3%</span></div>
+              <div class="pbar"><span class="pbar__name">Vision-DeepResearch</span><span class="pbar__track"><i style="width:31.8%"></i></span><span class="pbar__val">31.8%</span></div>
+              <div class="pbar"><span class="pbar__name">REDSearcher-MM</span><span class="pbar__track"><i style="width:61.8%"></i></span><span class="pbar__val">61.8%</span></div>
+              <div class="pbar pbar--race"><span class="pbar__name">RACE (Ours)</span><span class="pbar__track"><i style="width:96.2%"></i></span><span class="pbar__val">96.2%</span></div>
+            </div>
+          </div>
+        </article>
       </div>
     </section>
 
-    <!-- 03 Method -->
+    <!-- 02 Method -->
     <section id="method" class="section" aria-labelledby="method-title">
       <div class="container">
         <header class="section__head" data-reveal>
           <p class="section__label"><span class="section__num">02</span><span class="section__rule" aria-hidden="true"></span>Method</p>
-          <h2 id="method-title" class="section__title">Two operations make visually grounded search <em>necessary</em></h2>
-          <p class="section__lead">RACE synthesizes tasks from real images: social-media photographs, Bilibili video frames and MovieNet film imagery. <span class="t-ra">Referential Abstraction</span> ties target resolution to the image. <span class="t-ce">Compositional Evidence</span> makes each selected target's evidence necessary for the joint answer. A teacher then solves each task from its images and question alone.</p>
+          <h2 id="method-title" class="section__title">How RACE synthesizes <em>unshortcuttable</em> search tasks</h2>
+          <p class="section__lead">Starting from real-world imagery—social-media photos, Bilibili video frames, and MovieNet scenes—RACE builds grounded tasks, attacks them with a blind search probe to catch hidden leaks, and collects verified tool-use trajectories for one-stage SFT.</p>
         </header>
 
-        
+        <!-- 4-step scannable synthesis pipeline ribbon -->
+        <ol class="synth-flow" data-reveal-stagger aria-label="Four-stage RACE pipeline">
+          <li class="synth-step" data-reveal>
+            <span class="synth-step__num">01</span>
+            <h3 class="synth-step__title">Ground Real Entities</h3>
+            <p>Establish verified candidate identities (<var>e<sub>A</sub></var>, <var>e<sub>B</sub></var>) and provenance in natural scenes via annotations or visual analysis + retrieval.</p>
+          </li>
+          <li class="synth-step synth-step--ops" data-reveal>
+            <span class="synth-step__num">02</span>
+            <h3 class="synth-step__title">Apply <span class="t-ra">RA</span> + <span class="t-ce">CE</span></h3>
+            <p>Replace names with visual or candidate-searched references (<strong class="t-ra">RA</strong>) and bind retrieved facts into a joint answer (<strong class="t-ce">CE</strong>).</p>
+          </li>
+          <li class="synth-step synth-step--probe" data-reveal>
+            <span class="synth-step__num">03</span>
+            <h3 class="synth-step__title">Attack with Blind Probe</h3>
+            <p>Withhold all images and run web search from the question alone: <strong>2.4%</strong> are revised and kept, and <strong>2.7%</strong> are discarded.</p>
+          </li>
+          <li class="synth-step synth-step--train" data-reveal>
+            <span class="synth-step__num">04</span>
+            <h3 class="synth-step__title">Teacher Rollout → SFT</h3>
+            <p>Qwen3.7-Plus solves (<var>I</var>, <var>q</var>) with search tools; <strong>12K</strong> answer-verified trajectories fine-tune Qwen3.5-27B in one SFT stage.</p>
+          </li>
+        </ol>
 
+        <!-- Two core operations: intuition first, concrete modes second, formal condition cleanly framed -->
         <div class="ops">
           <article class="op op--ra" data-reveal>
-            <p class="op__kicker">Operation 1</p>
-            <h3 class="op__title">Referential Abstraction</h3>
-            <p class="op__lede">Replace identity-revealing text with a reference that is resolved among the candidates depicted in the image.</p>
-            <div class="op__math">
-              <span class="tex tex--wide" data-tex="\begin{aligned}\mathcal M(V,\rho;F)&=\{e\in\mathcal C(V,\nu):\phi(e;F_e)=1\}\\&=\{e^\star\}\end{aligned}" data-display="true">M(V, ρ; F) = {e ∈ C(V, ν) : φ(e; F<sub>e</sub>) = 1} = {e*}</span>
-              <span class="tex tex--narrow" data-tex="\begin{aligned}\mathcal M(V,\rho;F)&=\{e\in\mathcal C(V,\nu):\\&\qquad\phi(e;F_e)=1\}\\&=\{e^\star\}\end{aligned}" data-display="true">M(V, ρ; F) = {e ∈ C(V, ν) : φ(e; F<sub>e</sub>) = 1} = {e*}</span>
-              <p class="op__mathnote">Both forms of reference require a <strong>unique match</strong> <var>e</var>* among the candidates <span class="tex" data-tex="\mathcal C(V,\nu)">C(V, ν)</span> that show the visible cues <var>ν</var>.</p>
+            <div class="op__header">
+              <p class="op__kicker">Operation 1 · Image → Target Lock</p>
+              <h3 class="op__title">Referential Abstraction (RA)</h3>
+              <p class="op__rule"><strong>Core rule:</strong> Never leak names in text—the solver must inspect the image (and, when needed, search candidates) to uniquely identify <var>e</var>*.</p>
             </div>
             <dl class="op__forms">
-              <div>
-                <dt>Specific visual references</dt>
-                <dd>Appearance, position, order, spatial relations or occlusion locate the target before retrieval: <q>the third person from the left</q>, <q>the person partly hidden behind the post</q>.</dd>
+              <div class="op__mode">
+                <dt><span class="op__mode-tag">Mode A</span>Specific visual references</dt>
+                <dd>Appearance, spatial order, or occlusion pinpoints one person before retrieval: <q>the third person from the left</q>, <q>the person partly hidden behind the post</q>.</dd>
               </div>
-              <div>
-                <dt>Ambiguous relational references</dt>
-                <dd>Several candidates fit the visible cues, and a retrieved relation selects one: <q>the man in the image who appeared in a crime film in year <var>y</var></q>. Construction searches every candidate, supports one match and rules out all alternatives; unresolved cases are rejected.</dd>
+              <div class="op__mode">
+                <dt><span class="op__mode-tag">Mode B</span>Ambiguous relational references</dt>
+                <dd>Multiple people fit the visual cue, and a retrieved fact selects the unique match: <q>the man in the image who appeared in a crime film in year <var>y</var></q>. Construction searches <em>every</em> candidate, confirms one match, and rules out all others.</dd>
               </div>
             </dl>
+            <div class="op__math">
+              <p class="op__math-label">Formal Uniqueness Condition</p>
+              <span class="tex tex--wide" data-tex="\begin{aligned}\mathcal M(V,\rho;F)&=\{e\in\mathcal C(V,\nu):\phi(e;F_e)=1\}\\&=\{e^\star\}\end{aligned}" data-display="true">M(V, ρ; F) = {e ∈ C(V, ν) : φ(e; F<sub>e</sub>) = 1} = {e*}</span>
+              <span class="tex tex--narrow" data-tex="\begin{aligned}\mathcal M(V,\rho;F)&=\{e\in\mathcal C(V,\nu):\\&\qquad\phi(e;F_e)=1\}\\&=\{e^\star\}\end{aligned}" data-display="true">M(V, ρ; F) = {e ∈ C(V, ν) : φ(e; F<sub>e</sub>) = 1} = {e*}</span>
+              <p class="op__mathnote">Unique match <var>e</var>* among depicted candidates <span class="tex" data-tex="\mathcal C(V,\nu)">C(V, ν)</span> satisfying visible cues <var>ν</var> and retrieved relation <var>φ</var>.</p>
+            </div>
           </article>
 
           <article class="op op--ce" data-reveal>
-            <p class="op__kicker">Operation 2</p>
-            <h3 class="op__title">Compositional Evidence</h3>
-            <p class="op__lede">Link retrieved facts about multiple targets, in one image or across images, into a joint question whose answer needs every contribution.</p>
+            <div class="op__header">
+              <p class="op__kicker">Operation 2 · Evidence → Answer Lock</p>
+              <h3 class="op__title">Compositional Evidence (CE)</h3>
+              <p class="op__rule"><strong>Core rule:</strong> Combine retrieved facts across ≥2 targets so that all facts determine one answer, while dropping <em>any</em> fact leaves it undetermined.</p>
+            </div>
+            <dl class="op__forms">
+              <div class="op__mode">
+                <dt><span class="op__mode-tag op__mode-tag--ce">Single Image</span>Within-image composition</dt>
+                <dd>Two or more grounded targets in the same scene—e.g., comparing first feature-film years <var>|t<sub>A</sub> − t<sub>B</sub>|</var> of two actors in one still.</dd>
+              </div>
+              <div class="op__mode">
+                <dt><span class="op__mode-tag op__mode-tag--ce">Multi-Image</span>Cross-image composition (41.2% of RACE)</dt>
+                <dd>One grounded target per image across multiple inputs; withholding any image's contribution leaves the joint answer undetermined (collapsing probe accuracy from <strong>40.9% → 8.2%</strong>).</dd>
+              </div>
+            </dl>
             <div class="op__math">
+              <p class="op__math-label">Joint Sufficiency &amp; Individual Necessity</p>
               <span class="tex" data-tex="a=c(z_1,\ldots,z_k),\quad k\ge 2" data-display="true">a = c(z<sub>1</sub>, …, z<sub>k</sub>), k ≥ 2</span>
               <div class="op__conds">
                 <p><span class="op__cond">Joint sufficiency</span><span class="tex" data-tex="\mathcal Y_c([k])=\{a\}">Y<sub>c</sub>([k]) = {a}</span></p>
                 <p><span class="op__cond">Individual necessity</span><span class="tex" data-tex="\bigl|\mathcal Y_c([k]\setminus\{j\})\bigr|>1\ \ \forall j">|Y<sub>c</sub>([k] \ {j})| &gt; 1 for every j</span></p>
               </div>
-              <p class="op__mathnote">All designated facts determine one answer; removing any one leaves it undetermined.</p>
             </div>
-            <dl class="op__forms">
-              <div>
-                <dt>Within one image</dt>
-                <dd>Multiple grounded targets in the same image, for example two actors in one film still.</dd>
-              </div>
-              <div>
-                <dt>Across images</dt>
-                <dd>One grounded target per image; removing an image's contributions must also leave the answer undetermined.</dd>
-              </div>
-            </dl>
           </article>
         </div>
 
-        
+        <!-- Always-visible deep mechanics: Search-time recursion & Blind Probe gate -->
+        <div class="mech-duo" data-reveal-stagger>
+          <article class="mini mini--search" data-reveal>
+            <p class="mini__eyebrow">Multi-Hop Visual Chaining</p>
+            <h3 class="mini__title">Re-applying RA &amp; CE to images discovered <em>during</em> search</h3>
+            <p>Dependencies don't stop at the initial input. When retrieval surfaces an intermediate image <var>J</var>, <var>J</var> can directly supply visual answer evidence <span class="tex" data-tex="a=v(J)">a = v(J)</span> or introduce a new scene where RA selects the next search target <var>W′</var>:</p>
+            <div class="mini__math"><span class="tex" data-tex="W\xrightarrow{\ \mathrm{retrieve}\ }J\xrightarrow{\ \rho_{W'}\ }W'\xrightarrow{\ \mathrm{search}\ }z(W')" data-display="true">W → retrieve → J → ρ<sub>W′</sub> → W′ → search → z(W′)</span></div>
+            <p class="mini__note">Drives sustained multi-round visual tool use (<strong>34.6%</strong> beyond round 1, <strong>28.8%</strong> visual–web–visual chains).</p>
+          </article>
 
-        
+          <article class="mini mini--probe" data-reveal>
+            <p class="mini__eyebrow">Zero-Leakage Quality Gate</p>
+            <h3 class="mini__title">Blind question-only search probe &amp; retention criterion</h3>
+            <p>After static checks block direct name/answer leaks, a bounded search probe attempts the question <em>without any images</em>. If web search recovers a target identity, narrows candidates, or guesses the answer, feedback guides reference/relation edits:</p>
+            <div class="mini__math"><span class="tex" data-tex="\begin{gathered}g_{\mathrm{ref}}(T)=g_{\mathrm{sup}}(T)=g_{\mathrm{dep}}(T)=1,\quad b(T)=0\end{gathered}" data-display="true">g<sub>ref</sub>(T) = g<sub>sup</sub>(T) = g<sub>dep</sub>(T) = 1, b(T) = 0</span></div>
+            <p class="mini__note">Requires reference grounding, source support, fact &amp; image necessity, and zero shortcut bypass (<span class="tex" data-tex="b(T)=0">b(T) = 0</span>).</p>
+          </article>
+        </div>
 
         <figure class="paper-fig paper-fig--wide" data-reveal>
           <a class="paper-fig__link" href="assets/img/fig/fig2-pipeline@3x.webp" data-lightbox data-zoom="true" data-caption="Figure 2. RACE task synthesis and training. (a) Source annotations or visual analysis and retrieval establish target identities and provenance. (b) RA expresses targets through specific visual or ambiguous relational references. CE combines evidence from multiple targets within or across images. The example compares the years of the actors' first credited feature-film appearances, yielding |tA − tB|. Evidence exploration and question-only search feedback refine the task. (c) The teacher receives (I, q) and uses tools to solve the task; trajectories with correct final answers are retained for SFT.">
             <img src="assets/img/fig/fig2-pipeline@1x.webp" srcset="assets/img/fig/fig2-pipeline@1x.webp 1200w, assets/img/fig/fig2-pipeline@2x.webp 2400w" sizes="(min-width: 1200px) 1080px, 100vw" width="1200" height="1050" loading="lazy" decoding="async" alt="Figure 2: the RACE pipeline. (a) Establish grounded entities. (b) Construct and refine search tasks with Referential Abstraction and Compositional Evidence, explore evidence, and apply question-only search feedback. (c) Teacher trajectories and SFT.">
-            <span class="paper-fig__zoom"><svg class="icon" aria-hidden="true"><use href="#i-expand"/></svg>Enlarge</span>
+            <span class="paper-fig__zoom"><svg class="icon" aria-hidden="true"><use href="#i-expand"/></svg>Click to zoom</span>
           </a>
-          <figcaption><strong>Figure 2.</strong> RACE task synthesis and training. (a) Source annotations, or visual analysis and retrieval, establish target identities and provenance. (b) RA expresses targets through specific visual or ambiguous relational references; CE combines evidence from multiple targets within or across images, here the years of two actors' first credited feature-film appearances, <var>|t<sub>A</sub> − t<sub>B</sub>|</var>. Evidence exploration and question-only search feedback refine the task. (c) The teacher receives (<var>I</var>, <var>q</var>) and uses tools; trajectories with correct final answers are retained for SFT.</figcaption>
+          <figcaption><strong>Figure 2 · Full Synthesis &amp; Training Architecture.</strong> (a) Ground target identities and provenance. (b) Construct single- or multi-image tasks with RA and CE (here comparing two actors' first credited feature-film years, <var>|t<sub>A</sub> − t<sub>B</sub>|</var>) with iterative evidence exploration and blind question-only search feedback. (c) Retain answer-verified Qwen3.7-Plus tool trajectories to train Qwen3.5-27B via one SFT stage.</figcaption>
         </figure>
 
-        <details class="disclosure" data-reveal>
-          <summary class="disclosure__sum"><span class="disclosure__title">Construction details</span><span class="disclosure__meta">Applying the operations during search · construction feedback · teacher trajectories and SFT</span></summary>
-          <div class="disclosure__body">
-            <div class="method-more">
-          <article class="mini mini--search" data-reveal>
-            <h3 class="mini__title">Applying the operations during search</h3>
-            <p>A retrieved image <var>J</var> can supply answer evidence, <span class="tex" data-tex="a=v(J)">a = v(J)</span>, or determine the next search target. Referential Abstraction then applies again inside the retrieved scene:</p>
-            <div class="mini__math"><span class="tex" data-tex="W\xrightarrow{\ \mathrm{retrieve}\ }J\xrightarrow{\ \rho_{W'}\ }W'\xrightarrow{\ \mathrm{search}\ }z(W')" data-display="true">W → retrieve → J → ρ<sub>W′</sub> → W′ → search → z(W′)</span></div>
-            <p class="mini__note">As requirements expand, an earlier answer can become an intermediate fact.</p>
-          </article>
-          <article class="mini mini--probe" data-reveal>
-            <h3 class="mini__title">Construction feedback</h3>
-            <p>Static checks reject identity or answer leakage. A question-only probe then searches from the question alone, and a judge flags answer recovery, identity recovery or substantial candidate narrowing. Detected failures guide changes to the references, evidence or relation. A task is kept only when</p>
-            <div class="mini__math"><span class="tex" data-tex="\begin{gathered}g_{\mathrm{ref}}(T)=g_{\mathrm{sup}}(T)=g_{\mathrm{dep}}(T)=1\\ b(T)=0\end{gathered}" data-display="true">g<sub>ref</sub>(T) = g<sub>sup</sub>(T) = g<sub>dep</sub>(T) = 1, b(T) = 0</span></div>
-            <p class="mini__note">Reference grounding, answer support, evidence and image necessity, and no detected shortcut.</p>
-          </article>
-          <article class="mini mini--train" data-reveal>
-            <h3 class="mini__title">Teacher trajectories and SFT</h3>
-            <p>Qwen3.7-Plus solves each retained task with search tools, receiving only its images and question. Protocol-valid trajectories whose final answers are judged correct are kept, and Qwen3.5-27B is trained on 12K of them in one SFT stage.</p>
-            <p class="mini__note">The loss covers assistant tool calls and responses; tool observations provide context.</p>
-          </article>
-        </div>
-          </div>
-        </details>
-
+        <!-- Interactive Episode Walkthrough -->
         <div class="walk" id="watch">
           <div class="walk__head" data-reveal>
-            <h3 class="walk__title">Step through the paper's examples</h3>
-            <p class="walk__sub">Three construction walkthroughs from Figures 1(c) and 2. Each step shows the stage, its inputs and the rule it applies. Press play, or step with the arrow keys.</p>
+            <p class="eyebrow">Interactive Case Explorer</p>
+            <h3 class="walk__title">Step through three concrete RACE constructions</h3>
+            <p class="walk__sub">Compare <strong>ambiguous relational RA + CE</strong> (Fig.&nbsp;1c), <strong>specific visual RA + CE in one image</strong> (Fig.&nbsp;2), and <strong>cross-image CE across two images</strong> (Fig.&nbsp;2). Step with arrow keys or click any stage chip.</p>
           </div>
           <div class="stage">
             <div class="player" data-player data-src="assets/data/episodes/index.json" data-reveal>
-          <p class="player__fallback">The interactive player needs JavaScript.</p>
-        </div>
+              <p class="player__fallback">Loading interactive walkthrough…</p>
+            </div>
           </div>
         </div>
       </div>
     </section>
 
     <!-- 03 Results -->
-    <section id="results" class="section" aria-labelledby="results-title">
+    <section id="results" class="section section--band" aria-labelledby="results-title">
       <div class="container">
         <header class="section__head" data-reveal>
           <p class="section__label"><span class="section__num">03</span><span class="section__rule" aria-hidden="true"></span>Results</p>
-          <h2 id="results-title" class="section__title">Better on nine of ten benchmarks, from only <em>12K</em> trajectories</h2>
-          <p class="section__lead">The base agent and RACE-27B share the Qwen3.5-27B backbone, test sets, tools, decoding settings, inference budgets and scoring; each score is the mean of four sampled runs per question. SFT improves all four primary benchmarks by 2.2–5.0 points, 3.2 on average, and raises accuracy on nine of the ten benchmarks.</p>
+          <h2 id="results-title" class="section__title">Higher accuracy on nine of ten benchmarks—from only <em>12K</em> trajectories</h2>
+          <p class="section__lead">Under strictly identical backbone (Qwen3.5-27B), tools, turn limits, decoding, and 4-run evaluation per question, RACE-27B improves all four primary multimodal search benchmarks by <strong>2.2–5.0 points</strong> (<strong>+3.2</strong> on average) and outperforms <strong>28K</strong> open-source trajectories across the board.</p>
         </header>
 
+        <div class="result-pills" data-reveal-stagger>
+          <div class="rpill rpill--ra" data-reveal>
+            <span class="rpill__big">+6.3 / +5.0</span>
+            <span class="rpill__txt">Largest gains on hard search benchmarks: <strong>BrowseComp-VL (+6.3)</strong> &amp; <strong>BrowseComp-V³ (+5.0)</strong></span>
+          </div>
+          <div class="rpill rpill--train" data-reveal>
+            <span class="rpill__big">12K &gt; 28K</span>
+            <span class="rpill__txt"><strong>12K</strong> RACE trajectories beat <strong>28K</strong> open-source trajectories by <strong>0.4–3.0 pts</strong> on all 4 primary benchmarks</span>
+          </div>
+          <div class="rpill rpill--ce" data-reveal>
+            <span class="rpill__big">9 / 10 Up</span>
+            <span class="rpill__txt">Broad search gains while preserving factual VQA (−0.6 on MMSearch to +1.1 on FVQA; <strong>53.5 → 56.0</strong> overall)</span>
+          </div>
+        </div>
+
         <figure class="viz viz--results" data-chart="results-dumbbell" data-src="assets/data/results.json" data-reveal>
-          <figcaption class="viz__caption"><strong>Base agent → RACE-27B</strong> on all ten benchmarks (accuracy, %). The largest gains are on the search-oriented BrowseComp-VL (+6.3) and BrowseComp-V³ (+5.0); SimpleVQA, LiveVQA, FVQA and MMSearch change by −0.6 to +1.1.</figcaption>
+          <figcaption class="viz__caption"><strong>Controlled comparison: Base agent → RACE-27B</strong> across all ten benchmarks (accuracy, %, mean of 4 runs). Toggle <em>By gain</em> to sort by improvement.</figcaption>
         </figure>
 
         <div class="split" data-reveal>
           <div class="split__text">
-            <p class="eyebrow">Training-data comparison</p>
-            <h3 class="split__title">Less data, better supervision</h3>
-            <p>With the same Qwen3.5-27B backbone, SFT on only 12K RACE trajectories exceeds SFT on 28K open-source trajectories, drawn from OpenSearch-VL, Vision-DeepResearch and REDSearcher-MM, by 0.4–3.0 points on every primary benchmark.</p>
-            <p class="muted">The RA-only variant, with the same teacher and number of trajectories, also exceeds the 28K mixture on average over the four primary benchmarks: 39.2 versus 38.7.</p>
+            <p class="eyebrow">Data Quality vs. Data Volume</p>
+            <h3 class="split__title">12K shortcut-free trajectories beat 28K open-source trajectories</h3>
+            <p>With the exact same Qwen3.5-27B backbone, SFT on <strong>only 12K RACE trajectories</strong> surpasses SFT on a <strong>28K open-source mixture</strong> (combining OpenSearch-VL, Vision-DeepResearch, and REDSearcher-MM) by <strong>0.4–3.0 percentage points</strong> on every primary benchmark.</p>
+            <p class="muted">Even the single-target <strong>RA-only (12K)</strong> variant exceeds the 28K open-source mixture on average across the four primary benchmarks (<strong>39.2 vs. 38.7</strong>), and adding <strong>CE</strong> pushes full RACE to <strong>40.5</strong>.</p>
           </div>
           <figure class="viz" data-chart="data-comparison" data-src="assets/data/evidence.json" data-key="data_comparison">
-            <figcaption class="viz__caption">Accuracy (%) on the four primary benchmarks. Each SFT variant uses only the indicated training data.</figcaption>
+            <figcaption class="viz__caption">Accuracy (%) on the four primary multimodal search benchmarks under identical Qwen3.5-27B SFT.</figcaption>
           </figure>
         </div>
 
-        <details class="disclosure" data-reveal>
-          <summary class="disclosure__sum"><span class="disclosure__title">Full comparison with published agents</span><span class="disclosure__meta">Table 1 · ten benchmarks · frontier references and 30B–32B search agents</span></summary>
+        <details class="disclosure" data-reveal open>
+          <summary class="disclosure__sum"><span class="disclosure__title">Table 1 · Full benchmark comparison with frontier APIs &amp; 30B–32B search agents</span><span class="disclosure__meta">Ten benchmarks · Multimodal search &amp; factual generalization · Downloadable CSV</span></summary>
           <div class="disclosure__body">
             <div class="table-block">
-          <div class="table-block__head">
-            <h3 class="table-block__title sr-only">Full comparison</h3>
-            <a class="btn btn--small" href="assets/data/results.csv" download><svg class="icon" aria-hidden="true"><use href="#i-down"/></svg>results.csv</a>
-          </div>
-          <p class="table-block__sub">Accuracy (%, higher is better). Published agents keep the evaluation protocols of their sources and serve as system-level references; the final block is the controlled comparison under identical backbone, tools and budgets.</p>
-          <div class="table-scroll" tabindex="0" role="region" aria-label="Table 1, scrollable">
-            <table class="t1">
-              <caption class="sr-only">Search accuracy and factual generalization (%, higher is better)</caption>
-              <colgroup><col class="t1__model"></colgroup><colgroup span="6"></colgroup><colgroup span="4"></colgroup><colgroup><col class="t1__avgcol"></colgroup>
-              <thead>
-                <tr class="t1__groups"><th scope="col"></th><th scope="colgroup" colspan="6" class="t1__g t1__g--search">Multimodal search</th><th scope="colgroup" colspan="4" class="t1__g t1__g--factual">Factual generalization</th><th></th></tr>
-                <tr class="t1__cols"><th scope="col">Model / setting</th><th scope="col"><abbr title="MM-BrowseComp">MM-BC</abbr></th><th scope="col"><abbr title="MMSearch-Plus">MS+</abbr></th><th scope="col"><abbr title="BrowseComp-V³">BC-V³</abbr></th><th scope="col"><abbr title="VisBrowse-Bench">VisB</abbr></th><th scope="col"><abbr title="BrowseComp-VL">BC-VL</abbr></th><th scope="col">VDR</th><th scope="col"><abbr title="MMSearch">MMSearch</abbr></th><th scope="col"><abbr title="SimpleVQA">SimpleVQA</abbr></th><th scope="col"><abbr title="LiveVQA">LiveVQA</abbr></th><th scope="col"><abbr title="FVQA">FVQA</abbr></th><th scope="col" class="t1__avg"><abbr title="Unweighted mean over all ten benchmarks">Avg.</abbr></th></tr>
-              </thead>
-              <tbody>
-                <tr class="t1__rowgroup t1__rowgroup--references"><th colspan="12" scope="rowgroup">Frontier API and large-backbone references</th></tr>
-                <tr><th scope="row">Qwen3.5-397B-A17B</th><td>46.0</td><td>42.1</td><td>31.0</td><td>52.7</td><td>49.4</td><td class="t1__na"><span aria-hidden="true">—</span><span class="sr-only">not available</span></td><td>78.3</td><td>76.4</td><td>85.2</td><td>77.1</td><td class="t1__avg t1__na"><span aria-hidden="true">—</span><span class="sr-only">not available</span></td></tr>
-                <tr><th scope="row">Qwen3.7-Plus</th><td>37.1</td><td>46.3</td><td>42.3</td><td>59.8</td><td>55.6</td><td>30.2</td><td>80.7</td><td>77.7</td><td>84.6</td><td>79.7</td><td class="t1__avg">59.4</td></tr>
-                <tr><th scope="row">Qwen3.8-Max</th><td>53.2</td><td>59.1</td><td>56.3</td><td>66.9</td><td class="t1__na"><span aria-hidden="true">—</span><span class="sr-only">not available</span></td><td>33.2</td><td>84.0</td><td>83.8</td><td>88.8</td><td>85.6</td><td class="t1__avg t1__na"><span aria-hidden="true">—</span><span class="sr-only">not available</span></td></tr>
-                <tr><th scope="row">Gemini-3.1-Pro<sup>‡</sup></th><td>48.7</td><td>51.5</td><td>50.0</td><td>62.1</td><td>65.9</td><td>40.8</td><td>86.1</td><td>81.0</td><td>87.3</td><td>84.0</td><td class="t1__avg">65.7</td></tr>
-              </tbody>
-              <tbody>
-                <tr class="t1__rowgroup t1__rowgroup--agents"><th colspan="12" scope="rowgroup">Specialized multimodal search agents (30B–32B)<sup>†</sup></th></tr>
-                <tr><th scope="row">WebWatcher-32B</th><td class="t1__na"><span aria-hidden="true">—</span><span class="sr-only">not available</span></td><td class="t1__na"><span aria-hidden="true">—</span><span class="sr-only">not available</span></td><td>8.7<sup>‡</sup></td><td class="t1__na"><span aria-hidden="true">—</span><span class="sr-only">not available</span></td><td>27.0</td><td class="t1__na"><span aria-hidden="true">—</span><span class="sr-only">not available</span></td><td>55.3</td><td>59.0</td><td>58.7</td><td class="t1__na"><span aria-hidden="true">—</span><span class="sr-only">not available</span></td><td class="t1__avg t1__na"><span aria-hidden="true">—</span><span class="sr-only">not available</span></td></tr>
-                <tr><th scope="row">SenseNova-MARS-32B</th><td class="t1__na"><span aria-hidden="true">—</span><span class="sr-only">not available</span></td><td class="t1__na"><span aria-hidden="true">—</span><span class="sr-only">not available</span></td><td class="t1__na"><span aria-hidden="true">—</span><span class="sr-only">not available</span></td><td class="t1__na"><span aria-hidden="true">—</span><span class="sr-only">not available</span></td><td class="t1__na"><span aria-hidden="true">—</span><span class="sr-only">not available</span></td><td class="t1__na"><span aria-hidden="true">—</span><span class="sr-only">not available</span></td><td>74.3</td><td>74.1</td><td>60.8</td><td>72.6</td><td class="t1__avg t1__na"><span aria-hidden="true">—</span><span class="sr-only">not available</span></td></tr>
-                <tr><th scope="row">Vision-DeepResearch-30B-A3B</th><td class="t1__na"><span aria-hidden="true">—</span><span class="sr-only">not available</span></td><td>28.5</td><td class="t1__na"><span aria-hidden="true">—</span><span class="sr-only">not available</span></td><td class="t1__na"><span aria-hidden="true">—</span><span class="sr-only">not available</span></td><td>53.7</td><td>37.8</td><td>69.6</td><td class="t1__na"><span aria-hidden="true">—</span><span class="sr-only">not available</span></td><td>77.6</td><td>74.2</td><td class="t1__avg t1__na"><span aria-hidden="true">—</span><span class="sr-only">not available</span></td></tr>
-                <tr><th scope="row">OpenSearch-VL-30B-A3B</th><td class="t1__na"><span aria-hidden="true">—</span><span class="sr-only">not available</span></td><td class="t1__na"><span aria-hidden="true">—</span><span class="sr-only">not available</span></td><td class="t1__na"><span aria-hidden="true">—</span><span class="sr-only">not available</span></td><td class="t1__na"><span aria-hidden="true">—</span><span class="sr-only">not available</span></td><td>41.1</td><td>33.5</td><td>68.7</td><td>74.9</td><td>67.4</td><td>73.2</td><td class="t1__avg t1__na"><span aria-hidden="true">—</span><span class="sr-only">not available</span></td></tr>
-                <tr><th scope="row">REDSearcher-MM-RL-30B-A3B</th><td>23.5</td><td>26.6</td><td class="t1__na"><span aria-hidden="true">—</span><span class="sr-only">not available</span></td><td class="t1__na"><span aria-hidden="true">—</span><span class="sr-only">not available</span></td><td>57.2</td><td class="t1__na"><span aria-hidden="true">—</span><span class="sr-only">not available</span></td><td>72.9</td><td class="t1__na"><span aria-hidden="true">—</span><span class="sr-only">not available</span></td><td>79.3</td><td class="t1__na"><span aria-hidden="true">—</span><span class="sr-only">not available</span></td><td class="t1__avg t1__na"><span aria-hidden="true">—</span><span class="sr-only">not available</span></td></tr>
-                <tr><th scope="row">Skywork-R1V4-30B-A3B</th><td class="t1__na"><span aria-hidden="true">—</span><span class="sr-only">not available</span></td><td class="t1__na"><span aria-hidden="true">—</span><span class="sr-only">not available</span></td><td class="t1__na"><span aria-hidden="true">—</span><span class="sr-only">not available</span></td><td class="t1__na"><span aria-hidden="true">—</span><span class="sr-only">not available</span></td><td>38.4</td><td class="t1__na"><span aria-hidden="true">—</span><span class="sr-only">not available</span></td><td>66.1</td><td class="t1__na"><span aria-hidden="true">—</span><span class="sr-only">not available</span></td><td class="t1__na"><span aria-hidden="true">—</span><span class="sr-only">not available</span></td><td>67.2</td><td class="t1__avg t1__na"><span aria-hidden="true">—</span><span class="sr-only">not available</span></td></tr>
-                <tr><th scope="row">MM-DeepResearch-32B</th><td class="t1__na"><span aria-hidden="true">—</span><span class="sr-only">not available</span></td><td class="t1__na"><span aria-hidden="true">—</span><span class="sr-only">not available</span></td><td class="t1__na"><span aria-hidden="true">—</span><span class="sr-only">not available</span></td><td class="t1__na"><span aria-hidden="true">—</span><span class="sr-only">not available</span></td><td>43.0</td><td class="t1__na"><span aria-hidden="true">—</span><span class="sr-only">not available</span></td><td>69.0</td><td>67.6</td><td>68.0</td><td>70.1</td><td class="t1__avg t1__na"><span aria-hidden="true">—</span><span class="sr-only">not available</span></td></tr>
-                <tr><th scope="row">LMM-Searcher-30B-A3B (30 turns)<sup>§</sup></th><td>22.3</td><td>32.9</td><td class="t1__na"><span aria-hidden="true">—</span><span class="sr-only">not available</span></td><td>42.0</td><td class="t1__na"><span aria-hidden="true">—</span><span class="sr-only">not available</span></td><td class="t1__na"><span aria-hidden="true">—</span><span class="sr-only">not available</span></td><td>71.0</td><td class="t1__na"><span aria-hidden="true">—</span><span class="sr-only">not available</span></td><td class="t1__na"><span aria-hidden="true">—</span><span class="sr-only">not available</span></td><td class="t1__na"><span aria-hidden="true">—</span><span class="sr-only">not available</span></td><td class="t1__avg t1__na"><span aria-hidden="true">—</span><span class="sr-only">not available</span></td></tr>
-                <tr class="t1__sub"><th scope="row">same model, 100 turns<sup>§</sup></th><td>30.1</td><td>34.8</td><td class="t1__na"><span aria-hidden="true">—</span><span class="sr-only">not available</span></td><td>48.3</td><td class="t1__na"><span aria-hidden="true">—</span><span class="sr-only">not available</span></td><td class="t1__na"><span aria-hidden="true">—</span><span class="sr-only">not available</span></td><td>72.3</td><td class="t1__na"><span aria-hidden="true">—</span><span class="sr-only">not available</span></td><td class="t1__na"><span aria-hidden="true">—</span><span class="sr-only">not available</span></td><td class="t1__na"><span aria-hidden="true">—</span><span class="sr-only">not available</span></td><td class="t1__avg t1__na"><span aria-hidden="true">—</span><span class="sr-only">not available</span></td></tr>
-                <tr><th scope="row">SimpleSearch-VL-30B-A3B</th><td class="t1__na"><span aria-hidden="true">—</span><span class="sr-only">not available</span></td><td>34.4</td><td class="t1__na"><span aria-hidden="true">—</span><span class="sr-only">not available</span></td><td class="t1__na"><span aria-hidden="true">—</span><span class="sr-only">not available</span></td><td>55.9</td><td class="t1__na"><span aria-hidden="true">—</span><span class="sr-only">not available</span></td><td>83.6</td><td>79.6</td><td>81.1</td><td>79.0</td><td class="t1__avg t1__na"><span aria-hidden="true">—</span><span class="sr-only">not available</span></td></tr>
-              </tbody>
-              <tbody>
-                <tr class="t1__rowgroup t1__rowgroup--ours"><th colspan="12" scope="rowgroup">Our study with the Qwen3.5-27B backbone under identical settings</th></tr>
-                <tr class="t1__base"><th scope="row">Qwen3.5-27B (base agent)</th><td>31.3</td><td>37.6</td><td>31.7</td><td>48.5</td><td>47.9</td><td>24.4</td><td>79.3</td><td>74.5</td><td>84.5</td><td>75.7</td><td class="t1__avg">53.5</td></tr>
-                <tr class="t1__ours"><th scope="row">RACE-27B <span class="t1__tag">ours</span></th><td class="t1__b">33.5</td><td class="t1__b">40.2</td><td class="t1__b">36.7</td><td class="t1__b">51.5</td><td class="t1__b">54.2</td><td class="t1__b">27.4</td><td>78.7</td><td class="t1__b">75.5</td><td class="t1__b">85.0</td><td class="t1__b">76.8</td><td class="t1__b t1__avg">56.0</td></tr>
-                <tr class="t1__delta t1__sub"><th scope="row">Δ</th><td class="is-pos">+2.2</td><td class="is-pos">+2.6</td><td class="is-pos">+5.0</td><td class="is-pos">+3.0</td><td class="is-pos">+6.3</td><td class="is-pos">+3.0</td><td class="is-neg">−0.6</td><td class="is-pos">+1.0</td><td class="is-pos">+0.5</td><td class="is-pos">+1.1</td><td class="t1__avg is-pos">+2.5</td></tr>
-              </tbody>
-            </table>
-          </div>
-          <div class="table-notes">
-            <p>MM-BC: MM-BrowseComp. MS+: MMSearch-Plus. BC-V³: BrowseComp-V³. VisB: VisBrowse-Bench. BC-VL: BrowseComp-VL. Avg. is the unweighted mean of all ten aggregate scores and is reported only for rows with complete scores; — denotes an unavailable score. Published scores retain their source-specific evaluation settings. Δ is SFT minus the matched base agent, computed from displayed scores, in points.</p>
-            <p><sup>†</sup>Scores reported in each agent's original paper under its own evaluation setting, shown for reference. <sup>‡</sup>From the agentic-workflow evaluation compiled by DeepVoyager-VL (Zhang et al., 2026), except Gemini-3.1-Pro's MM-BC, MMSearch and FVQA scores, which are our evaluations. <sup>§</sup>LMM-Searcher uses Thinking initialization and the MS+ single-image subset; turn budgets are listed by row.</p>
-          </div>
-        </div>
+              <div class="table-block__head">
+                <h3 class="table-block__title sr-only">Full comparison</h3>
+                <a class="btn btn--small" href="assets/data/results.csv" download><svg class="icon" aria-hidden="true"><use href="#i-down"/></svg>Download results.csv</a>
+              </div>
+              <p class="table-block__sub">Accuracy (%, higher is better). Published agents keep the evaluation protocols of their sources and serve as system-level references; the highlighted bottom block is the controlled comparison under identical backbone, tools, and budgets.</p>
+              <div class="table-scroll" tabindex="0" role="region" aria-label="Table 1, scrollable">
+                <table class="t1">
+                  <caption class="sr-only">Search accuracy and factual generalization (%, higher is better)</caption>
+                  <colgroup><col class="t1__model"></colgroup><colgroup span="6"></colgroup><colgroup span="4"></colgroup><colgroup><col class="t1__avgcol"></colgroup>
+                  <thead>
+                    <tr class="t1__groups"><th scope="col"></th><th scope="colgroup" colspan="6" class="t1__g t1__g--search">Multimodal search</th><th scope="colgroup" colspan="4" class="t1__g t1__g--factual">Factual generalization</th><th></th></tr>
+                    <tr class="t1__cols"><th scope="col">Model / setting</th><th scope="col"><abbr title="MM-BrowseComp">MM-BC</abbr></th><th scope="col"><abbr title="MMSearch-Plus">MS+</abbr></th><th scope="col"><abbr title="BrowseComp-V³">BC-V³</abbr></th><th scope="col"><abbr title="VisBrowse-Bench">VisB</abbr></th><th scope="col"><abbr title="BrowseComp-VL">BC-VL</abbr></th><th scope="col">VDR</th><th scope="col"><abbr title="MMSearch">MMSearch</abbr></th><th scope="col"><abbr title="SimpleVQA">SimpleVQA</abbr></th><th scope="col"><abbr title="LiveVQA">LiveVQA</abbr></th><th scope="col"><abbr title="FVQA">FVQA</abbr></th><th scope="col" class="t1__avg"><abbr title="Unweighted mean over all ten benchmarks">Avg.</abbr></th></tr>
+                  </thead>
+                  <tbody>
+                    <tr class="t1__rowgroup t1__rowgroup--references"><th colspan="12" scope="rowgroup">Frontier API and large-backbone references</th></tr>
+                    <tr><th scope="row">Qwen3.5-397B-A17B</th><td>46.0</td><td>42.1</td><td>31.0</td><td>52.7</td><td>49.4</td><td class="t1__na"><span aria-hidden="true">—</span><span class="sr-only">not available</span></td><td>78.3</td><td>76.4</td><td>85.2</td><td>77.1</td><td class="t1__avg t1__na"><span aria-hidden="true">—</span><span class="sr-only">not available</span></td></tr>
+                    <tr><th scope="row">Qwen3.7-Plus</th><td>37.1</td><td>46.3</td><td>42.3</td><td>59.8</td><td>55.6</td><td>30.2</td><td>80.7</td><td>77.7</td><td>84.6</td><td>79.7</td><td class="t1__avg">59.4</td></tr>
+                    <tr><th scope="row">Qwen3.8-Max</th><td>53.2</td><td>59.1</td><td>56.3</td><td>66.9</td><td class="t1__na"><span aria-hidden="true">—</span><span class="sr-only">not available</span></td><td>33.2</td><td>84.0</td><td>83.8</td><td>88.8</td><td>85.6</td><td class="t1__avg t1__na"><span aria-hidden="true">—</span><span class="sr-only">not available</span></td></tr>
+                    <tr><th scope="row">Gemini-3.1-Pro<sup>‡</sup></th><td>48.7</td><td>51.5</td><td>50.0</td><td>62.1</td><td>65.9</td><td>40.8</td><td>86.1</td><td>81.0</td><td>87.3</td><td>84.0</td><td class="t1__avg">65.7</td></tr>
+                  </tbody>
+                  <tbody>
+                    <tr class="t1__rowgroup t1__rowgroup--agents"><th colspan="12" scope="rowgroup">Specialized multimodal search agents (30B–32B)<sup>†</sup></th></tr>
+                    <tr><th scope="row">WebWatcher-32B</th><td class="t1__na"><span aria-hidden="true">—</span><span class="sr-only">not available</span></td><td class="t1__na"><span aria-hidden="true">—</span><span class="sr-only">not available</span></td><td>8.7<sup>‡</sup></td><td class="t1__na"><span aria-hidden="true">—</span><span class="sr-only">not available</span></td><td>27.0</td><td class="t1__na"><span aria-hidden="true">—</span><span class="sr-only">not available</span></td><td>55.3</td><td>59.0</td><td>58.7</td><td class="t1__na"><span aria-hidden="true">—</span><span class="sr-only">not available</span></td><td class="t1__avg t1__na"><span aria-hidden="true">—</span><span class="sr-only">not available</span></td></tr>
+                    <tr><th scope="row">SenseNova-MARS-32B</th><td class="t1__na"><span aria-hidden="true">—</span><span class="sr-only">not available</span></td><td class="t1__na"><span aria-hidden="true">—</span><span class="sr-only">not available</span></td><td class="t1__na"><span aria-hidden="true">—</span><span class="sr-only">not available</span></td><td class="t1__na"><span aria-hidden="true">—</span><span class="sr-only">not available</span></td><td class="t1__na"><span aria-hidden="true">—</span><span class="sr-only">not available</span></td><td class="t1__na"><span aria-hidden="true">—</span><span class="sr-only">not available</span></td><td>74.3</td><td>74.1</td><td>60.8</td><td>72.6</td><td class="t1__avg t1__na"><span aria-hidden="true">—</span><span class="sr-only">not available</span></td></tr>
+                    <tr><th scope="row">Vision-DeepResearch-30B-A3B</th><td class="t1__na"><span aria-hidden="true">—</span><span class="sr-only">not available</span></td><td>28.5</td><td class="t1__na"><span aria-hidden="true">—</span><span class="sr-only">not available</span></td><td class="t1__na"><span aria-hidden="true">—</span><span class="sr-only">not available</span></td><td>53.7</td><td>37.8</td><td>69.6</td><td class="t1__na"><span aria-hidden="true">—</span><span class="sr-only">not available</span></td><td>77.6</td><td>74.2</td><td class="t1__avg t1__na"><span aria-hidden="true">—</span><span class="sr-only">not available</span></td></tr>
+                    <tr><th scope="row">OpenSearch-VL-30B-A3B</th><td class="t1__na"><span aria-hidden="true">—</span><span class="sr-only">not available</span></td><td class="t1__na"><span aria-hidden="true">—</span><span class="sr-only">not available</span></td><td class="t1__na"><span aria-hidden="true">—</span><span class="sr-only">not available</span></td><td class="t1__na"><span aria-hidden="true">—</span><span class="sr-only">not available</span></td><td>41.1</td><td>33.5</td><td>68.7</td><td>74.9</td><td>67.4</td><td>73.2</td><td class="t1__avg t1__na"><span aria-hidden="true">—</span><span class="sr-only">not available</span></td></tr>
+                    <tr><th scope="row">REDSearcher-MM-RL-30B-A3B</th><td>23.5</td><td>26.6</td><td class="t1__na"><span aria-hidden="true">—</span><span class="sr-only">not available</span></td><td class="t1__na"><span aria-hidden="true">—</span><span class="sr-only">not available</span></td><td>57.2</td><td class="t1__na"><span aria-hidden="true">—</span><span class="sr-only">not available</span></td><td>72.9</td><td class="t1__na"><span aria-hidden="true">—</span><span class="sr-only">not available</span></td><td>79.3</td><td class="t1__na"><span aria-hidden="true">—</span><span class="sr-only">not available</span></td><td class="t1__avg t1__na"><span aria-hidden="true">—</span><span class="sr-only">not available</span></td></tr>
+                    <tr><th scope="row">Skywork-R1V4-30B-A3B</th><td class="t1__na"><span aria-hidden="true">—</span><span class="sr-only">not available</span></td><td class="t1__na"><span aria-hidden="true">—</span><span class="sr-only">not available</span></td><td class="t1__na"><span aria-hidden="true">—</span><span class="sr-only">not available</span></td><td class="t1__na"><span aria-hidden="true">—</span><span class="sr-only">not available</span></td><td>38.4</td><td class="t1__na"><span aria-hidden="true">—</span><span class="sr-only">not available</span></td><td>66.1</td><td class="t1__na"><span aria-hidden="true">—</span><span class="sr-only">not available</span></td><td class="t1__na"><span aria-hidden="true">—</span><span class="sr-only">not available</span></td><td>67.2</td><td class="t1__avg t1__na"><span aria-hidden="true">—</span><span class="sr-only">not available</span></td></tr>
+                    <tr><th scope="row">MM-DeepResearch-32B</th><td class="t1__na"><span aria-hidden="true">—</span><span class="sr-only">not available</span></td><td class="t1__na"><span aria-hidden="true">—</span><span class="sr-only">not available</span></td><td class="t1__na"><span aria-hidden="true">—</span><span class="sr-only">not available</span></td><td class="t1__na"><span aria-hidden="true">—</span><span class="sr-only">not available</span></td><td>43.0</td><td class="t1__na"><span aria-hidden="true">—</span><span class="sr-only">not available</span></td><td>69.0</td><td>67.6</td><td>68.0</td><td>70.1</td><td class="t1__avg t1__na"><span aria-hidden="true">—</span><span class="sr-only">not available</span></td></tr>
+                    <tr><th scope="row">LMM-Searcher-30B-A3B (30 turns)<sup>§</sup></th><td>22.3</td><td>32.9</td><td class="t1__na"><span aria-hidden="true">—</span><span class="sr-only">not available</span></td><td>42.0</td><td class="t1__na"><span aria-hidden="true">—</span><span class="sr-only">not available</span></td><td class="t1__na"><span aria-hidden="true">—</span><span class="sr-only">not available</span></td><td>71.0</td><td class="t1__na"><span aria-hidden="true">—</span><span class="sr-only">not available</span></td><td class="t1__na"><span aria-hidden="true">—</span><span class="sr-only">not available</span></td><td class="t1__na"><span aria-hidden="true">—</span><span class="sr-only">not available</span></td><td class="t1__avg t1__na"><span aria-hidden="true">—</span><span class="sr-only">not available</span></td></tr>
+                    <tr class="t1__sub"><th scope="row">same model, 100 turns<sup>§</sup></th><td>30.1</td><td>34.8</td><td class="t1__na"><span aria-hidden="true">—</span><span class="sr-only">not available</span></td><td>48.3</td><td class="t1__na"><span aria-hidden="true">—</span><span class="sr-only">not available</span></td><td class="t1__na"><span aria-hidden="true">—</span><span class="sr-only">not available</span></td><td>72.3</td><td class="t1__na"><span aria-hidden="true">—</span><span class="sr-only">not available</span></td><td class="t1__na"><span aria-hidden="true">—</span><span class="sr-only">not available</span></td><td class="t1__na"><span aria-hidden="true">—</span><span class="sr-only">not available</span></td><td class="t1__avg t1__na"><span aria-hidden="true">—</span><span class="sr-only">not available</span></td></tr>
+                    <tr><th scope="row">SimpleSearch-VL-30B-A3B</th><td class="t1__na"><span aria-hidden="true">—</span><span class="sr-only">not available</span></td><td>34.4</td><td class="t1__na"><span aria-hidden="true">—</span><span class="sr-only">not available</span></td><td class="t1__na"><span aria-hidden="true">—</span><span class="sr-only">not available</span></td><td>55.9</td><td class="t1__na"><span aria-hidden="true">—</span><span class="sr-only">not available</span></td><td>83.6</td><td>79.6</td><td>81.1</td><td>79.0</td><td class="t1__avg t1__na"><span aria-hidden="true">—</span><span class="sr-only">not available</span></td></tr>
+                  </tbody>
+                  <tbody>
+                    <tr class="t1__rowgroup t1__rowgroup--ours"><th colspan="12" scope="rowgroup">Controlled comparison · Qwen3.5-27B backbone under identical settings</th></tr>
+                    <tr class="t1__base"><th scope="row">Qwen3.5-27B (base agent)</th><td>31.3</td><td>37.6</td><td>31.7</td><td>48.5</td><td>47.9</td><td>24.4</td><td>79.3</td><td>74.5</td><td>84.5</td><td>75.7</td><td class="t1__avg">53.5</td></tr>
+                    <tr class="t1__ours"><th scope="row">RACE-27B <span class="t1__tag">ours</span></th><td class="t1__b">33.5</td><td class="t1__b">40.2</td><td class="t1__b">36.7</td><td class="t1__b">51.5</td><td class="t1__b">54.2</td><td class="t1__b">27.4</td><td>78.7</td><td class="t1__b">75.5</td><td class="t1__b">85.0</td><td class="t1__b">76.8</td><td class="t1__b t1__avg">56.0</td></tr>
+                    <tr class="t1__delta t1__sub"><th scope="row">Δ</th><td class="is-pos">+2.2</td><td class="is-pos">+2.6</td><td class="is-pos">+5.0</td><td class="is-pos">+3.0</td><td class="is-pos">+6.3</td><td class="is-pos">+3.0</td><td class="is-neg">−0.6</td><td class="is-pos">+1.0</td><td class="is-pos">+0.5</td><td class="is-pos">+1.1</td><td class="t1__avg is-pos">+2.5</td></tr>
+                  </tbody>
+                </table>
+              </div>
+              <div class="table-notes">
+                <p>MM-BC: MM-BrowseComp. MS+: MMSearch-Plus. BC-V³: BrowseComp-V³. VisB: VisBrowse-Bench. BC-VL: BrowseComp-VL. Avg. is the unweighted mean of all ten aggregate scores and is reported only for rows with complete scores; — denotes an unavailable score. Published scores retain their source-specific evaluation settings. Δ is SFT minus the matched base agent, computed from displayed scores, in points.</p>
+                <p><sup>†</sup>Scores reported in each agent's original paper under its own evaluation setting, shown for reference. <sup>‡</sup>From the agentic-workflow evaluation compiled by DeepVoyager-VL (Zhang et al., 2026), except Gemini-3.1-Pro's MM-BC, MMSearch and FVQA scores, which are our evaluations. <sup>§</sup>LMM-Searcher uses Thinking initialization and the MS+ single-image subset; turn budgets are listed by row.</p>
+              </div>
+            </div>
           </div>
         </details>
       </div>
     </section>
 
-    <!-- 04 Analysis -->
-    <section id="analysis" class="section section--band" aria-labelledby="analysis-title">
+    <!-- 04 Analysis: Six Decisive Proofs Up Front -->
+    <section id="analysis" class="section" aria-labelledby="analysis-title">
       <div class="container">
         <header class="section__head" data-reveal>
-          <p class="section__label"><span class="section__num">04</span><span class="section__rule" aria-hidden="true"></span>Why it works</p>
-          <h2 id="analysis-title" class="section__title">Evidence that the dependency is real</h2>
-          <p class="section__lead">Three controlled tests carry the argument: both operations help, matching the training data's size and multi-image share does not reproduce the gain, and the trained agent depends on what its visual search tools return.</p>
+          <p class="section__label"><span class="section__num">04</span><span class="section__rule" aria-hidden="true"></span>Why It Works</p>
+          <h2 id="analysis-title" class="section__title">Six controlled tests prove the <em>dependency</em> drives the gain</h2>
+          <p class="section__lead">Is RACE better simply because it has multi-image tasks or more tool calls? Controlled ablations, blind image-removal probes, trajectory audits, and test-time masking rule out superficial explanations.</p>
         </header>
 
         <div class="ev-highlights">
-          <div class="ev-grid ev-grid--3">
+          <div class="ev-grid ev-grid--3 ev-grid--top">
             <article class="ev" data-reveal>
-              <h4 class="ev__h"><span class="ev__kicker">RA-only ablation</span>
+              <h4 class="ev__h"><span class="ev__kicker">1 · Both Operations Matter (Ablation)</span>
                 <span class="ev__big">37.3 <span class="ev__to">→</span> 39.2 <span class="ev__to">→</span> <span class="t-ra">40.5</span></span></h4>
-              <p class="ev__take">With the same teacher, backbone, 12K trajectories and SFT settings, RA alone raises the four-benchmark average by 1.9 points, and adding CE raises it by a further 1.3.</p>
+              <p class="ev__take">With identical teacher, backbone, and 12K budget, <strong>RA alone adds +1.9 pts</strong> over the base agent, and adding <strong>CE adds another +1.3 pts</strong> across the four primary benchmarks.</p>
               <figure class="viz viz--card" data-chart="ablation" data-src="assets/data/evidence.json" data-key="ablation"><figcaption class="sr-only">Base agent, RA only and RACE on the four primary benchmarks.</figcaption></figure>
               <p class="ev__src">Appendix D</p>
             </article>
+
             <article class="ev" data-reveal>
-              <h4 class="ev__h"><span class="ev__kicker">Composition-matched control</span>
-                <span class="ev__big"><span class="t-ra">+2.7</span> <span class="ev__unit">points on average</span></span></h4>
-              <p class="ev__take">An open-source control drawn from the 28K mixture with RACE's 12,309 trajectories and 41.2% multi-image share stays 1.8–3.6 points below RACE on every primary benchmark.</p>
+              <h4 class="ev__h"><span class="ev__kicker">2 · Not Just Multi-Image Ratio</span>
+                <span class="ev__big"><span class="t-ra">+2.7</span> <span class="ev__unit">pts over matched control</span></span></h4>
+              <p class="ev__take">An open-source subset matched to RACE's exact <strong>12,309 trajectories</strong> and <strong>41.2% multi-image share</strong> still trails RACE by <strong>1.8–3.6 points</strong> on every primary benchmark.</p>
               <figure class="viz viz--card" data-chart="composition-control" data-src="assets/data/evidence.json" data-key="composition_control"><figcaption class="sr-only">Average accuracy of the full open-source mixture, the composition-matched control and RACE.</figcaption></figure>
               <p class="ev__src">Appendix B.3</p>
             </article>
+
             <article class="ev" data-reveal>
-              <h4 class="ev__h"><span class="ev__kicker">Masking visual search returns</span>
+              <h4 class="ev__h"><span class="ev__kicker">3 · 96.2% Shortcut-Free Supervision</span>
+                <span class="ev__big"><span class="t-ra">96.2%</span> <span class="ev__unit">vs. 22.3–61.8%</span></span></h4>
+              <p class="ev__take">Auditing 500 trajectories per dataset shows <strong>96.2%</strong> of RACE demonstrations both ground targets in the image and gather evidence for every entity (<strong>86.8%</strong> with ≥3 entities verified).</p>
+              <figure class="viz viz--card" data-chart="audit" data-src="assets/data/evidence.json" data-key="audit"><figcaption class="sr-only">Share of trajectories that demonstrate both behaviors, by training source.</figcaption></figure>
+              <p class="ev__src">Appendix F</p>
+            </article>
+
+            <article class="ev" data-reveal>
+              <h4 class="ev__h"><span class="ev__kicker">4 · Every Image Is Truly Required</span>
+                <span class="ev__big">40.9% <span class="ev__to">→</span> <span class="t-break">8.2%</span></span></h4>
+              <p class="ev__take">On 499 cross-image tasks, a search probe solves <strong>40.9%</strong> given both images, collapsing to <strong>8.2%</strong> on average when either image is withheld.</p>
+              <figure class="viz viz--card" data-chart="image-removal" data-src="assets/data/evidence.json" data-key="image_removal"><figcaption class="sr-only">Search-probe accuracy with both images and with one image withheld.</figcaption></figure>
+              <p class="ev__src">Appendix C.2</p>
+            </article>
+
+            <article class="ev" data-reveal>
+              <h4 class="ev__h"><span class="ev__kicker">5 · Agent Relies on Visual Returns</span>
                 <span class="ev__big">51.5 <span class="ev__to">→</span> <span class="t-break">36.1</span> <span class="ev__unit">VisBrowse-Bench</span></span></h4>
-              <p class="ev__take">Masking the returns of image search and text-to-image search, with the tool set and interaction limits unchanged, lowers RACE's accuracy from 51.5 to 36.1 on VisBrowse-Bench and from 40.2 to 35.2 on MMSearch-Plus. Masking either one alone also lowers it.</p>
+              <p class="ev__take">Masking visual search tool returns at test time drops RACE from <strong>51.5 to 36.1</strong> on VisBrowse-Bench and <strong>40.2 to 35.2</strong> on MMSearch-Plus—proving genuine visual evidence use.</p>
               <figure class="viz viz--card" data-chart="masking" data-src="assets/data/evidence.json" data-key="masking"><figcaption class="sr-only">RACE accuracy with no masking and with each visual search return masked.</figcaption></figure>
               <p class="ev__src">Appendix G</p>
+            </article>
+
+            <article class="ev" data-reveal>
+              <h4 class="ev__h"><span class="ev__kicker">6 · Deep Multi-Round Visual Search</span>
+                <span class="ev__big"><span class="t-ra">34.6%</span> <span class="ev__unit">beyond round 1</span></span></h4>
+              <p class="ev__take">Visual-tool calls continue past round 1 in <strong>34.6%</strong> of RACE training trajectories (vs. <strong>6.0%, 5.6%, 1.7%</strong> in baselines), raising post-round-1 visual search by <strong>12.5–19.5 pts</strong> after SFT.</p>
+              <figure class="viz viz--card" data-chart="training-behavior" data-src="assets/data/evidence.json" data-key="training_behavior"><figcaption class="sr-only">Post-first-round visual use and visual-web-visual sequences across training sources.</figcaption></figure>
+              <p class="ev__src">Section 4.4, Section 4.5</p>
             </article>
           </div>
         </div>
 
         <details class="disclosure disclosure--more" data-reveal>
-          <summary class="disclosure__sum"><span class="disclosure__title">Eight more analyses</span><span class="disclosure__meta">Training-data audit · image removal · question-only probe · required steps · tool budgets · parallel calls · visual use · variability</span></summary>
+          <summary class="disclosure__sum"><span class="disclosure__title">Five additional behavioral checks &amp; paper figure gallery</span><span class="disclosure__meta">Blind probe rates · strict checklist accuracy · tool-call budgets · parallel calls in fewer rounds · 4-run stability · Figures 3–5 &amp; strata</span></summary>
           <div class="disclosure__body">
-            <div class="ev-grid ev-grid--2">
-              <article class="ev" data-reveal>
-              <h4 class="ev__h"><span class="ev__kicker">Training-data audit</span>
-                <span class="ev__big"><span class="t-ra">96.2%</span> <span class="ev__unit">vs. 22.3–61.8%</span></span></h4>
-              <p class="ev__take">A judge labels 500 sampled trajectories per source. 96.2% of RACE trajectories identify the target from the image and obtain evidence for every relevant entity; 86.8% do so while verifying at least three entities.</p>
-              <figure class="viz viz--card" data-chart="audit" data-src="assets/data/evidence.json" data-key="audit"><figcaption class="sr-only">Share of trajectories that demonstrate both behaviors, by training source.</figcaption></figure>
-              <p class="ev__src">Appendix F</p>
-            </article>
-              <article class="ev" data-reveal>
-              <h4 class="ev__h"><span class="ev__kicker">Image-removal test</span>
-                <span class="ev__big">40.9% <span class="ev__to">→</span> <span class="t-break">8.2%</span></span></h4>
-              <p class="ev__take">On 499 cross-image tasks, a search probe answers 40.9% with both images and 8.2% on average when one image is withheld.</p>
-              <figure class="viz viz--card" data-chart="image-removal" data-src="assets/data/evidence.json" data-key="image_removal"><figcaption class="sr-only">Search-probe accuracy with both images and with one image withheld.</figcaption></figure>
-              <p class="ev__src">Appendix C.2</p>
-            </article>
-              <article class="ev ev--probe" data-reveal>
-              <h4 class="ev__h"><span class="ev__kicker">Question-only probe</span>
-                <span class="ev__big"><span class="t-probe">2.4%</span> <span class="ev__unit">revised and kept</span><br><span class="t-break">2.7%</span> <span class="ev__unit">discarded</span></span></h4>
-              <p class="ev__take">The probe runs after reference construction and static leakage checks, and tests whether web search from the question alone can still recover a target's identity or the answer.</p>
-              <figure class="viz viz--card" data-chart="probe" data-src="assets/data/evidence.json" data-key="probe"><figcaption class="sr-only">Share of all candidate tasks flagged by the question-only probe.</figcaption></figure>
-              <p class="ev__src">Appendix C.1</p>
-            </article>
-              <article class="ev" data-reveal>
-              <h4 class="ev__h"><span class="ev__kicker">Required steps</span>
-                <span class="ev__big">21.9 <span class="ev__to">→</span> <span class="t-ra">24.1</span> <span class="ev__unit">Strict Accuracy, MM-BC</span></span></h4>
-              <p class="ev__take">On MM-BrowseComp, Strict Accuracy, which also requires every checklist step, rises by 2.2 points, matching the overall gain; answers that are correct with steps missing stay at 9.4%. On BrowseComp-V³, subgoal completion rises from 56.0 to 62.5.</p>
-              <figure class="viz viz--card" data-chart="checklist" data-src="assets/data/evidence.json" data-key="checklist"><figcaption class="sr-only">MM-BrowseComp accuracy split into strict and incomplete-checklist answers, plus checklist and subgoal scores.</figcaption></figure>
-              <p class="ev__src">Appendix G</p>
-            </article>
-              <article class="ev" data-reveal>
-              <h4 class="ev__h"><span class="ev__kicker">Tool-call budgets</span>
-                <span class="ev__big"><span class="t-ra">Ahead</span> <span class="ev__unit">at every budget</span></span></h4>
-              <p class="ev__take">With a per-question cap on tool calls, RACE stays ahead of the base agent at every budget: by 0.8–2.2 points on MM-BrowseComp and 2.7–7.0 points on BrowseComp-V³.</p>
-              <figure class="viz viz--card" data-chart="budget" data-src="assets/data/evidence.json" data-key="budget"><figcaption class="sr-only">Accuracy of the base agent and RACE under tool-call budgets.</figcaption></figure>
-              <p class="ev__src">Appendix E</p>
-            </article>
-              <article class="ev" data-reveal>
-              <h4 class="ev__h"><span class="ev__kicker">Parallel calls, fewer rounds</span>
-                <span class="ev__big">0.91–0.97 <span class="ev__to">→</span> <span class="t-ra">1.41–1.47</span> <span class="ev__unit">calls per round</span></span></h4>
-              <p class="ev__take">On three of the four primary benchmarks RACE uses fewer interaction rounds than the base agent; its additional tool calls come mainly from parallel calls within a round.</p>
-              <figure class="viz viz--card" data-chart="rounds" data-src="assets/data/evidence.json" data-key="rounds"><figcaption class="sr-only">Interaction rounds and tool calls per round for the base agent and RACE.</figcaption></figure>
-              <p class="ev__src">Section 4.5, Appendix E</p>
-            </article>
-              <article class="ev" data-reveal>
-              <h4 class="ev__h"><span class="ev__kicker">Visual search beyond the first round</span>
-                <span class="ev__big"><span class="t-ra">34.6%</span> <span class="ev__unit">of RACE training trajectories</span></span></h4>
-              <p class="ev__take">Visual-tool use continues after the first round in 34.6% of RACE training trajectories, compared with 6.0%, 5.6% and 1.7% for OpenSearch-VL, Vision-DeepResearch and REDSearcher-MM. After SFT, the agent uses visual tools beyond the first round more often on all four primary benchmarks, by 12.5–19.5 points.</p>
-              <figure class="viz viz--card" data-chart="training-behavior" data-src="assets/data/evidence.json" data-key="training_behavior"><figcaption class="sr-only">Post-first-round visual use and visual-web-visual sequences across training sources.</figcaption></figure>
-              <p class="ev__src">Section 4.4, Section 4.5</p>
-            </article>
-              <article class="ev" data-reveal>
-              <h4 class="ev__h"><span class="ev__kicker">Variability</span>
-                <span class="ev__big">4 <span class="ev__unit">sampled runs per question · mean ± std</span></span></h4>
-              <p class="ev__take">Every question is answered four times with the same decoding settings and turn limits; RACE has higher mean accuracy than the base agent on all four primary benchmarks.</p>
-              <figure class="viz viz--card" data-chart="variability" data-src="assets/data/evidence.json" data-key="variability"><figcaption class="sr-only">Mean accuracy and standard deviation across four runs.</figcaption></figure>
-              <p class="ev__src">Appendix E</p>
-            </article>
+            <div class="ev-grid ev-grid--2 ev-grid--top">
+              <article class="ev ev--probe">
+                <h4 class="ev__h"><span class="ev__kicker">Question-only probe</span>
+                  <span class="ev__big"><span class="t-probe">2.4%</span> <span class="ev__unit">revised and kept</span><br><span class="t-break">2.7%</span> <span class="ev__unit">discarded</span></span></h4>
+                <p class="ev__take">The probe runs after reference construction and static leakage checks, testing whether web search from the question alone can still recover a target's identity or the answer.</p>
+                <figure class="viz viz--card" data-chart="probe" data-src="assets/data/evidence.json" data-key="probe"><figcaption class="sr-only">Share of all candidate tasks flagged by the question-only probe.</figcaption></figure>
+                <p class="ev__src">Appendix C.1</p>
+              </article>
+
+              <article class="ev">
+                <h4 class="ev__h"><span class="ev__kicker">Required steps &amp; subgoals</span>
+                  <span class="ev__big">21.9 <span class="ev__to">→</span> <span class="t-ra">24.1</span> <span class="ev__unit">Strict Accuracy, MM-BC</span></span></h4>
+                <p class="ev__take">On MM-BrowseComp, Strict Accuracy—requiring every checklist step—rises by 2.2 points, matching the overall gain while incomplete-step answers stay flat at 9.4%. On BrowseComp-V³, subgoal completion rises from 56.0 to 62.5.</p>
+                <figure class="viz viz--card" data-chart="checklist" data-src="assets/data/evidence.json" data-key="checklist"><figcaption class="sr-only">MM-BrowseComp accuracy split into strict and incomplete-checklist answers, plus checklist and subgoal scores.</figcaption></figure>
+                <p class="ev__src">Appendix G</p>
+              </article>
+
+              <article class="ev">
+                <h4 class="ev__h"><span class="ev__kicker">Tool-call budgets</span>
+                  <span class="ev__big"><span class="t-ra">Ahead</span> <span class="ev__unit">at every budget</span></span></h4>
+                <p class="ev__take">With a per-question cap on tool calls, RACE stays ahead of the base agent at every budget: by 0.8–2.2 points on MM-BrowseComp and 2.7–7.0 points on BrowseComp-V³.</p>
+                <figure class="viz viz--card" data-chart="budget" data-src="assets/data/evidence.json" data-key="budget"><figcaption class="sr-only">Accuracy of the base agent and RACE under tool-call budgets.</figcaption></figure>
+                <p class="ev__src">Appendix E</p>
+              </article>
+
+              <article class="ev">
+                <h4 class="ev__h"><span class="ev__kicker">Parallel calls, fewer rounds</span>
+                  <span class="ev__big">0.91–0.97 <span class="ev__to">→</span> <span class="t-ra">1.41–1.47</span> <span class="ev__unit">calls per round</span></span></h4>
+                <p class="ev__take">On three of the four primary benchmarks RACE uses fewer interaction rounds than the base agent; its additional tool calls come mainly from parallel calls within a round.</p>
+                <figure class="viz viz--card" data-chart="rounds" data-src="assets/data/evidence.json" data-key="rounds"><figcaption class="sr-only">Interaction rounds and tool calls per round for the base agent and RACE.</figcaption></figure>
+                <p class="ev__src">Section 4.5, Appendix E</p>
+              </article>
+
+              <article class="ev ev--span2">
+                <h4 class="ev__h"><span class="ev__kicker">Run-to-run stability</span>
+                  <span class="ev__big">4 <span class="ev__unit">sampled runs per question · mean ± std</span></span></h4>
+                <p class="ev__take">Every question is answered four times with identical decoding settings and turn limits; RACE achieves higher mean accuracy than the base agent across all four primary benchmarks.</p>
+                <figure class="viz viz--card" data-chart="variability" data-src="assets/data/evidence.json" data-key="variability"><figcaption class="sr-only">Mean accuracy and standard deviation across four runs.</figcaption></figure>
+                <p class="ev__src">Appendix E</p>
+              </article>
             </div>
+
             <div class="gallery">
-          <div class="gallery__head">
-            <h3 class="gallery__title">More figures from the paper</h3>
-          </div>
-          <div class="tabs" data-tabs>
-            <div class="tabs__list tabs__list--pills" role="tablist" aria-label="Paper figures">
-              <button class="tabs__tab" role="tab" id="gf-tab-1" aria-controls="gf-1" aria-selected="true">Multi-image input</button>
-              <button class="tabs__tab" role="tab" id="gf-tab-2" aria-controls="gf-2" aria-selected="false" tabindex="-1">Training trajectories</button>
-              <button class="tabs__tab" role="tab" id="gf-tab-3" aria-controls="gf-3" aria-selected="false" tabindex="-1">Search behavior</button>
-              <button class="tabs__tab" role="tab" id="gf-tab-4" aria-controls="gf-4" aria-selected="false" tabindex="-1">Task strata</button>
-              <button class="tabs__tab" role="tab" id="gf-tab-5" aria-controls="gf-5" aria-selected="false" tabindex="-1">Interaction lengths</button>
-              <button class="tabs__tab" role="tab" id="gf-tab-6" aria-controls="gf-6" aria-selected="false" tabindex="-1">Visual span</button>
+              <div class="gallery__head">
+                <h3 class="gallery__title">Paper figures (click to zoom)</h3>
+              </div>
+              <div class="tabs" data-tabs>
+                <div class="tabs__list tabs__list--pills" role="tablist" aria-label="Paper figures">
+                  <button class="tabs__tab" role="tab" id="gf-tab-1" aria-controls="gf-1" aria-selected="true">Multi-image input</button>
+                  <button class="tabs__tab" role="tab" id="gf-tab-2" aria-controls="gf-2" aria-selected="false" tabindex="-1">Training trajectories</button>
+                  <button class="tabs__tab" role="tab" id="gf-tab-3" aria-controls="gf-3" aria-selected="false" tabindex="-1">Search behavior</button>
+                  <button class="tabs__tab" role="tab" id="gf-tab-4" aria-controls="gf-4" aria-selected="false" tabindex="-1">Task strata</button>
+                  <button class="tabs__tab" role="tab" id="gf-tab-5" aria-controls="gf-5" aria-selected="false" tabindex="-1">Interaction lengths</button>
+                  <button class="tabs__tab" role="tab" id="gf-tab-6" aria-controls="gf-6" aria-selected="false" tabindex="-1">Visual span</button>
+                </div>
+                <div class="tabs__panel" role="tabpanel" id="gf-1" aria-labelledby="gf-tab-1">
+                  <figure class="paper-fig paper-fig--narrow">
+                    <a class="paper-fig__link" href="assets/img/fig/fig3-multi-image@2x.webp" data-lightbox data-caption="Figure 3. Multi-image input: trajectory proportions across training sources.">
+                      <img src="assets/img/fig/fig3-multi-image@1x.webp" srcset="assets/img/fig/fig3-multi-image@1x.webp 1200w, assets/img/fig/fig3-multi-image@2x.webp 2400w" sizes="(min-width: 1200px) 880px, 100vw" width="1201" height="476" loading="lazy" decoding="async" alt="Figure 3: share of trajectories with multi-image input in each training source.">
+                      <span class="paper-fig__zoom"><svg class="icon" aria-hidden="true"><use href="#i-expand"/></svg>Enlarge</span>
+                    </a>
+                    <figcaption><strong>Figure 3.</strong> At least two images occur in the initial input of 41.2% of RACE trajectories, compared with at most 28.9% across the three training-source baselines.</figcaption>
+                  </figure>
+                </div>
+                <div class="tabs__panel" role="tabpanel" id="gf-2" aria-labelledby="gf-tab-2" hidden>
+                  <figure class="paper-fig">
+                    <a class="paper-fig__link" href="assets/img/fig/fig4-trajectory-distributions@2x.webp" data-lightbox data-caption="Figure 4. Training trajectory distributions and behavior. (a) Visual calls per trajectory. (b) Proportion of trajectories containing a visual-web-visual pattern. (c) Proportion of trajectories with visual calls after the first tool round and mean number of distinct tool types.">
+                      <img src="assets/img/fig/fig4-trajectory-distributions@1x.webp" srcset="assets/img/fig/fig4-trajectory-distributions@1x.webp 1200w, assets/img/fig/fig4-trajectory-distributions@2x.webp 2400w" sizes="(min-width: 1200px) 1080px, 100vw" width="1200" height="400" loading="lazy" decoding="async" alt="Figure 4: visual calls per trajectory, visual-web-visual patterns, post-first-round visual calls and distinct tool types across training sources.">
+                      <span class="paper-fig__zoom"><svg class="icon" aria-hidden="true"><use href="#i-expand"/></svg>Enlarge</span>
+                    </a>
+                    <figcaption><strong>Figure 4.</strong> RACE trajectories more often contain multiple visual calls and visual–web–visual sequences (28.8%, compared with 4.8%, 4.5% and 1.4%), and use more distinct tool types per trajectory (3.16 versus 2.86–2.93).</figcaption>
+                  </figure>
+                </div>
+                <div class="tabs__panel" role="tabpanel" id="gf-3" aria-labelledby="gf-tab-3" hidden>
+                  <figure class="paper-fig">
+                    <a class="paper-fig__link" href="assets/img/fig/fig5-eval-behavior@2x.webp" data-lightbox data-caption="Figure 5. Evaluation-time search behavior before and after SFT. (a) Mean tool calls and interaction rounds per trajectory. (b) Mean within-trajectory fraction of tool calls that use visual tools. (c) Fraction of trajectories that use visual tools after the first tool round.">
+                      <img src="assets/img/fig/fig5-eval-behavior@1x.webp" srcset="assets/img/fig/fig5-eval-behavior@1x.webp 1200w, assets/img/fig/fig5-eval-behavior@2x.webp 2400w" sizes="(min-width: 1200px) 1080px, 100vw" width="1200" height="507" loading="lazy" decoding="async" alt="Figure 5: tool calls, interaction rounds, visual-call share and post-first-round visual use for the base and SFT agents on four benchmarks.">
+                      <span class="paper-fig__zoom"><svg class="icon" aria-hidden="true"><use href="#i-expand"/></svg>Enlarge</span>
+                    </a>
+                    <figcaption><strong>Figure 5.</strong> After SFT, visual-call share rises by 5.4–12.3 points and post-first-round visual use by 12.5–19.5 points on every primary benchmark.</figcaption>
+                  </figure>
+                </div>
+                <div class="tabs__panel" role="tabpanel" id="gf-4" aria-labelledby="gf-tab-4" hidden>
+                  <figure class="paper-fig">
+                    <a class="paper-fig__link" href="assets/img/fig/figA-strata-delta@2x.webp" data-lightbox data-caption="Paired differences across task strata: SFT minus base-agent trajectory proportions, in points, with pointwise paired-bootstrap 95% intervals.">
+                      <img src="assets/img/fig/figA-strata-delta@1x.webp" srcset="assets/img/fig/figA-strata-delta@1x.webp 1200w, assets/img/fig/figA-strata-delta@2x.webp 2400w" sizes="(min-width: 1200px) 1080px, 100vw" width="1200" height="418" loading="lazy" decoding="async" alt="Paired SFT-minus-base differences in visual search behavior across nine task strata, with 95% intervals.">
+                      <span class="paper-fig__zoom"><svg class="icon" aria-hidden="true"><use href="#i-expand"/></svg>Enlarge</span>
+                    </a>
+                    <figcaption><strong>Task strata.</strong> Across 790 matched question pairs grouped by dependency depth, checklist length and input-image count, the SFT agent has higher point estimates of post-first-round visual use in all nine strata.</figcaption>
+                  </figure>
+                </div>
+                <div class="tabs__panel" role="tabpanel" id="gf-5" aria-labelledby="gf-tab-5" hidden>
+                  <figure class="paper-fig">
+                    <a class="paper-fig__link" href="assets/img/fig/figB-round-ranges@2x.webp" data-lightbox data-caption="Continued visual use across interaction lengths: proportion of trajectories with a visual-tool call after the first round, within each round-count range.">
+                      <img src="assets/img/fig/figB-round-ranges@1x.webp" srcset="assets/img/fig/figB-round-ranges@1x.webp 1200w, assets/img/fig/figB-round-ranges@2x.webp 2400w" sizes="(min-width: 1200px) 960px, 100vw" width="1200" height="627" loading="lazy" decoding="async" alt="Continued visual use within four round-count ranges for each training source.">
+                      <span class="paper-fig__zoom"><svg class="icon" aria-hidden="true"><use href="#i-expand"/></svg>Enlarge</span>
+                    </a>
+                    <figcaption><strong>Interaction lengths.</strong> Within round ranges of 1–5, 6–10, 11–15 and 16 or more, RACE exceeds the highest baseline rate of continued visual use by 16.8, 34.3, 32.2 and 26.1 points.</figcaption>
+                  </figure>
+                </div>
+                <div class="tabs__panel" role="tabpanel" id="gf-6" aria-labelledby="gf-tab-6" hidden>
+                  <figure class="paper-fig">
+                    <a class="paper-fig__link" href="assets/img/fig/figC-visual-span@2x.webp" data-lightbox data-caption="Supplementary visual-span statistics for training trajectories. (a) Proportion of trajectories whose normalized visual span exceeds each threshold. (b) Mean normalized visual span for each source.">
+                      <img src="assets/img/fig/figC-visual-span@1x.webp" srcset="assets/img/fig/figC-visual-span@1x.webp 1200w, assets/img/fig/figC-visual-span@2x.webp 2400w" sizes="(min-width: 1200px) 1080px, 100vw" width="1200" height="403" loading="lazy" decoding="async" alt="Normalized visual span of training trajectories by source.">
+                      <span class="paper-fig__zoom"><svg class="icon" aria-hidden="true"><use href="#i-expand"/></svg>Enlarge</span>
+                    </a>
+                    <figcaption><strong>Visual span.</strong> The first and last visual calls span more than half the tool-call sequence in 21.8% of RACE trajectories with visual calls, compared with 1.0–3.8% for the baselines.</figcaption>
+                  </figure>
+                </div>
+              </div>
             </div>
-            <div class="tabs__panel" role="tabpanel" id="gf-1" aria-labelledby="gf-tab-1">
-              <figure class="paper-fig paper-fig--narrow">
-              <a class="paper-fig__link" href="assets/img/fig/fig3-multi-image@2x.webp" data-lightbox data-caption="Figure 3. Multi-image input: trajectory proportions across training sources.">
-                <img src="assets/img/fig/fig3-multi-image@1x.webp" srcset="assets/img/fig/fig3-multi-image@1x.webp 1200w, assets/img/fig/fig3-multi-image@2x.webp 2400w" sizes="(min-width: 1200px) 880px, 100vw" width="1201" height="476" loading="lazy" decoding="async" alt="Figure 3: share of trajectories with multi-image input in each training source.">
-                <span class="paper-fig__zoom"><svg class="icon" aria-hidden="true"><use href="#i-expand"/></svg>Enlarge</span>
-              </a>
-              <figcaption><strong>Figure 3.</strong> At least two images occur in the initial input of 41.2% of RACE trajectories, compared with at most 28.9% across the three training-source baselines.</figcaption>
-            </figure>
-            </div>
-            <div class="tabs__panel" role="tabpanel" id="gf-2" aria-labelledby="gf-tab-2" hidden>
-              <figure class="paper-fig">
-              <a class="paper-fig__link" href="assets/img/fig/fig4-trajectory-distributions@2x.webp" data-lightbox data-caption="Figure 4. Training trajectory distributions and behavior. (a) Visual calls per trajectory. (b) Proportion of trajectories containing a visual-web-visual pattern. (c) Proportion of trajectories with visual calls after the first tool round and mean number of distinct tool types.">
-                <img src="assets/img/fig/fig4-trajectory-distributions@1x.webp" srcset="assets/img/fig/fig4-trajectory-distributions@1x.webp 1200w, assets/img/fig/fig4-trajectory-distributions@2x.webp 2400w" sizes="(min-width: 1200px) 1080px, 100vw" width="1200" height="400" loading="lazy" decoding="async" alt="Figure 4: visual calls per trajectory, visual-web-visual patterns, post-first-round visual calls and distinct tool types across training sources.">
-                <span class="paper-fig__zoom"><svg class="icon" aria-hidden="true"><use href="#i-expand"/></svg>Enlarge</span>
-              </a>
-              <figcaption><strong>Figure 4.</strong> RACE trajectories more often contain multiple visual calls and visual–web–visual sequences (28.8%, compared with 4.8%, 4.5% and 1.4%), and use more distinct tool types per trajectory (3.16 versus 2.86–2.93).</figcaption>
-            </figure>
-            </div>
-            <div class="tabs__panel" role="tabpanel" id="gf-3" aria-labelledby="gf-tab-3" hidden>
-              <figure class="paper-fig">
-              <a class="paper-fig__link" href="assets/img/fig/fig5-eval-behavior@2x.webp" data-lightbox data-caption="Figure 5. Evaluation-time search behavior before and after SFT. (a) Mean tool calls and interaction rounds per trajectory. (b) Mean within-trajectory fraction of tool calls that use visual tools. (c) Fraction of trajectories that use visual tools after the first tool round.">
-                <img src="assets/img/fig/fig5-eval-behavior@1x.webp" srcset="assets/img/fig/fig5-eval-behavior@1x.webp 1200w, assets/img/fig/fig5-eval-behavior@2x.webp 2400w" sizes="(min-width: 1200px) 1080px, 100vw" width="1200" height="507" loading="lazy" decoding="async" alt="Figure 5: tool calls, interaction rounds, visual-call share and post-first-round visual use for the base and SFT agents on four benchmarks.">
-                <span class="paper-fig__zoom"><svg class="icon" aria-hidden="true"><use href="#i-expand"/></svg>Enlarge</span>
-              </a>
-              <figcaption><strong>Figure 5.</strong> After SFT, visual-call share rises by 5.4–12.3 points and post-first-round visual use by 12.5–19.5 points on every primary benchmark.</figcaption>
-            </figure>
-            </div>
-            <div class="tabs__panel" role="tabpanel" id="gf-4" aria-labelledby="gf-tab-4" hidden>
-              <figure class="paper-fig">
-              <a class="paper-fig__link" href="assets/img/fig/figA-strata-delta@2x.webp" data-lightbox data-caption="Paired differences across task strata: SFT minus base-agent trajectory proportions, in points, with pointwise paired-bootstrap 95% intervals.">
-                <img src="assets/img/fig/figA-strata-delta@1x.webp" srcset="assets/img/fig/figA-strata-delta@1x.webp 1200w, assets/img/fig/figA-strata-delta@2x.webp 2400w" sizes="(min-width: 1200px) 1080px, 100vw" width="1200" height="418" loading="lazy" decoding="async" alt="Paired SFT-minus-base differences in visual search behavior across nine task strata, with 95% intervals.">
-                <span class="paper-fig__zoom"><svg class="icon" aria-hidden="true"><use href="#i-expand"/></svg>Enlarge</span>
-              </a>
-              <figcaption><strong>Task strata.</strong> Across 790 matched question pairs grouped by dependency depth, checklist length and input-image count, the SFT agent has higher point estimates of post-first-round visual use in all nine strata.</figcaption>
-            </figure>
-            </div>
-            <div class="tabs__panel" role="tabpanel" id="gf-5" aria-labelledby="gf-tab-5" hidden>
-              <figure class="paper-fig">
-              <a class="paper-fig__link" href="assets/img/fig/figB-round-ranges@2x.webp" data-lightbox data-caption="Continued visual use across interaction lengths: proportion of trajectories with a visual-tool call after the first round, within each round-count range.">
-                <img src="assets/img/fig/figB-round-ranges@1x.webp" srcset="assets/img/fig/figB-round-ranges@1x.webp 1200w, assets/img/fig/figB-round-ranges@2x.webp 2400w" sizes="(min-width: 1200px) 960px, 100vw" width="1200" height="627" loading="lazy" decoding="async" alt="Continued visual use within four round-count ranges for each training source.">
-                <span class="paper-fig__zoom"><svg class="icon" aria-hidden="true"><use href="#i-expand"/></svg>Enlarge</span>
-              </a>
-              <figcaption><strong>Interaction lengths.</strong> Within round ranges of 1–5, 6–10, 11–15 and 16 or more, RACE exceeds the highest baseline rate of continued visual use by 16.8, 34.3, 32.2 and 26.1 points.</figcaption>
-            </figure>
-            </div>
-            <div class="tabs__panel" role="tabpanel" id="gf-6" aria-labelledby="gf-tab-6" hidden>
-              <figure class="paper-fig">
-              <a class="paper-fig__link" href="assets/img/fig/figC-visual-span@2x.webp" data-lightbox data-caption="Supplementary visual-span statistics for training trajectories. (a) Proportion of trajectories whose normalized visual span exceeds each threshold. (b) Mean normalized visual span for each source.">
-                <img src="assets/img/fig/figC-visual-span@1x.webp" srcset="assets/img/fig/figC-visual-span@1x.webp 1200w, assets/img/fig/figC-visual-span@2x.webp 2400w" sizes="(min-width: 1200px) 1080px, 100vw" width="1200" height="403" loading="lazy" decoding="async" alt="Normalized visual span of training trajectories by source.">
-                <span class="paper-fig__zoom"><svg class="icon" aria-hidden="true"><use href="#i-expand"/></svg>Enlarge</span>
-              </a>
-              <figcaption><strong>Visual span.</strong> The first and last visual calls span more than half the tool-call sequence in 21.8% of RACE trajectories with visual calls, compared with 1.0–3.8% for the baselines.</figcaption>
-            </figure>
-            </div>
-          </div>
-        </div>
           </div>
         </details>
+      </div>
+    </section>
+
+    <!-- Paper Abstract & Contributions -->
+    <section id="overview" class="section section--band overview-section" aria-labelledby="overview-title">
+      <div class="container overview">
+        <div class="abstract" data-reveal>
+          <p class="eyebrow">Paper Summary</p>
+          <h2 id="overview-title" class="split__title">Abstract</h2>
+          <p class="abstract__lead">Training multimodal search agents requires tasks that make visually grounded search necessary for determining the answer. Textual identity clues and unused target evidence allow shortcuts in synthetic questions, weakening supervision for visual search and evidence integration.</p>
+          <p>We propose <strong>RACE</strong>, an image-conditioned task synthesis framework that constructs dependencies from images to targets and from target-specific evidence to answers.</p>
+          <details class="more">
+            <summary><span class="more__open">Read full paper abstract</span><span class="more__close">Show less</span></summary>
+            <p><em class="t-ra">Referential Abstraction</em> (RA) replaces identity-revealing text with specific visual references or ambiguous relational references resolved by searching among depicted candidates. <em class="t-ce">Compositional Evidence</em> (CE) links retrieved facts about multiple entities in one image or entities from different images into joint questions whose answers require every designated contribution. Both operations also apply to images found during search, allowing new visual observations to determine subsequent search targets or supply answer evidence.</p>
+            <p>Fine-tuning Qwen3.5-27B on only 12K teacher-generated trajectories from RACE raises average accuracy across ten multimodal benchmarks from 53.5 to 56.0, a relative improvement of approximately 4.7% over the matched base agent. Our code, data, and model will be publicly available.</p>
+          </details>
+        </div>
+
+        <div data-reveal>
+          <p class="eyebrow">Three Contributions</p>
+          <ol class="contribs">
+            <li class="contrib">
+              <span class="contrib__n">1</span>
+              <h3 class="contrib__title">Dependency-first formulation of task synthesis</h3>
+              <p>Unifies textual identity leakage and unused target evidence as breaks in the dependency chain from images, through targets and retrieved evidence, to answers.</p>
+            </li>
+            <li class="contrib">
+              <span class="contrib__n">2</span>
+              <h3 class="contrib__title">RACE: Referential Abstraction + Compositional Evidence</h3>
+              <p>Pairs unique image-grounded target resolution with individually necessary multi-target composition—within scenes, across images, and recursively across retrieved images.</p>
+            </li>
+            <li class="contrib">
+              <span class="contrib__n">3</span>
+              <h3 class="contrib__title">Data-efficient SFT &amp; deeper visual search</h3>
+              <p>Only 12K teacher trajectories lift Qwen3.5-27B from 53.5 to 56.0 across ten benchmarks, beat 28K open-source trajectories, and boost multi-round visual tool use.</p>
+            </li>
+          </ol>
+        </div>
       </div>
     </section>
 

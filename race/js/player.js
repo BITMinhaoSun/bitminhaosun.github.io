@@ -13,6 +13,9 @@ export async function mount(root) {
   if(!listing?.episodes?.length) {root.querySelector('.player__fallback')?.remove();return unavailable(root,source);}
   const prefix='episode-'+(++instances);
   const list=listing.episodes;
+  // Preload the tiny episode JSONs in parallel so tab switching has zero async lag
+  const cache=new Map();
+  list.forEach(entry=>{cache.set(entry.file,getJSON(entry.file).catch(()=>null));});
   const tabs=el('div','pl-tabs'), panel=el('div','pl-panel'), title=el('h3','pl-title');
   tabs.setAttribute('role','tablist');
   tabs.setAttribute('aria-label','Episodes');
@@ -215,7 +218,7 @@ export async function mount(root) {
     tabButtons.forEach((b,j)=>{b.setAttribute('aria-selected',String(j===i)); b.tabIndex=j===i?0:-1;});
     panel.setAttribute('aria-labelledby',tabButtons[i].id);
     panel.setAttribute('aria-busy','true');
-    const data=await getJSON(list[i].file);
+    const data=await (cache.get(list[i].file) || getJSON(list[i].file));
     if(token!==generation) return;
     panel.removeAttribute('aria-busy');
     root.querySelector('.viz-unavailable')?.remove();
